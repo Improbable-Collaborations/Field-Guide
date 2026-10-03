@@ -1,0 +1,201 @@
+{
+  "type": "FeatureCollection",
+  "name": "luthien-legend-map",
+  "description": "Lúthien Legend Map. Literary First Age map: Neldoreth · Doriath · Angband · Mandos (desk only). Geometry mode: desk stand-in. Source: beren-luthien-catalog.json. Wiki: luthien-legend-map.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0928,
+          51.5255
+        ]
+      },
+      "properties": {
+        "id": "literary-neldoreth",
+        "title": "Forest of Neldoreth",
+        "trail": "luthien-legend-map",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 0,
+        "radiusM": 25,
+        "place": "Literary: Beleriand / Doriath",
+        "nation": "literary",
+        "placeKind": "memorial",
+        "poseHint": "desk_standin",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "one_minute_company",
+        "relicId": "tinuviel-dance",
+        "relicPrompt": "Hold with the forest dance that begins the romance.",
+        "riteId": "literary-neldoreth:dance",
+        "wikiSlug": "forest-of-neldoreth",
+        "wikiThemeSlug": "luthien-legend-map",
+        "narrationText": "In Neldoreth Beren first sees Lúthien dancing. On Earth that hinge is Roos; here it is the legend's forest name.",
+        "directionHint": "Legend-map pin: Forest of Neldoreth.",
+        "themes": [
+          "tinuviel",
+          "legend_romance"
+        ],
+        "confidence": [
+          "literary"
+        ],
+        "ethics": [
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "unknown",
+        "access": "Desk / legend-map only. No Earth GPS.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5255,
+        "liveLon": -0.092,
+        "notes": "poseHint=desk_standin;riteId=literary-neldoreth:dance;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09268,
+          51.52565
+        ]
+      },
+      "properties": {
+        "id": "literary-doriath",
+        "title": "Doriath",
+        "trail": "luthien-legend-map",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 1,
+        "radiusM": 25,
+        "place": "Literary: Beleriand",
+        "nation": "literary",
+        "placeKind": "memorial",
+        "poseHint": "desk_standin",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "epitaph",
+        "relicId": "silmaril-bride-price",
+        "relicPrompt": "Hold with Thingol's impossible bride-price: a Silmaril.",
+        "riteId": "literary-doriath:thingol",
+        "wikiSlug": "doriath",
+        "wikiThemeSlug": "luthien-legend-map",
+        "narrationText": "Doriath, kingdom of Thingol and Melian. Lúthien's home; the Silmaril demand begins here.",
+        "directionHint": "Legend-map pin: Doriath.",
+        "themes": [
+          "legend_romance",
+          "silmaril_quest"
+        ],
+        "confidence": [
+          "literary"
+        ],
+        "ethics": [
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "unknown",
+        "access": "Desk / legend-map only.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5257,
+        "liveLon": -0.0917,
+        "notes": "poseHint=desk_standin;riteId=literary-doriath:thingol;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09256,
+          51.525800000000004
+        ]
+      },
+      "properties": {
+        "id": "literary-angband",
+        "title": "Angband",
+        "trail": "luthien-legend-map",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 2,
+        "radiusM": 25,
+        "place": "Literary: north of Beleriand",
+        "nation": "literary",
+        "placeKind": "memorial",
+        "poseHint": "desk_standin",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/CaveRock",
+        "momentVerb": "none",
+        "relicId": "iron-crown",
+        "relicPrompt": "Hold with the fortress where a Silmaril is cut free.",
+        "riteId": "literary-angband:silmaril",
+        "wikiSlug": "angband",
+        "wikiThemeSlug": "luthien-legend-map",
+        "narrationText": "Angband: Morgoth's northern fortress. Beren and Lúthien take a Silmaril from the iron crown.",
+        "directionHint": "Legend-map pin: Angband.",
+        "themes": [
+          "silmaril_quest"
+        ],
+        "confidence": [
+          "literary"
+        ],
+        "ethics": [
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "unknown",
+        "access": "Desk / legend-map only.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5259,
+        "liveLon": -0.0914,
+        "notes": "poseHint=desk_standin;riteId=literary-angband:silmaril;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09244,
+          51.52595
+        ]
+      },
+      "properties": {
+        "id": "literary-mandos",
+        "title": "Halls of Mandos",
+        "trail": "luthien-legend-map",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 3,
+        "radiusM": 25,
+        "place": "Literary: Aman",
+        "nation": "literary",
+        "placeKind": "memorial",
+        "poseHint": "desk_standin",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "epitaph",
+        "relicId": "mandos-doom",
+        "relicPrompt": "Hold with Lúthien's plea that wins a mortal life together.",
+        "riteId": "literary-mandos:plea",
+        "wikiSlug": "halls-of-mandos",
+        "wikiThemeSlug": "luthien-legend-map",
+        "narrationText": "In the Halls of Mandos Lúthien wins a unique doom: return with Beren as mortals. Tolkien later wrote he could not plead there for Edith.",
+        "directionHint": "Legend-map pin: Halls of Mandos.",
+        "themes": [
+          "legend_romance"
+        ],
+        "confidence": [
+          "literary"
+        ],
+        "ethics": [
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "unknown",
+        "access": "Desk / legend-map only.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5261,
+        "liveLon": -0.0911,
+        "notes": "poseHint=desk_standin;riteId=literary-mandos:plea;geometryMode=desk_standin"
+      }
+    }
+  ]
+}

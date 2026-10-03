@@ -1,0 +1,121 @@
+{
+  "type": "FeatureCollection",
+  "name": "jab-sw1-gloves",
+  "description": "Street boxing gloves around JAB Boxing Club SW1. Pin id is the STAR objective title and the NFT trailPinId. Coords are public-street approximations, not indoor.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.14726, 51.49274] },
+      "properties": {
+        "id": "glove-victoria-door",
+        "title": "Club door mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 0,
+        "radiusM": 40,
+        "place": "JAB Boxing Club SW1",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "The first mitt sits on the pavement outside the club door. Check in to mint it into your OASIS Solana wallet.",
+        "directionHint": "Unit 5, Colonnade Walk, 151 Buckingham Palace Road. Stay on the public colonnade.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.14755, 51.49255] },
+      "properties": {
+        "id": "glove-victoria-colonnade",
+        "title": "Colonnade Walk mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 1,
+        "radiusM": 35,
+        "place": "Colonnade Walk",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "Along the colonnade, a second glove. Same hunt, same wallet.",
+        "directionHint": "Public walkway west of the club entrance.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1443, 51.4952] },
+      "properties": {
+        "id": "glove-victoria-station",
+        "title": "Victoria station mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 2,
+        "radiusM": 50,
+        "place": "London Victoria",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "The rail hop from Finsbury lands here. The glove is on the public station approach, not the platforms.",
+        "directionHint": "Victoria station street approach, Buckingham Palace Road side.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1468, 51.4975] },
+      "properties": {
+        "id": "glove-grosvenor-gardens",
+        "title": "Grosvenor Gardens mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 3,
+        "radiusM": 40,
+        "place": "Grosvenor Gardens",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "North of the club, the square holds the fourth mitt.",
+        "directionHint": "Public paths in Grosvenor Gardens. Stay off private hotel forecourts.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1456, 51.4944] },
+      "properties": {
+        "id": "glove-buckingham-palace-rd",
+        "title": "Palace Road mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 4,
+        "radiusM": 35,
+        "place": "Buckingham Palace Road",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "A linear street mitt on Buckingham Palace Road between the club and the station.",
+        "directionHint": "Pavement on Buckingham Palace Road.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1503, 51.4934] },
+      "properties": {
+        "id": "glove-eccleston-y1",
+        "title": "Eccleston mitt",
+        "trail": "jab-sw1-gloves",
+        "questRole": "glove",
+        "dropKind": "glove",
+        "order": 5,
+        "radiusM": 40,
+        "place": "Eccleston Place",
+        "imageUrl": "/icons/boxing-glove.svg",
+        "wikiSlug": "jab-sw1-street-gloves",
+        "narrationText": "The outer mitt, Belgravia edge. Collect this and the set is complete.",
+        "directionHint": "Public pavement around Eccleston Place / Eccleston Yards approach.",
+        "notes": "starQuestId=8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22"
+      }
+    }
+  ]
+}

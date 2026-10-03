@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "collection": "reliquary",
+  "commonRelicTable": [
+    "bone-bronze-splinter",
+    "bell-tongue-shard",
+    "martyr-cloth-thread",
+    "choir-ash",
+    "pulpit-key-tooth",
+    "vestry-iron-nail"
+  ],
+  "relics": [
+    {
+      "id": "bone-bronze-splinter",
+      "title": "Bone-Bronze Splinter",
+      "epitaph": "A saint's knuckle cast in dull bronze. Still cold.",
+      "tier": "common",
+      "rarity": "common",
+      "artSlug": "bone-bronze",
+      "upgradeHooks": ["armorStone"]
+    },
+    {
+      "id": "bell-tongue-shard",
+      "title": "Bell-Tongue Shard",
+      "epitaph": "Broken clapper metal. It rings once when no one listens.",
+      "tier": "common",
+      "rarity": "common",
+      "artSlug": "bell-tongue",
+      "upgradeHooks": ["sensorRose"]
+    },
+    {
+      "id": "martyr-cloth-thread",
+      "title": "Martyr-Cloth Thread",
+      "epitaph": "Frayed linen from a shroud. Smells faintly of myrrh.",
+      "tier": "common",
+      "rarity": "uncommon",
+      "artSlug": "martyr-cloth",
+      "upgradeHooks": ["powerCore"]
+    },
+    {
+      "id": "choir-ash",
+      "title": "Choir Ash",
+      "epitaph": "Ash from candles that burned through a night of siege.",
+      "tier": "common",
+      "rarity": "common",
+      "artSlug": "choir-ash",
+      "upgradeHooks": ["powerCore"]
+    },
+    {
+      "id": "pulpit-key-tooth",
+      "title": "Pulpit Key-Tooth",
+      "epitaph": "A filed key bit that once raised the Devout into the tower.",
+      "tier": "common",
+      "rarity": "uncommon",
+      "artSlug": "pulpit-key",
+      "upgradeHooks": ["weaponSpires"]
+    },
+    {
+      "id": "vestry-iron-nail",
+      "title": "Vestry Iron Nail",
+      "epitaph": "Hand-forged. Driven into oak that outlived three wars.",
+      "tier": "common",
+      "rarity": "common",
+      "artSlug": "vestry-nail",
+      "upgradeHooks": ["armorStone"]
+    },
+    {
+      "id": "omen-scar-fragment",
+      "title": "Scar Fragment",
+      "epitaph": "Black glass from a blister in the earth. It ticks when demons near.",
+      "tier": "fragment",
+      "rarity": "uncommon",
+      "artSlug": "scar-fragment",
+      "upgradeHooks": ["sensorRose"]
+    },
+    {
+      "id": "st-pauls-rose-shard",
+      "title": "Rose Shard of St Paul",
+      "epitaph": "A fragment of the great window, still warm with prayer.",
+      "tier": "exclusive",
+      "rarity": "legendary",
+      "cathedralId": "cathedral-st-pauls-london",
+      "artSlug": "rose-shard",
+      "upgradeHooks": ["sensorRose", "powerCore"],
+      "wikiSlug": "st-pauls-rose-shard"
+    },
+    {
+      "id": "westminster-coronation-splinter",
+      "title": "Coronation Splinter",
+      "epitaph": "Oak from a chair of kings. It will not burn clean.",
+      "tier": "exclusive",
+      "rarity": "legendary",
+      "cathedralId": "cathedral-westminster",
+      "artSlug": "coronation-splinter",
+      "upgradeHooks": ["armorStone", "powerCore"],
+      "wikiSlug": "westminster-coronation-splinter"
+    },
+    {
+      "id": "southwark-river-nail",
+      "title": "River Nail of Southwark",
+      "epitaph": "Salt-eaten iron. Driven when the Thames still flooded the nave.",
+      "tier": "exclusive",
+      "rarity": "epic",
+      "cathedralId": "cathedral-southwark",
+      "artSlug": "river-nail",
+      "upgradeHooks": ["weaponSpires", "armorStone"],
+      "wikiSlug": "southwark-river-nail"
+    },
+    {
+      "id": "canterbury-letter-shard",
+      "title": "Becket Letter-Shard",
+      "epitaph": "Vellum scraped thin. The ink is blood that dried into scripture.",
+      "tier": "exclusive",
+      "rarity": "legendary",
+      "cathedralId": "cathedral-canterbury",
+      "artSlug": "letter-shard",
+      "upgradeHooks": ["powerCore", "weaponSpires"],
+      "wikiSlug": "canterbury-letter-shard"
+    },
+    {
+      "id": "amsterdam-harbour-bell-tongue",
+      "title": "Harbour Bell-Tongue",
+      "epitaph": "Bronze from St Nicholas. It called ships and Cathedrons alike.",
+      "tier": "exclusive",
+      "rarity": "legendary",
+      "cathedralId": "cathedral-st-nicholas-amsterdam",
+      "artSlug": "harbour-bell",
+      "upgradeHooks": ["sensorRose", "weaponSpires"],
+      "wikiSlug": "amsterdam-harbour-bell-tongue"
+    },
+    {
+      "id": "parish-seal",
+      "title": "Parish Seal",
+      "epitaph": "Wax and thread. Proof you stood where a shell still sleeps.",
+      "tier": "seal",
+      "rarity": "common",
+      "artSlug": "parish-seal",
+      "upgradeHooks": []
+    },
+    {
+      "id": "cathedral-seal",
+      "title": "Cathedral Seal",
+      "epitaph": "Heavier wax. The Devout mark of a true Cathedron husk.",
+      "tier": "seal",
+      "rarity": "rare",
+      "artSlug": "cathedral-seal",
+      "upgradeHooks": ["powerCore"]
+    }
+  ]
+}

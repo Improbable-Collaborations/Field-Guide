@@ -1,0 +1,45 @@
+{
+  "questId": "ce427e5b-3faf-4b75-862f-ab819ce7e3c3",
+  "name": "Wiltshire Crop Circles: The Skywatch Set",
+  "createdAt": "2026-08-17T11:50:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "wiltshire-crop-circles.geojson",
+  "atmosphere": "skywatch",
+  "gameSource": "FieldGuide",
+  "wikiSlug": "wiltshire-crop-circles",
+  "description": "Collect the Skywatch Set: five 2026 Wiltshire crop-circle GeoNFTs. Each drop holds motif and croppie readings. Collect all five to complete the mission. [trailFile=wiltshire-crop-circles.geojson] [atmosphere=skywatch] [mode=crop-circles]",
+  "requiredPinIds": [
+    "crop-2026-milk-hill",
+    "crop-2026-avebury-stone-circle",
+    "crop-2026-roundway-hill",
+    "crop-2026-etchilhampton-poppy",
+    "crop-2026-maccoombe-down"
+  ],
+  "pinObjectiveMap": {
+    "crop-2026-milk-hill": "crop-2026-milk-hill",
+    "crop-2026-avebury-stone-circle": "crop-2026-avebury-stone-circle",
+    "crop-2026-roundway-hill": "crop-2026-roundway-hill",
+    "crop-2026-etchilhampton-poppy": "crop-2026-etchilhampton-poppy",
+    "crop-2026-maccoombe-down": "crop-2026-maccoombe-down"
+  },
+  "spawnNear": {
+    "pinId": "crop-2026-milk-hill",
+    "lat": 51.375152,
+    "lon": -1.850175,
+    "note": "Milk Hill: start of the Skywatch Set (Alton Barnes / Avebury cluster)"
+  },
+  "notes": {
+    "mode": "Collect-a-set GeoNFT quest. Required pins are waypoint drops; optional 2026 circles stay on the map.",
+    "set": "Milk Hill, Avebury, Roundway Hill, Etchilhampton poppy, Maccoombe Down",
+    "icons": "markerStyle=flying-saucer · worldPrefab=CropCircles/World/flying-saucer",
+    "seed": "Docs/Devs/scripts/seed-wiltshire-crop-circles-geonfts.mjs + seed-wiltshire-crop-circles-star-quest.mjs",
+    "starObjectives": {
+      "crop-2026-milk-hill": "9d26142a-9079-4eb5-b48d-f702874fe962",
+      "crop-2026-avebury-stone-circle": "8e9f8df9-04b2-47ec-9c85-9c4bb491bcfb",
+      "crop-2026-roundway-hill": "c7df63f5-bd19-441a-bd68-372317eaf500",
+      "crop-2026-etchilhampton-poppy": "07a96997-79a0-4459-9cfa-e1e4406a62b0",
+      "crop-2026-maccoombe-down": "e44e9f81-0349-4171-a839-62ccd49f2626"
+    },
+    "photos": "2026 aerials copyrighted; Field Guide covers / placeholder for mint imageUrl."
+  }
+}

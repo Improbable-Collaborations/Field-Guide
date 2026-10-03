@@ -1,0 +1,163 @@
+{
+  "type": "FeatureCollection",
+  "name": "grave-highgate-east",
+  "description": "Highgate East Ideas. Marx → Eliot → Adams: ideas, novel, Hitchhikers passport. Geometry mode: Finsbury desk stand-in. Source: uk-graves-catalog.json. Wiki: highgate-east-ideas.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0978,
+          51.5216
+        ]
+      },
+      "properties": {
+        "id": "highgate-karl-marx",
+        "title": "Karl Marx",
+        "trail": "grave-highgate-east",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 0,
+        "radiusM": 30,
+        "place": "Highgate Cemetery East, London",
+        "nation": "England",
+        "cemeteryId": "highgate-east",
+        "placeKind": "memorial",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "epitaph",
+        "relicId": "workers-unite-card",
+        "relicPrompt": "Hold with the Feuerbach inscription on the plinth.",
+        "riteId": "highgate-karl-marx:epitaph",
+        "wikiSlug": "karl-marx-at-highgate",
+        "wikiThemeSlug": "highgate-east-ideas",
+        "narrationText": "Marx wrote Capital in London exile. The 1956 bronze bust still carries Workers of all lands unite and the line that philosophers have only interpreted the world.",
+        "directionHint": "At the Marx bust, Highgate East.",
+        "themes": [
+          "thinker",
+          "political_site"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot",
+          "political_site",
+          "partner_required"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "East Cemetery paths near the bust monument.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5664,
+        "liveLon": -0.1439,
+        "notes": "poseHint=pathside;riteId=highgate-karl-marx:epitaph;relicId=workers-unite-card;geometryMode=desk_standin;live=51.5664,-0.1439;pathside_only=true"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0975,
+          51.5217
+        ]
+      },
+      "properties": {
+        "id": "highgate-george-eliot",
+        "title": "George Eliot",
+        "trail": "grave-highgate-east",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 1,
+        "radiusM": 28,
+        "place": "Highgate Cemetery East, London",
+        "nation": "England",
+        "cemeteryId": "highgate-east",
+        "placeKind": "grave",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "one_minute_company",
+        "relicId": "middlemarch-leaf",
+        "relicPrompt": "One quiet minute for the novelist of provincial souls.",
+        "riteId": "highgate-george-eliot:epitaph",
+        "wikiSlug": "george-eliot-at-highgate",
+        "wikiThemeSlug": "highgate-east-ideas",
+        "narrationText": "Mary Ann Evans published as George Eliot so Middlemarch would be judged as work. Abbey doors stayed shut; Highgate took her beside George Henry Lewes.",
+        "directionHint": "At George Eliot's stone, Highgate East.",
+        "themes": [
+          "writer"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot",
+          "partner_required"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "East paths near the Marx neighbourhood. Name on stone: Mary Ann Cross.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5662,
+        "liveLon": -0.1442,
+        "notes": "poseHint=pathside;riteId=highgate-george-eliot:epitaph;relicId=middlemarch-leaf;geometryMode=desk_standin;live=51.5662,-0.1442;pathside_only=true"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0972,
+          51.5218
+        ]
+      },
+      "properties": {
+        "id": "highgate-douglas-adams",
+        "title": "Douglas Adams",
+        "trail": "grave-highgate-east",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 2,
+        "radiusM": 28,
+        "place": "Highgate Cemetery East, London",
+        "nation": "England",
+        "cemeteryId": "highgate-east",
+        "placeKind": "grave",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "leave_token",
+        "relicId": "digital-pen",
+        "relicPrompt": "Digital pen token for the Guide's author.",
+        "riteId": "highgate-douglas-adams:leave-token",
+        "wikiSlug": "douglas-adams-at-highgate",
+        "wikiThemeSlug": "highgate-east-ideas",
+        "narrationText": "Adams began Hitchhiker as BBC radio comedy, then a comic cosmos: towels, 42, and a planet cleared for a hyperspace bypass. The Highgate stone stays plain on purpose.",
+        "directionHint": "At Douglas Adams's stone, Highgate East.",
+        "themes": [
+          "writer",
+          "fantasy_passport"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot",
+          "partner_required"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "East Cemetery. Plain stone; fans sometimes leave pens.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.566,
+        "liveLon": -0.1445,
+        "notes": "poseHint=pathside;riteId=highgate-douglas-adams:leave-token;relicId=digital-pen;geometryMode=desk_standin;live=51.566,-0.1445;pathside_only=true"
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "name": "Cathedrons Cathedral Registry",
+  "exclusiveNote": "Exclusive relics only drop at their cathedral. Parish churches never grant these.",
+  "cathedrals": [
+    {
+      "id": "cathedral-st-pauls-london",
+      "title": "St Paul's Cathedral",
+      "place": "London, England",
+      "lat": 51.5138,
+      "lon": -0.0984,
+      "radiusM": 90,
+      "wikiSlug": "st-pauls-cathedral-cathedron",
+      "exclusiveRelicId": "st-pauls-rose-shard",
+      "markerStyle": "cathedral",
+      "narrationText": "St Paul's. Dome like a sealed rose. The Devout once synched here under the whisper of the great window."
+    },
+    {
+      "id": "cathedral-westminster",
+      "title": "Westminster Abbey",
+      "place": "London, England",
+      "lat": 51.4994,
+      "lon": -0.1273,
+      "radiusM": 90,
+      "wikiSlug": "westminster-abbey-cathedron",
+      "exclusiveRelicId": "westminster-coronation-splinter",
+      "markerStyle": "cathedral",
+      "narrationText": "Westminster. Crowns and bones. A Cathedron seal sleeps under the choir."
+    },
+    {
+      "id": "cathedral-southwark",
+      "title": "Southwark Cathedral",
+      "place": "London, England",
+      "lat": 51.5061,
+      "lon": -0.0895,
+      "radiusM": 80,
+      "wikiSlug": "southwark-cathedral-cathedron",
+      "exclusiveRelicId": "southwark-river-nail",
+      "markerStyle": "cathedral",
+      "narrationText": "Southwark by the river. Pilgrims once crossed here. The nail still remembers the tide."
+    },
+    {
+      "id": "cathedral-canterbury",
+      "title": "Canterbury Cathedral",
+      "place": "Canterbury, England",
+      "lat": 51.2797,
+      "lon": 1.0829,
+      "radiusM": 100,
+      "wikiSlug": "canterbury-cathedral-cathedron",
+      "exclusiveRelicId": "canterbury-beck-shard",
+      "markerStyle": "cathedral",
+      "narrationText": "Canterbury. Becket's shadow. The shrine is gone; the letter of power remains."
+    },
+    {
+      "id": "cathedral-st-nicholas-amsterdam",
+      "title": "Basilica of St Nicholas",
+      "place": "Amsterdam, Netherlands",
+      "lat": 52.3765,
+      "lon": 4.9011,
+      "radiusM": 90,
+      "wikiSlug": "st-nicholas-amsterdam-cathedron",
+      "exclusiveRelicId": "amsterdam-harbour-bell-tongue",
+      "markerStyle": "cathedral",
+      "narrationText": "St Nicholas on the harbour. The first Cathedron brief was drawn from this silhouette."
+    }
+  ]
+}

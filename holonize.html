@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holonic Pre-Check — OASIS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amber:        #c4906a;
+      --amber2:       #e8b48c;
+      --ember:        #ff8c42;
+      --gold:         #f5c842;
+      --space:        #080810;
+      --void:         #04040a;
+      --panel:        rgba(10,10,18,0.88);
+      --panel2:       rgba(18,18,30,0.92);
+      --border:       rgba(196,144,106,0.22);
+      --border2:      rgba(196,144,106,0.45);
+      --text:         #e8e0d4;
+      --muted:        #7a6f64;
+      --green:        #39d98a;
+      --blue:         #64b5f6;
+      --moon-col:     #b0b8cc;
+      --planet-col:   #60c8ff;
+      --star-col:     #ffd050;
+      --super-col:    #ffe080;
+      --grand-col:    #e8f0ff;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --sans: 'Space Grotesk', sans-serif;
+      --serif: 'Newsreader', Georgia, serif;
+      --display: 'Bebas Neue', var(--sans);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--void); color: var(--text);
+      font-family: var(--mono); min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* ── Canvas ──────────────────────────────────────────────────────── */
+    #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── Status bar ──────────────────────────────────────────────────── */
+    #status-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1.5rem;
+      background: rgba(4,4,10,0.92); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      font-size: 0.68rem; letter-spacing: 0.09em;
+    }
+    .sb-brand { color: var(--amber); font-weight: 700; }
+    .sb-sep   { color: var(--border2); }
+    .sb-phase { color: var(--muted); }
+    .sb-live  { margin-left: auto; display: flex; align-items: center; gap: 5px; color: var(--amber2); font-size: 0.62rem; }
+    .sb-dot   { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .nav-links { display: none; } /* merged into status-bar */
+    .nav-galaxy-btn {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--amber2);
+      border: 1px solid rgba(196,144,106,0.45);
+      border-radius: 4px;
+      padding: 0.25rem 0.7rem;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-galaxy-btn:hover {
+      background: rgba(196,144,106,0.14);
+      border-color: rgba(196,144,106,0.75);
+      color: #f5c97a;
+    }
+    .sb-nav-link {
+      font-size: 0.62rem; letter-spacing: 0.08em;
+      color: var(--muted); text-decoration: none; transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .sb-nav-link:hover { color: var(--amber2); }
+
+    /* ── Page wrapper ────────────────────────────────────────────────── */
+    .page { position: relative; z-index: 10; padding-top: 44px; }
+
+    /* ── Section base ────────────────────────────────────────────────── */
+    section {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 1.5rem 4rem; position: relative;
+    }
+    section.compact { min-height: auto; padding: 4rem 1.5rem; }
+
+    .section-n {
+      font-size: 0.58rem; letter-spacing: 0.25em; color: var(--amber);
+      opacity: 0.55; margin-bottom: 1.2rem; text-transform: uppercase;
+    }
+
+    /* ────────────────────────────────────────────────────────────────────
+       SECTION 1 — PORTAL
+    ─────────────────────────────────────────────────────────────────── */
+    #portal { text-align: center; }
+
+    .portal-eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.28em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 1.4rem; opacity: 0.85;
+    }
+
+    .portal-headline {
+      font-family: var(--display); font-size: clamp(3rem, 7.5vw, 6rem);
+      font-weight: 400; line-height: 1.0; letter-spacing: 0.03em;
+      text-transform: uppercase; max-width: 800px;
+      margin: 0 auto 1.2rem;
+    }
+    .portal-headline em {
+      font-family: var(--serif); font-style: italic;
+      color: var(--amber2); text-transform: none;
+      font-size: 0.88em; letter-spacing: 0;
+    }
+
+    .portal-sub {
+      font-family: var(--serif); font-style: italic;
+      font-size: 1.05rem; line-height: 1.7;
+      color: var(--muted); max-width: 500px; margin: 0 auto 3rem;
+    }
+
+    /* Celestial legend row */
+    .body-legend {
+      display: flex; gap: 0.6rem; justify-content: center;
+      margin-bottom: 3rem; flex-wrap: wrap;
+    }
+    .body-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--border); font-size: 0.6rem;
+      letter-spacing: 0.06em; color: var(--muted);
+      background: rgba(255,255,255,0.02);
+    }
+    .body-chip span { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Input card */
+    .portal-card {
+      width: 100%; max-width: 540px;
+      background: var(--panel); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 2rem;
+      backdrop-filter: blur(14px);
+    }
+
+    .input-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .tab-btn {
+      font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em;
+      padding: 0.45rem 1rem; cursor: pointer; color: var(--muted);
+      border: none; background: none; border-bottom: 2px solid transparent;
+      transition: all 0.2s; margin-bottom: -1px;
+    }
+    .tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .field-label {
+      font-size: 0.6rem; letter-spacing: 0.12em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 0.45rem;
+    }
+    .field-input {
+      width: 100%; background: rgba(0,0,0,0.45);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.7rem 1rem; font-family: var(--mono);
+      font-size: 0.78rem; color: var(--text);
+      transition: border-color 0.2s; margin-bottom: 0.4rem;
+    }
+    .field-input::placeholder { color: var(--muted); }
+    .field-input:focus { outline: none; border-color: var(--amber); }
+
+    .field-hint { font-size: 0.58rem; color: var(--muted); margin-bottom: 1.2rem; }
+
+    .scan-btn {
+      width: 100%;
+      border: 1px solid var(--amber); border-radius: 4px;
+      background: transparent; padding: 0.85rem;
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.12em; color: var(--amber2);
+      cursor: pointer; transition: all 0.2s; text-transform: uppercase;
+    }
+    .scan-btn:hover:not(:disabled) {
+      background: rgba(196,144,106,0.1); color: var(--text);
+    }
+    .scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .error-msg {
+      background: rgba(255,80,80,0.07); border: 1px solid rgba(255,80,80,0.3);
+      border-radius: 4px; padding: 0.5rem 0.9rem;
+      font-size: 0.68rem; color: #ff8888; margin-top: 0.6rem; display: none;
+    }
+
+    /* Example chips */
+    .examples {
+      margin-top: 1.5rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .ex-label { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; }
+    .ex-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .ex-chip {
+      font-size: 0.58rem; padding: 3px 8px; border-radius: 10px;
+      border: 1px solid var(--border); color: var(--muted);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .ex-chip:hover { border-color: var(--amber2); color: var(--amber2); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      animation: hint-bob 2.5s ease-in-out infinite;
+    }
+    @keyframes hint-bob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+    /* ────────────────────────────────────────────────────────────────────
+       SECTION 2 — SCAN
+    ─────────────────────────────────────────────────────────────────── */
+    #scan-section { display: none; }
+    #scan-section.show { display: flex; }
+
+    .scan-inner { width: 100%; max-width: 600px; }
+
+    .scan-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.28em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0.7;
+    }
+
+    /* Animated orb (morphs into the celestial body) */
+    .scan-orb-track {
+      display: flex; justify-content: center; align-items: center;
+      margin-bottom: 2rem; height: 80px;
+    }
+    .scan-orb {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 1px solid var(--border2);
+      background: radial-gradient(circle at 40% 35%, rgba(196,144,106,0.25), rgba(196,144,106,0.04));
+      animation: orb-pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes orb-pulse {
+      0%,100%{box-shadow:0 0 20px rgba(196,144,106,0.18);transform:scale(1)}
+      50%{box-shadow:0 0 50px rgba(196,144,106,0.42);transform:scale(1.1)}
+    }
+
+    /* Terminal */
+    .terminal {
+      background: rgba(0,0,0,0.55); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1.2rem 1.5rem;
+      font-size: 0.7rem; line-height: 2; min-height: 180px;
+    }
+    .t-line { opacity: 0; transform: translateY(3px); transition: opacity 0.3s, transform 0.3s; }
+    .t-line.vis { opacity: 1; transform: none; }
+    .t-ok   { color: var(--green); }
+    .t-dim  { color: var(--muted); }
+    .t-val  { color: var(--amber2); }
+    .t-warn { color: var(--gold); }
+    .t-cur  { display: inline-block; width: 8px; height: 14px; background: var(--amber); vertical-align: middle; animation: blink 0.9s step-end infinite; }
+
+    /* ────────────────────────────────────────────────────────────────────
+       SECTION 3 — RESULT
+    ─────────────────────────────────────────────────────────────────── */
+    #result-section { display: none; text-align: center; }
+    #result-section.show { display: flex; }
+
+    .result-inner { width: 100%; max-width: 680px; margin: 0 auto; }
+
+    /* Large CSS-drawn celestial body */
+    .body-stage {
+      display: flex; justify-content: center; align-items: center;
+      margin-bottom: 2rem; height: 200px; position: relative;
+    }
+    .r-sphere {
+      border-radius: 50%; flex-shrink: 0;
+      animation: sphere-in 0.9s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes sphere-in {
+      from { opacity:0; transform:scale(0.35) }
+      to   { opacity:1; transform:scale(1) }
+    }
+    .r-sphere.moon {
+      width: 110px; height: 110px;
+      background: radial-gradient(circle at 35% 30%, #d4d8e8, #a0a5b8 48%, #6b7090);
+      box-shadow: inset -12px -12px 30px rgba(0,0,0,0.6), 0 0 50px rgba(176,184,204,0.28);
+    }
+    .r-sphere.planet {
+      width: 140px; height: 140px;
+      background: radial-gradient(circle at 35% 30%, #90e4f8, #2e92cc 45%, #0e4878);
+      box-shadow: inset -16px -16px 44px rgba(0,0,0,0.52), 0 0 70px rgba(80,190,255,0.48);
+    }
+    .body-stage.planet::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 240px; height: 240px; border-radius: 50%;
+      border: 3px solid rgba(96,200,255,0.3);
+      transform: translate(-50%,-50%) scaleY(0.16);
+      animation: ring-in 0.8s 0.6s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes ring-in {
+      from{opacity:0;transform:translate(-50%,-50%) scaleY(0)}
+      to{opacity:1;transform:translate(-50%,-50%) scaleY(0.16)}
+    }
+    .r-sphere.star {
+      width: 158px; height: 158px;
+      background: radial-gradient(circle at 38% 28%, #fffcc0, #ffd040 28%, #e88010 68%, #c04000);
+      box-shadow: inset -20px -20px 50px rgba(0,0,0,0.35),
+                  0 0 90px rgba(255,208,80,0.68), 0 0 160px rgba(255,140,0,0.24);
+      animation: sphere-in 0.9s cubic-bezier(0.16,1,0.3,1) both, star-breathe 3s ease-in-out infinite 1s;
+    }
+    @keyframes star-breathe {
+      0%,100%{box-shadow:inset -20px -20px 50px rgba(0,0,0,0.35),0 0 90px rgba(255,208,80,0.68),0 0 160px rgba(255,140,0,0.24)}
+      50%{box-shadow:inset -20px -20px 50px rgba(0,0,0,0.35),0 0 130px rgba(255,208,80,0.85),0 0 240px rgba(255,140,0,0.38)}
+    }
+    .r-sphere.superstar {
+      width: 172px; height: 172px;
+      background: radial-gradient(circle at 38% 28%, #ffffff, #ffe898 14%, #ffb030 50%, #d84000);
+      box-shadow: inset -22px -22px 56px rgba(0,0,0,0.3),
+                  0 0 110px rgba(255,200,60,0.78), 0 0 220px rgba(255,140,0,0.38);
+      animation: sphere-in 0.9s cubic-bezier(0.16,1,0.3,1) both, star-breathe 3s ease-in-out infinite 1s;
+    }
+    .r-sphere.grandsuperstar {
+      width: 182px; height: 182px;
+      background: radial-gradient(circle at 38% 28%, #ffffff, #e8f4ff 16%, #a8c8ff 48%, #3048c0);
+      box-shadow: inset -24px -24px 58px rgba(0,0,0,0.25),
+                  0 0 130px rgba(160,210,255,0.82), 0 0 260px rgba(80,140,255,0.4);
+      animation: sphere-in 0.9s cubic-bezier(0.16,1,0.3,1) both, grand-breathe 4s ease-in-out infinite 1s;
+    }
+    @keyframes grand-breathe {
+      0%,100%{box-shadow:inset -24px -24px 58px rgba(0,0,0,0.25),0 0 130px rgba(160,210,255,0.82),0 0 260px rgba(80,140,255,0.4)}
+      50%{box-shadow:inset -24px -24px 58px rgba(0,0,0,0.25),0 0 180px rgba(160,210,255,0.95),0 0 340px rgba(80,140,255,0.55)}
+    }
+
+    .r-class-label {
+      font-size: 0.6rem; letter-spacing: 0.28em; color: var(--muted);
+      text-transform: uppercase; margin-bottom: 0.4rem; margin-top: 1.5rem;
+    }
+    .r-name {
+      font-family: var(--display); font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .r-repo {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .r-sub {
+      font-family: var(--serif); font-style: italic; font-size: 0.98rem;
+      color: var(--muted); margin-bottom: 2rem; max-width: 480px; margin-left: auto; margin-right: auto;
+    }
+
+    /* Stats tiles */
+    .r-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px;
+      overflow: hidden; margin-bottom: 2rem;
+    }
+    .r-stat { background: var(--panel); padding: 1rem; text-align: center; }
+    .r-stat-val { font-family: var(--sans); font-size: 1.5rem; font-weight: 700; display: block; }
+    .r-stat-lbl { font-size: 0.5rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+
+    /* Holonic meaning */
+    .r-meaning {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem;
+    }
+    .r-meaning-head {
+      font-size: 0.6rem; letter-spacing: 0.18em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .r-meaning-para {
+      font-family: var(--serif); font-style: italic;
+      font-size: 0.92rem; line-height: 1.65; color: var(--text); opacity: 0.9;
+    }
+
+    /* Benefits list */
+    .r-benefits { list-style: none; text-align: left; margin-bottom: 2rem; }
+    .r-ben {
+      display: flex; gap: 0.8rem; padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border); font-size: 0.76rem; line-height: 1.5;
+    }
+    .r-ben-icon { color: var(--green); flex-shrink: 0; margin-top: 1px; font-size: 0.8rem; }
+    .r-ben-title { color: var(--text); font-weight: 500; margin-right: 0.4rem; }
+    .r-ben-desc { color: var(--muted); }
+
+    .r-scroll-cta {
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      animation: hint-bob 2.5s ease-in-out infinite;
+      cursor: pointer; margin-top: 1rem;
+    }
+    .r-scroll-cta span { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    .r-scroll-arrow { color: var(--amber); }
+
+    @keyframes cta-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ── Primary progression CTA ── */
+    .next-step-cta {
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      width: 100%; margin-top: 2.5rem; cursor: pointer;
+      padding: 1.6rem 2rem;
+      background: rgba(196,144,106,0.06);
+      border: 1px solid rgba(196,144,106,0.3);
+      border-radius: 8px;
+      transition: background 0.25s, border-color 0.25s, transform 0.2s;
+      animation: cta-bob 3s ease-in-out infinite;
+    }
+    .next-step-cta:hover {
+      background: rgba(196,144,106,0.12);
+      border-color: rgba(196,144,106,0.55);
+      transform: translateY(-2px);
+      animation: none;
+    }
+    .next-step-cta-eyebrow {
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--amber); opacity: 0.8;
+    }
+    .next-step-cta-label {
+      font-family: var(--display); font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--text);
+    }
+    .next-step-cta-sub {
+      font-family: var(--serif); font-style: italic; font-size: 0.82rem;
+      color: var(--muted); margin-top: 0.1rem;
+    }
+    .next-step-cta-arrow {
+      font-size: 1.2rem; color: var(--amber); margin-top: 0.4rem;
+      transition: transform 0.2s;
+    }
+    .next-step-cta:hover .next-step-cta-arrow { transform: translateY(4px); }
+
+    .karma-callout {
+      background: rgba(196,144,106,0.07); border: 1px solid rgba(196,144,106,0.25);
+      border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.2rem 0 1.6rem;
+      text-align: left;
+    }
+    .karma-callout-head {
+      font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 0.35rem;
+    }
+    .karma-callout-body {
+      font-family: var(--serif); font-style: italic; font-size: 0.82rem;
+      line-height: 1.6; color: var(--muted);
+    }
+    .karma-callout-body strong { color: var(--amber2); font-style: normal; }
+    .karma-req-row {
+      display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem;
+      font-family: var(--mono); font-size: 0.58rem; color: var(--muted);
+    }
+    .karma-req-badge {
+      background: rgba(196,144,106,0.15); border: 1px solid rgba(196,144,106,0.3);
+      padding: 0.2rem 0.5rem; border-radius: 3px; color: var(--amber2);
+      letter-spacing: 0.06em; white-space: nowrap;
+    }
+
+    .reset-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em;
+      color: var(--muted); background: transparent; border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem; border-radius: 4px; cursor: pointer;
+      text-transform: uppercase; transition: color 0.2s, border-color 0.2s;
+    }
+    .reset-btn:hover { color: var(--amber); border-color: var(--amber); }
+
+    .try-token-link {
+      font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em;
+      color: var(--muted); cursor: pointer; text-decoration: underline;
+      text-decoration-color: var(--border); text-underline-offset: 3px;
+      transition: color 0.2s;
+    }
+    .try-token-link:hover { color: var(--amber2); }
+
+    /* ────────────────────────────────────────────────────────────────────
+       SECTION 4 — GROWTH PATH
+    ─────────────────────────────────────────────────────────────────── */
+    #growth-section { display: none; }
+    #growth-section.show { display: flex; }
+
+    .growth-inner { width: 100%; max-width: 700px; margin: 0 auto; }
+
+    .growth-headline {
+      font-family: var(--display); font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 400; letter-spacing: 0.03em; text-transform: uppercase;
+      text-align: center; margin-bottom: 0.5rem;
+    }
+    .growth-sub {
+      font-family: var(--serif); font-style: italic; font-size: 0.95rem;
+      color: var(--muted); text-align: center; margin-bottom: 3rem;
+    }
+
+    /* Path rail */
+    .path-rail {
+      position: relative; display: flex; align-items: flex-end;
+      justify-content: space-between; margin-bottom: 0.5rem;
+      padding-bottom: 2.5rem;
+    }
+    .path-bg-line {
+      position: absolute; bottom: 2rem; left: 0; right: 0; height: 2px;
+      background: var(--border); z-index: 0;
+    }
+    .path-fill-line {
+      position: absolute; bottom: 2rem; left: 0; height: 2px;
+      background: linear-gradient(90deg, var(--amber), var(--gold));
+      z-index: 1; transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .path-node {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      flex: 1;
+    }
+    .path-sphere {
+      border-radius: 50%; transition: all 0.4s; border: 2px solid var(--border);
+      background: var(--void);
+    }
+    .path-sphere.reached { border-color: var(--amber); }
+    .path-sphere.current { border-color: var(--gold); animation: cur-pulse 1.8s ease-in-out infinite; }
+    .path-sphere.locked  { opacity: 0.35; }
+    @keyframes cur-pulse {
+      0%,100%{box-shadow:0 0 10px rgba(245,200,66,0.4)} 50%{box-shadow:0 0 30px rgba(245,200,66,0.8)}
+    }
+    .path-lbl {
+      font-size: 0.52rem; letter-spacing: 0.08em; color: var(--muted);
+      text-transform: uppercase; text-align: center;
+    }
+    .path-lbl.reached, .path-lbl.current { color: var(--amber2); }
+    .path-lbl.current { color: var(--gold); }
+
+    /* Next-level card */
+    .next-level-card {
+      background: rgba(196,144,106,0.06);
+      border: 1px solid var(--amber); border-radius: 8px;
+      padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .nlc-head {
+      font-size: 0.6rem; letter-spacing: 0.2em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .nlc-title { font-family: var(--sans); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .nlc-metrics { display: flex; flex-direction: column; gap: 0.6rem; }
+    .nlc-metric { }
+    .nlc-metric-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.65rem; color: var(--muted); margin-bottom: 3px;
+    }
+    .nlc-metric-label span:last-child { color: var(--amber2); }
+    .nlc-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .nlc-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--amber), var(--gold)); transition: width 1.4s cubic-bezier(0.16,1,0.3,1); }
+
+    /* Tier comparison grid */
+    .tier-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 1.5rem; }
+    .tier-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.75rem 0.5rem; text-align: center;
+    }
+    .tier-card.active { border-color: var(--amber); background: rgba(196,144,106,0.07); }
+    .tier-mini-sphere { border-radius: 50%; margin: 0 auto 6px; }
+    .tier-card-name { font-size: 0.55rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+    .tier-card-threshold { font-size: 0.5rem; color: var(--muted); opacity: 0.7; }
+
+    /* ────────────────────────────────────────────────────────────────────
+       SECTION 5 — HOLONIZE CTA
+    ─────────────────────────────────────────────────────────────────── */
+    #cta-section { display: none; }
+    #cta-section.show { display: flex; }
+
+    .cta-inner { width: 100%; max-width: 600px; text-align: center; margin: 0 auto; }
+
+    /* ── Ownership verification panel ── */
+    .own-panel {
+      text-align: left; border-radius: 6px; padding: 1.2rem 1.4rem;
+      margin: 0 0 2rem; border: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .own-panel.own-verified { border-color: rgba(80,200,120,0.4); background: rgba(80,200,120,0.04); }
+    .own-head {
+      font-size: 0.55rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.7rem;
+    }
+    .own-title { font-family: var(--sans); font-size: 0.88rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .own-desc {
+      font-family: var(--serif); font-style: italic; font-size: 0.8rem;
+      color: var(--muted); line-height: 1.55; margin-bottom: 1rem;
+    }
+    .own-step { margin-bottom: 0.9rem; }
+    .own-step-label {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+      color: var(--amber); text-transform: uppercase; margin-bottom: 0.3rem;
+    }
+    .own-cmd-row {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,0,0,0.35); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.5rem 0.7rem;
+      font-family: var(--mono); font-size: 0.62rem; color: var(--text);
+    }
+    .own-cmd-row code { flex: 1; color: var(--amber2); word-break: break-all; }
+    .own-copy-btn {
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.06em;
+      color: var(--muted); background: transparent; border: 1px solid var(--border);
+      padding: 0.2rem 0.5rem; border-radius: 3px; cursor: pointer; white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .own-copy-btn:hover { color: var(--amber); border-color: var(--amber); }
+    .own-action-row { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .own-verify-btn {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em;
+      padding: 0.5rem 1.1rem; border-radius: 4px; cursor: pointer;
+      border: 1px solid var(--amber); color: var(--amber);
+      background: rgba(196,144,106,0.08); transition: background 0.2s;
+    }
+    .own-verify-btn:hover:not(:disabled) { background: rgba(196,144,106,0.18); }
+    .own-verify-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .own-wallet-btn {
+      font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.06em;
+      padding: 0.5rem 1.1rem; border-radius: 4px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.15); color: var(--text);
+      background: rgba(255,255,255,0.05); transition: background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .own-wallet-btn:hover { background: rgba(255,255,255,0.1); }
+    .own-status {
+      font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.04em;
+      color: var(--muted); margin-top: 0.5rem;
+    }
+    .own-status.ok { color: var(--green); }
+    .own-status.err { color: #ff8888; }
+    .own-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em;
+      color: var(--green); background: rgba(80,200,120,0.1);
+      border: 1px solid rgba(80,200,120,0.3); border-radius: 3px;
+      padding: 0.2rem 0.55rem;
+    }
+
+    .cta-eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.25em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .cta-headline {
+      font-family: var(--sans); font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 1rem;
+    }
+    .cta-sub {
+      font-family: var(--serif); font-style: italic; font-size: 1rem;
+      color: var(--muted); line-height: 1.65; margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto;
+    }
+
+    /* Principles grid */
+    .principles {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.75rem; margin-bottom: 2.5rem; text-align: left;
+    }
+    .p-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem;
+    }
+    .p-num { font-size: 0.5rem; letter-spacing: 0.2em; color: var(--amber); margin-bottom: 0.4rem; }
+    .p-title { font-family: var(--sans); font-size: 0.82rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .p-desc { font-size: 0.66rem; color: var(--muted); line-height: 1.5; }
+
+    /* Holonize button */
+    .holonize-btn {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      background: var(--amber); color: var(--void);
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: none; border-radius: 4px; cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .holonize-btn:hover { background: var(--amber2); transform: translateY(-2px); box-shadow: 0 10px 36px rgba(196,144,106,0.45); }
+    .holonize-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .cta-links { margin-top: 1rem; display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .cta-link { font-size: 0.62rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .cta-link:hover { color: var(--amber2); }
+
+    /* Result copy-command block */
+    .cmd-block {
+      background: rgba(0,0,0,0.55); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem 1.2rem;
+      font-size: 0.72rem; color: var(--amber2);
+      text-align: left; margin: 1.5rem 0; position: relative;
+      overflow-x: auto; white-space: pre;
+    }
+    .cmd-label { font-size: 0.55rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.4rem; }
+    .copy-btn {
+      position: absolute; top: 0.6rem; right: 0.6rem;
+      background: var(--border); border: none; border-radius: 3px;
+      padding: 2px 8px; font-size: 0.56rem; color: var(--muted); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { background: var(--amber); color: var(--void); }
+
+    /* ── Guided steps (GitHub → local holonize) ─────────────────────── */
+    .guided-steps {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; text-align: left;
+    }
+    .guided-intro {
+      padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border);
+      font-size: 0.72rem; line-height: 1.65; color: var(--muted);
+    }
+    .guided-intro strong { color: var(--text); }
+    .guided-step {
+      display: flex; gap: 1rem; padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .guided-step:last-child { border-bottom: none; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border2); font-size: 0.6rem;
+      color: var(--amber); font-weight: 700; margin-top: 2px;
+    }
+    .step-num.done { background: var(--green); border-color: var(--green); color: var(--void); }
+    .step-body { flex: 1; min-width: 0; }
+    .step-title {
+      font-family: var(--sans); font-size: 0.82rem; font-weight: 700;
+      margin-bottom: 0.3rem; color: var(--text);
+    }
+    .step-desc { font-size: 0.66rem; color: var(--muted); margin-bottom: 0.75rem; line-height: 1.5; }
+    .step-cmd {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.55rem 0.85rem;
+      font-size: 0.7rem; color: var(--amber2); overflow-x: auto;
+    }
+    .step-cmd code { flex: 1; white-space: nowrap; }
+    .step-copy {
+      flex-shrink: 0; background: var(--border); border: none; border-radius: 3px;
+      padding: 3px 9px; font-size: 0.55rem; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; font-family: var(--mono);
+    }
+    .step-copy:hover { background: var(--amber); color: var(--void); }
+    .step-input-row { display: flex; gap: 0.5rem; align-items: stretch; }
+    .step-path-input {
+      flex: 1; background: rgba(0,0,0,0.45); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.65rem 0.9rem;
+      font-family: var(--mono); font-size: 0.75rem; color: var(--text);
+      transition: border-color 0.2s; min-width: 0;
+    }
+    .step-path-input::placeholder { color: var(--muted); }
+    .step-path-input:focus { outline: none; border-color: var(--amber); }
+    .step-path-hint { font-size: 0.58rem; color: var(--muted); margin-top: 0.35rem; }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+
+    /* Tablet / large phone ≤ 768px */
+    @media (max-width: 768px) {
+      /* Status bar — hide secondary nav links */
+      .sb-phase { display: none; }
+      .sb-nav-link { display: none; }
+      #status-bar { padding: 0.5rem 1rem; }
+
+      /* Hero */
+      section { padding: 4.5rem 1rem 3rem; }
+      section.compact { padding: 3rem 1rem; }
+
+      .portal-card { padding: 1.4rem 1.2rem; }
+
+      /* Stats: 3 → 2 cols */
+      .r-stats { grid-template-columns: 1fr 1fr; }
+
+      /* Path rail: horizontal scroll */
+      .path-rail { overflow-x: auto; padding-bottom: 3rem; gap: 0.5rem; flex-wrap: nowrap; }
+      .path-node { min-width: 60px; }
+
+      /* Tier grid: 5 → 3 cols */
+      .tier-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* Principles */
+      .principles { grid-template-columns: 1fr; }
+
+      /* Steps: stack the input row */
+      .step-input-row { flex-direction: column; }
+
+      /* Own action row: stack */
+      .own-action-row { flex-direction: column; align-items: flex-start; }
+      .own-verify-btn, .own-wallet-btn { width: 100%; justify-content: center; }
+
+      /* Growth */
+      .next-level-card { padding: 1rem; }
+    }
+
+    /* Small phone ≤ 480px */
+    @media (max-width: 480px) {
+      /* Status bar — keep only brand + active dot */
+      .sb-sep { display: none; }
+      .nav-galaxy-btn { font-size: 0.52rem; padding: 0.18rem 0.5rem; }
+
+      /* Hero card */
+      .portal-card { padding: 1.1rem 0.9rem; border-radius: 6px; }
+      .tab-btn { font-size: 0.55rem; padding: 0.4rem 0.65rem; }
+
+      /* Body legend wraps tightly */
+      .body-legend { gap: 0.3rem; }
+      .body-chip { font-size: 0.54rem; padding: 3px 7px; }
+
+      /* Scan terminal */
+      .terminal { padding: 0.9rem 1rem; font-size: 0.64rem; }
+
+      /* Result sphere — slightly smaller on very small screens */
+      .r-sphere.star       { width: 130px; height: 130px; }
+      .r-sphere.superstar  { width: 142px; height: 142px; }
+      .r-sphere.grandsuperstar { width: 150px; height: 150px; }
+      .r-sphere.planet     { width: 116px; height: 116px; }
+      .body-stage          { height: 170px; }
+
+      /* Stats: 3 → 2 cols, then wrap */
+      .r-stats { grid-template-columns: 1fr 1fr; }
+      .r-stat-val { font-size: 1.2rem; }
+
+      /* Path rail stays horizontal but smaller */
+      .path-node { min-width: 50px; }
+      .path-lbl  { font-size: 0.45rem; }
+
+      /* Tier grid: 5 → 2 cols */
+      .tier-grid { grid-template-columns: repeat(2, 1fr); gap: 0.35rem; }
+
+      /* CTA card */
+      .next-step-cta { padding: 1.2rem 1rem; }
+      .next-step-cta-sub { font-size: 0.75rem; }
+
+      /* CTA section */
+      .cta-inner { padding: 0 0.25rem; }
+
+      /* Holonize steps */
+      .own-cmd-row { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+      .own-copy-btn { align-self: flex-end; }
+
+      /* Growth headline */
+      .growth-sub { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="status-bar">
+    <span class="sb-brand">⬡ OASIS</span>
+    <span class="sb-sep">|</span>
+    <span class="sb-phase">HOLONIC PRE-CHECK</span>
+    <div class="sb-live" style="gap:1.2rem">
+      <a href="/import.html" class="sb-nav-link">↗ Import Portal</a>
+      <a href="/galaxy.html" class="nav-galaxy-btn">⬡ Galaxy View →</a>
+      <span style="display:flex;align-items:center;gap:5px;color:var(--amber2);font-size:0.62rem">
+        <span class="sb-dot"></span>ACTIVE
+      </span>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a href="/import.html">↗ Import Portal</a>
+    <a href="/galaxy.html" class="nav-galaxy-btn">⬡ Galaxy View →</a>
+  </nav>
+
+  <div class="page">
+
+    <!-- ═══════════════ SECTION 1: PORTAL ═══════════════ -->
+    <section id="portal">
+      <div class="section-n">01 — CELESTIAL CLASSIFICATION</div>
+
+      <p class="portal-eyebrow">⬡ OASIS Holonic Architecture</p>
+
+      <h1 class="portal-headline">
+        Where does your project<br>
+        <em>sit in the cosmos?</em>
+      </h1>
+
+      <p class="portal-sub">
+        Every application in OASIS lives somewhere in the holarchy — from Moon to GrandSuperStar.
+        Scan a GitHub repo, a live on-chain protocol, or a local codebase.
+      </p>
+
+      <!-- Body legend -->
+      <div class="body-legend">
+        <div class="body-chip"><span style="background:#b0b8cc"></span>Moon</div>
+        <div class="body-chip"><span style="background:#60c8ff"></span>Planet</div>
+        <div class="body-chip"><span style="background:#ffd050"></span>Star</div>
+        <div class="body-chip"><span style="background:#ffe080"></span>SuperStar</div>
+        <div class="body-chip"><span style="background:#a8c8ff"></span>GrandSuperStar</div>
+      </div>
+
+      <div class="portal-card">
+        <div class="input-tabs">
+          <button class="tab-btn active" data-tab="web3">◈ On-Chain</button>
+          <button class="tab-btn"        data-tab="github">⬡ GitHub</button>
+          <button class="tab-btn"        data-tab="local">⊟ Local Path</button>
+        </div>
+
+        <div id="tab-github" class="tab-pane">
+          <p class="field-label">Repository URL</p>
+          <input id="github-url" class="field-input"
+                 placeholder="https://github.com/owner/repo"
+                 autocomplete="off" spellcheck="false">
+          <p class="field-hint">Public repos only. We use the GitHub API — no auth needed.</p>
+          <button class="scan-btn" id="scan-github-btn" onclick="startScan('github')">
+            → Scan Project
+          </button>
+          <div class="error-msg" id="gh-error"></div>
+        </div>
+
+        <div id="tab-web3" class="tab-pane active">
+          <p class="field-label">Protocol, token, or contract address</p>
+          <input id="web3-input" class="field-input"
+                 placeholder="uniswap · eth · 0x1f9840..."
+                 autocomplete="off" spellcheck="false">
+          <p class="field-hint">We query DefiLlama and CoinGecko — fully public, no API key needed.</p>
+          <button class="scan-btn" id="scan-web3-btn" onclick="startScan('web3')">
+            → Scan On-Chain Data
+          </button>
+          <div class="error-msg" id="web3-error"></div>
+          <div class="examples" style="margin-top:1rem">
+            <p class="ex-label">Try an example:</p>
+            <div class="ex-chips">
+              <span class="ex-chip" onclick="fillWeb3('uniswap')">Uniswap</span>
+              <span class="ex-chip" onclick="fillWeb3('aave')">Aave</span>
+              <span class="ex-chip" onclick="fillWeb3('lido')">Lido</span>
+              <span class="ex-chip" onclick="fillWeb3('ethereum')">Ethereum</span>
+              <span class="ex-chip" onclick="fillWeb3('bitcoin')">Bitcoin</span>
+              <span class="ex-chip" onclick="fillWeb3('maker')">MakerDAO</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-local" class="tab-pane">
+          <p class="field-label">Absolute path on this machine</p>
+          <input id="local-path" class="field-input"
+                 placeholder="/path/to/your/project"
+                 autocomplete="off" spellcheck="false">
+          <p class="field-hint">Scanned server-side via the OASIS API at localhost:50564.</p>
+          <button class="scan-btn" id="scan-local-btn" onclick="startScan('local')">
+            → Scan Project
+          </button>
+          <div class="error-msg" id="local-error"></div>
+        </div>
+
+        <div class="examples" id="github-examples">
+          <p class="ex-label">Try an example:</p>
+          <div class="ex-chips" id="example-chips"></div>
+        </div>
+      </div>
+
+      <div class="scroll-hint">
+        <span class="r-scroll-arrow">↓</span>
+        <span>Scroll to explore the holarchy</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 2: SCAN ═══════════════ -->
+    <section id="scan-section" class="compact">
+      <div class="scan-inner">
+        <p class="scan-eyebrow">⬡ HOLONIC SCAN IN PROGRESS</p>
+        <div class="scan-orb-track">
+          <div class="scan-orb" id="scan-orb"></div>
+        </div>
+        <div class="terminal" id="terminal"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 3: RESULT ═══════════════ -->
+    <section id="result-section">
+      <div class="result-inner">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div class="section-n" style="margin-bottom:0">02 — CLASSIFICATION RESULT</div>
+          <button class="reset-btn" onclick="resetScan()">↺ Scan another</button>
+        </div>
+
+        <div class="body-stage" id="body-stage">
+          <div class="r-sphere" id="result-sphere"></div>
+        </div>
+
+        <p class="r-class-label" id="r-class-label">Projected Entry Tier</p>
+        <h2 class="r-name" id="r-name" style="color:var(--amber2)">—</h2>
+        <p class="r-repo" id="r-repo">—</p>
+        <p id="r-try-token" style="display:none;margin-bottom:0.6rem;font-size:0.6rem">
+          <span class="try-token-link" onclick="tryAsToken()">Not the right match? Try as token instead →</span>
+        </p>
+        <p class="r-sub" id="r-sub">Calculating...</p>
+
+        <div class="r-stats" id="r-stats"></div>
+
+        <div class="karma-callout" id="karma-callout">
+          <p class="karma-callout-head">★ Karma prerequisite</p>
+          <p class="karma-callout-body" id="karma-callout-body">
+            This is your <strong>projected entry tier</strong> based on data gravity alone.
+            To hold this position in the OASIS holarchy, your builders' Avatar must also meet
+            the Karma threshold — earned through contributions, quests, and ecosystem participation.
+          </p>
+          <div class="karma-req-row">
+            <span>Karma required to enter at this tier:</span>
+            <span class="karma-req-badge" id="karma-req-badge">—</span>
+          </div>
+        </div>
+
+        <div class="r-meaning">
+          <p class="r-meaning-head">What this means in OASIS</p>
+          <p class="r-meaning-para" id="r-meaning"></p>
+        </div>
+
+        <ul class="r-benefits" id="r-benefits"></ul>
+
+        <div class="next-step-cta" onclick="showGrowth()">
+          <span class="next-step-cta-eyebrow">Next Step</span>
+          <span class="next-step-cta-label">Chart your ascent</span>
+          <span class="next-step-cta-sub">See exactly what it takes to reach the next tier — and beyond</span>
+          <span class="next-step-cta-arrow">↓</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 4: GROWTH PATH ═══════════════ -->
+    <section id="growth-section">
+      <div class="growth-inner">
+        <div class="section-n">03 — GROWTH PATH</div>
+        <h2 class="growth-headline">The path from <em style="font-family:var(--serif);font-style:italic;color:var(--amber2);text-transform:none;font-size:0.88em;letter-spacing:0">here</em> to star.</h2>
+        <p class="growth-sub">OASIS gamifies your project's growth. As your codebase expands and your community grows, your holonic body evolves.</p>
+
+        <!-- Rail -->
+        <div class="path-rail" id="path-rail">
+          <div class="path-bg-line"></div>
+          <div class="path-fill-line" id="path-fill" style="width:0%"></div>
+          <!-- nodes injected by JS -->
+        </div>
+
+        <!-- Next level card -->
+        <div class="next-level-card" id="next-level-card" style="display:none">
+          <p class="nlc-head">Your next milestone</p>
+          <p class="nlc-title" id="nlc-title">—</p>
+          <div class="nlc-metrics" id="nlc-metrics"></div>
+        </div>
+
+        <!-- Tier reference grid -->
+        <div class="tier-grid" id="tier-grid"></div>
+
+        <div class="next-step-cta" onclick="showCta()">
+          <span class="next-step-cta-eyebrow">You're ready</span>
+          <span class="next-step-cta-label">Enter the Omniverse</span>
+          <span class="next-step-cta-sub">Holonize your project and claim your place in the OASIS holarchy</span>
+          <span class="next-step-cta-arrow">↓</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ SECTION 5: HOLONIZE CTA ═══════════════ -->
+    <section id="cta-section">
+      <div class="cta-inner">
+        <div class="section-n">04 — ENTER THE OMNIVERSE</div>
+        <p class="cta-eyebrow">⬡ OASIS Holonization</p>
+        <h2 class="cta-headline">Enter the <em style="font-style:italic;color:var(--amber2)">Omniverse.</em></h2>
+        <p class="cta-sub" id="cta-sub">
+          Holonization stores every file as an IHolon — a universal data object with cross-chain portability,
+          version history, and provider-agnostic identity.
+        </p>
+
+        <div class="principles">
+          <div class="p-card">
+            <p class="p-num">01 — IDENTITY</p>
+            <p class="p-title">One universal ID</p>
+            <p class="p-desc">Every holon carries a GUID, audit trail, and provider-agnostic storage key. Move between Ethereum, IPFS, and MongoDB — zero data loss.</p>
+          </div>
+          <div class="p-card">
+            <p class="p-num">02 — HIERARCHY</p>
+            <p class="p-title">Holons nest infinitely</p>
+            <p class="p-desc">Your project becomes a Planet containing Moons containing Zomes. Every level maps to real code structure — folders, modules, files.</p>
+          </div>
+          <div class="p-card">
+            <p class="p-num">03 — PORTABILITY</p>
+            <p class="p-title">Every provider, one API</p>
+            <p class="p-desc">IOASISStorageProvider means your holons run on any backend. No lock-in. Auto-failover and replication built-in.</p>
+          </div>
+          <div class="p-card">
+            <p class="p-num">04 — KARMA</p>
+            <p class="p-title">Reputation travels with you</p>
+            <p class="p-desc">Builders accumulate karma across every OASIS app. Contribute once, earn everywhere in the ecosystem.</p>
+          </div>
+        </div>
+
+        <!-- Ownership verification gate -->
+        <div id="ownership-verify"></div>
+
+        <!-- Holonize button — revealed after ownership confirmed -->
+        <div id="cta-action" style="display:none"></div>
+
+        <div class="cta-links">
+          <a href="/galaxy.html" class="cta-link">↗ Open the Omniverse</a>
+          <a href="https://github.com/NextGenSoftwareUK/Our-World-OASIS-API-HoloNET-HoloUnity-And-Other-Managers" target="_blank" class="cta-link">↗ GitHub Repository</a>
+          <a href="https://hessmeister.github.io/oasis-holonic-staging/" target="_blank" class="cta-link">↗ Architecture Docs</a>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page -->
+
+  <script type="importmap">{"imports":{"three":"https://esm.sh/three@0.160.0"}}</script>
+  <script type="module">
+    import * as THREE from 'three';
+
+    // ── Starfield ──────────────────────────────────────────────────────────────
+    const canvas  = document.getElementById('bg-canvas');
+    const scene   = new THREE.Scene();
+    const camera  = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+    const renderer= new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    renderer.setSize(innerWidth, innerHeight);
+    camera.position.z = 1;
+
+    const starGeo = new THREE.BufferGeometry();
+    const N = 7000;
+    const positions = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      positions[i*3]   = (Math.random()-0.5) * 200;
+      positions[i*3+1] = (Math.random()-0.5) * 200;
+      positions[i*3+2] = (Math.random()-0.5) * 200;
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const starMat = new THREE.PointsMaterial({ color: 0xe8d8c4, size: 0.12, transparent: true, opacity: 0.55 });
+    scene.add(new THREE.Points(starGeo, starMat));
+
+    function animate() {
+      requestAnimationFrame(animate);
+      scene.rotation.y += 0.00008;
+      scene.rotation.x += 0.000035;
+      renderer.render(scene, camera);
+    }
+    animate();
+    window.addEventListener('resize', () => {
+      camera.aspect = innerWidth/innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    // ── Tab switching ──────────────────────────────────────────────────────────
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+        activeTab = tab;
+        // Show/hide github examples section
+        const ghEx = document.getElementById('github-examples');
+        if (ghEx) ghEx.style.display = tab === 'github' ? 'block' : 'none';
+      });
+    });
+
+    // ── Web3 example fill ──────────────────────────────────────────────────────
+    window.fillWeb3 = (val) => {
+      document.getElementById('web3-input').value = val;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelector('[data-tab="web3"]').classList.add('active');
+      document.getElementById('tab-web3').classList.add('active');
+      const ghEx = document.getElementById('github-examples');
+      if (ghEx) ghEx.style.display = 'none';
+      activeTab = 'web3';
+    };
+
+    // ── Example chips ──────────────────────────────────────────────────────────
+    const EXAMPLES = [
+      { label: 'OASIS',        url: 'https://github.com/NextGenSoftwareUK/OASIS' },
+      { label: 'React',        url: 'https://github.com/facebook/react' },
+      { label: 'Tailwind CSS', url: 'https://github.com/tailwindlabs/tailwindcss' },
+      { label: 'Ethereum',     url: 'https://github.com/ethereum/go-ethereum' },
+      { label: 'Holochain',    url: 'https://github.com/holochain/holochain' },
+    ];
+    const chipWrap = document.getElementById('example-chips');
+    EXAMPLES.forEach(ex => {
+      const c = document.createElement('span');
+      c.className = 'ex-chip'; c.textContent = ex.label;
+      c.onclick = () => {
+        document.getElementById('github-url').value = ex.url;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelector('[data-tab="github"]').classList.add('active');
+        document.getElementById('tab-github').classList.add('active');
+        activeTab = 'github';
+      };
+      chipWrap.appendChild(c);
+    });
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    let activeTab = 'web3';
+    let scanResult = null;
+
+    // ── Classification constants ───────────────────────────────────────────────
+    const TIERS = [
+      { key: 'moon',      label: 'Moon',      col: '#b0b8cc', size: 20,
+        minFiles: 0,     minLoc: 0,       minTvl: 0,              minMcap: 0,
+        maxFiles: 100,   maxLoc: 5000,    maxTvl: 1e6,            maxMcap: 10e6,
+        minKarma: 0,
+        desc: 'Small, self-contained app or micro-service. Every OAPP starts life as a Moon.' },
+      { key: 'planet',    label: 'Planet',    col: '#60c8ff', size: 28,
+        minFiles: 100,   minLoc: 5000,    minTvl: 1e6,            minMcap: 10e6,
+        maxFiles: 1000,  maxLoc: 50000,   maxTvl: 100e6,          maxMcap: 1e9,
+        minKarma: 100,
+        desc: 'Major module with real weight. Independently deployable with its own ecosystem.' },
+      { key: 'star',      label: 'Star',      col: '#ffd050', size: 36,
+        minFiles: 1000,  minLoc: 50000,   minTvl: 100e6,          minMcap: 1e9,
+        maxFiles: 5000,  maxLoc: 200000,  maxTvl: 5e9,            maxMcap: 50e9,
+        minKarma: 500,
+        desc: 'Top-level platform — a full OAPP with its own ecosystem of Planets and Moons.' },
+      { key: 'superstar', label: 'SuperStar', col: '#ffe080', size: 40,
+        minFiles: 5000,  minLoc: 200000,  minTvl: 5e9,            minMcap: 50e9,
+        maxFiles: 15000, maxLoc: 750000,  maxTvl: 50e9,           maxMcap: 500e9,
+        minKarma: 2000,
+        desc: 'A mature, multi-domain platform with significant community and on-chain gravity.' },
+      { key: 'grandsuperstar', label: 'GrandSuperStar', col: '#a8c8ff', size: 44,
+        minFiles: 15000, minLoc: 750000,  minTvl: 50e9,           minMcap: 500e9,
+        maxFiles: Infinity, maxLoc: Infinity, maxTvl: Infinity,   maxMcap: Infinity,
+        minKarma: 10000,
+        desc: 'Galactic-scale infrastructure. A universe-level system spanning all providers.' },
+    ];
+
+    function classifyFromMetrics(files, loc) {
+      if (files < 100  || loc < 5000)    return 'moon';
+      if (files < 1000 || loc < 50000)   return 'planet';
+      if (files < 5000 || loc < 200000)  return 'star';
+      if (files < 15000|| loc < 750000)  return 'superstar';
+      return 'grandsuperstar';
+    }
+
+    function classifyWeb3(tvl, mcap) {
+      const primary = (tvl > 0 ? tvl : 0) + (mcap > 0 ? mcap * 0.1 : 0); // TVL dominates; mcap is supplementary
+      const mcapOnly = mcap || 0;
+      // Use TVL when available (more meaningful), fall back to market cap
+      const metric = tvl > 0 ? tvl : mcapOnly;
+      if (metric >= 50e9)  return 'grandsuperstar';
+      if (metric >= 5e9)   return 'superstar';
+      if (metric >= 100e6) return 'star';
+      if (metric >= 1e6)   return 'planet';
+      return 'moon';
+    }
+
+    // Format large dollar amounts
+    function fmtUsd(n) {
+      if (!n || n === 0) return '—';
+      if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+      if (n >= 1e9)  return '$' + (n/1e9).toFixed(2)  + 'B';
+      if (n >= 1e6)  return '$' + (n/1e6).toFixed(1)  + 'M';
+      if (n >= 1e3)  return '$' + (n/1e3).toFixed(1)  + 'K';
+      return '$' + Math.round(n);
+    }
+    function fmtNum(n) {
+      if (!n) return '—';
+      if (n >= 1e9) return (n/1e9).toFixed(1) + 'B';
+      if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+      return String(Math.round(n));
+    }
+
+    function tierByKey(key) { return TIERS.find(t => t.key === key); }
+
+    // ── GitHub scan ────────────────────────────────────────────────────────────
+    async function scanGitHub(rawUrl) {
+      const m = rawUrl.match(/github\.com\/([^/\s]+)\/([^/\s#?]+)/);
+      if (!m) throw new Error('Could not parse a GitHub repo URL. Format: https://github.com/owner/repo');
+      const [, owner, repo] = m;
+      const repoName = repo.replace(/\.git$/, '');
+
+      termLine(`<span class="t-dim">[INIT]</span> Connecting to GitHub API...`);
+      await delay(500);
+
+      const headers = { Accept: 'application/vnd.github.v3+json' };
+      const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, { headers });
+      if (!repoRes.ok) throw new Error(`GitHub API returned ${repoRes.status}. Is this a public repo?`);
+      const r = await repoRes.json();
+      termLine(`<span class="t-ok">[✓]</span> Repository found: <span class="t-val">${r.full_name}</span>`);
+      await delay(400);
+
+      termLine(`<span class="t-dim">[FETCH]</span> Querying contributor data...`);
+      const contribRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}/contributors?per_page=100&anon=true`, { headers });
+      const contribs = contribRes.ok ? await contribRes.json() : [];
+      const contribCount = Array.isArray(contribs) ? contribs.length : 0;
+      termLine(`<span class="t-ok">[✓]</span> Contributors detected: <span class="t-val">${contribCount > 0 ? contribCount + (contribCount === 100 ? '+' : '') : '—'}</span>`);
+      await delay(400);
+
+      // Estimate file/LOC counts from GitHub's size (KB)
+      // GitHub size ≈ working-tree disk usage. ~3 KB/file avg, ~30 LOC/KB
+      const sizeKb     = r.size || 1;
+      const estFiles   = Math.max(1, Math.round(sizeKb / 3.2));
+      const estLoc     = Math.round(sizeKb * 28);
+
+      termLine(`<span class="t-dim">[ANALYZE]</span> Estimating codebase dimensions...`);
+      await delay(500);
+      termLine(`<span class="t-dim">         </span> Repo size: <span class="t-val">${sizeKb > 1024 ? (sizeKb/1024).toFixed(1)+' MB' : sizeKb+' KB'}</span> · Est. files: <span class="t-val">${estFiles.toLocaleString()}</span> · Est. LOC: <span class="t-val">${estLoc.toLocaleString()}</span>`);
+      await delay(600);
+
+      termLine(`<span class="t-dim">[CLASSIFY]</span> Applying OASIS celestial hierarchy...`);
+      await delay(700);
+
+      const bodyType = classifyFromMetrics(estFiles, estLoc);
+      const tier = tierByKey(bodyType);
+      termLine(`<span class="t-ok">[✓ CLASSIFIED]</span> <span class="t-val">${tier.label.toUpperCase()}</span> — ${tier.desc.substring(0,60)}...`);
+      await delay(300);
+
+      return {
+        source:    'github',
+        name:      r.full_name,
+        shortName: r.name,
+        desc:      r.description || 'No description provided.',
+        language:  r.language || 'Unknown',
+        stars:     r.stargazers_count,
+        forks:     r.forks_count,
+        sizeKb,
+        estFiles,
+        estLoc,
+        contribCount,
+        bodyType,
+        gitRemote: r.html_url,
+        topics:    r.topics || [],
+        openIssues: r.open_issues_count,
+        isEstimate: true,
+        createdAt: r.created_at,
+        pushedAt:  r.pushed_at,
+      };
+    }
+
+    // ── Local path scan ────────────────────────────────────────────────────────
+    async function scanLocal(path) {
+      termLine(`<span class="t-dim">[INIT]</span> Connecting to OASIS API at localhost:50564...`);
+      await delay(500);
+
+      const projectName = path.split('/').filter(Boolean).pop() || 'Project';
+
+      termLine(`<span class="t-dim">[SCAN]</span> Running filesystem holonizer (dry-run)...`);
+
+      const res = await fetch('/api/holonize/filesystem', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path, projectName, dryRun: true }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || `API returned ${res.status}. Check the path exists.`);
+      }
+      const data = await res.json();
+      const gme  = data.result?.galaxyMapEntry;
+      const stats= data.result?.stats || {};
+      termLine(`<span class="t-ok">[✓]</span> Scan complete — <span class="t-val">${(stats.totalFiles||0).toLocaleString()} files</span>, <span class="t-val">${(stats.totalLinesOfCode||0).toLocaleString()} LOC</span>`);
+      await delay(400);
+
+      termLine(`<span class="t-dim">[CLASSIFY]</span> Applying OASIS celestial hierarchy...`);
+      await delay(600);
+      const bodyType = gme?.bodyType || 'moon';
+      const tier = tierByKey(bodyType);
+      termLine(`<span class="t-ok">[✓ CLASSIFIED]</span> <span class="t-val">${tier.label.toUpperCase()}</span>`);
+      await delay(300);
+
+      return {
+        source:    'local',
+        name:      projectName,
+        shortName: projectName,
+        desc:      gme?.desc || stats.sizeLabel || '',
+        language:  stats.primaryLanguage || 'Unknown',
+        stars:     null,
+        forks:     null,
+        sizeKb:    Math.round((stats.totalSizeBytes || 0) / 1024),
+        estFiles:  stats.totalFiles || 0,
+        estLoc:    stats.totalLinesOfCode || 0,
+        contribCount: (data.result?.galaxyMapEntry?.contributors || []).length,
+        bodyType,
+        gitRemote: stats.gitRemoteUrl || null,
+        topics:    [],
+        isEstimate:false,
+        localPath: path,
+      };
+    }
+
+    // ── Terminal helpers ───────────────────────────────────────────────────────
+    function termLine(html) {
+      const term = document.getElementById('terminal');
+      const line = document.createElement('div');
+      line.className = 't-line';
+      line.innerHTML = html;
+      term.appendChild(line);
+      requestAnimationFrame(() => line.classList.add('vis'));
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ── Web3 scan ──────────────────────────────────────────────────────────────
+    async function scanWeb3(raw) {
+      const input = raw.trim();
+      const isAddress = /^0x[0-9a-fA-F]{40}$/.test(input);
+      const clean = input.toLowerCase().replace(/^\$/, '');
+
+      termLine(`<span class="t-dim">[INIT]</span> ${isAddress ? 'Contract address detected' : 'Searching on-chain data sources'}...`);
+      await delay(400);
+
+      let result = null;
+
+      // ── 1. DefiLlama (best for DeFi protocols) ────────────────────────────
+      termLine(`<span class="t-dim">[DEFILLAMA]</span> Querying DeFi protocol registry...`);
+      await delay(300);
+      try {
+        const protocols = await fetch('https://api.llama.fi/protocols').then(r => r.json());
+        // Prefer exact slug/name match; only fall back to startsWith if nothing exact found
+        const found = protocols.find(p => {
+          const n = (p.name || '').toLowerCase();
+          const s = (p.slug || '').toLowerCase();
+          return s === clean || n === clean;
+        }) || protocols.find(p => {
+          const n = (p.name || '').toLowerCase();
+          const s = (p.slug || '').toLowerCase();
+          return s.startsWith(clean + '-') || n.startsWith(clean + ' ');
+        });
+
+        if (found) {
+          termLine(`<span class="t-ok">[✓]</span> Protocol found: <span class="t-val">${found.name}</span> — fetching details...`);
+          const detail = await fetch(`https://api.llama.fi/protocol/${found.slug}`).then(r => r.json());
+
+          const tvl    = found.tvl || 0;
+          const chains = Object.keys(detail.currentChainTvls || {})
+                               .filter(c => !c.includes('-') && !c.includes('staking') && !c.includes('pool'));
+          const mcap   = found.mcap || null;
+
+          termLine(`<span class="t-dim">           </span> TVL: <span class="t-val">${fmtUsd(tvl)}</span> · Chains: <span class="t-val">${chains.slice(0,5).join(', ')}${chains.length > 5 ? ` +${chains.length-5} more` : ''}</span>`);
+          if (mcap) termLine(`<span class="t-dim">           </span> Market cap: <span class="t-val">${fmtUsd(mcap)}</span>`);
+
+          result = {
+            source: 'web3', scanType: 'defi',
+            name: found.name, shortName: found.name,
+            desc: detail.description || `${found.name} — ${found.category || 'DeFi protocol'}`,
+            tvl, mcap, chains, chainCount: chains.length,
+            category: found.category || 'DeFi',
+            url: found.url || null, twitter: found.twitter || null,
+            logo: found.logo || null,
+            bodyType: classifyWeb3(tvl, mcap),
+          };
+        }
+      } catch (_) { /* fall through */ }
+
+      // ── 2. CoinGecko (tokens + wider coverage) ────────────────────────────
+      if (!result) {
+        termLine(`<span class="t-dim">[COINGECKO]</span> Searching token registry...`);
+        await delay(300);
+        try {
+          const search = await fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(clean)}`).then(r => r.json());
+          const coin   = search.coins?.[0];
+          if (coin) {
+            const detail = await fetch(
+              `https://api.coingecko.com/api/v3/coins/${coin.id}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false`
+            ).then(r => r.json());
+
+            const mcap      = detail.market_data?.market_cap?.usd || 0;
+            const vol24h    = detail.market_data?.total_volume?.usd || 0;
+            const supply    = detail.market_data?.circulating_supply || null;
+            const twitter   = detail.community_data?.twitter_followers || null;
+            const reddit    = detail.community_data?.reddit_subscribers || null;
+            const platforms = detail.platforms ? Object.keys(detail.platforms).filter(Boolean) : [];
+
+            termLine(`<span class="t-ok">[✓]</span> Token found: <span class="t-val">${detail.name}</span> (${(detail.symbol||'').toUpperCase()})`);
+            termLine(`<span class="t-dim">           </span> Market cap: <span class="t-val">${fmtUsd(mcap)}</span> · 24h volume: <span class="t-val">${fmtUsd(vol24h)}</span>`);
+            if (twitter) termLine(`<span class="t-dim">           </span> Twitter: <span class="t-val">${fmtNum(twitter)} followers</span>${reddit ? ` · Reddit: <span class="t-val">${fmtNum(reddit)} members</span>` : ''}`);
+
+            const plainDesc = (detail.description?.en || '').replace(/<[^>]+>/g,'').split('\r\n')[0].slice(0, 200);
+            result = {
+              source: 'web3', scanType: 'token',
+              name: detail.name, shortName: (detail.symbol||detail.name).toUpperCase(),
+              desc: plainDesc || `${detail.name} — cryptocurrency`,
+              tvl: null, mcap, vol24h, supply,
+              chains: platforms, chainCount: platforms.length || 1,
+              category: 'Token',
+              twitter, reddit,
+              logo: detail.image?.large || null,
+              url: detail.links?.homepage?.[0] || null,
+              bodyType: classifyWeb3(0, mcap),
+            };
+          }
+        } catch (_) { /* fall through */ }
+      }
+
+      if (!result) {
+        throw new Error(
+          `"${input}" not found on DefiLlama or CoinGecko. Try the full protocol name (e.g. "uniswap", "aave") or a token name/symbol (e.g. "ethereum", "eth", "bitcoin").`
+        );
+      }
+
+      termLine(`<span class="t-dim">[CLASSIFY]</span> Applying OASIS celestial hierarchy...`);
+      await delay(700);
+      const tier = tierByKey(result.bodyType);
+      termLine(`<span class="t-ok">[✓ CLASSIFIED]</span> <span class="t-val">${tier.label.toUpperCase()}</span> — ${tier.desc.slice(0, 65)}...`);
+      return result;
+    }
+
+    // ── MAIN SCAN ENTRY ────────────────────────────────────────────────────────
+    window.startScan = async function(mode) {
+      const inputEl = mode === 'github' ? 'github-url' : mode === 'web3' ? 'web3-input' : 'local-path';
+      const errId   = mode === 'github' ? 'gh-error'   : mode === 'web3' ? 'web3-error' : 'local-error';
+      const input   = document.getElementById(inputEl).value.trim();
+      const errEl   = document.getElementById(errId);
+      errEl.style.display = 'none';
+
+      if (!input) {
+        errEl.textContent = mode === 'github' ? 'Please enter a GitHub URL.'
+                          : mode === 'web3'   ? 'Please enter a protocol name, token symbol, or contract address.'
+                                              : 'Please enter a local path.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      document.querySelectorAll('.scan-btn').forEach(b => b.disabled = true);
+
+      const scanSec = document.getElementById('scan-section');
+      document.getElementById('terminal').innerHTML = '';
+      scanSec.classList.add('show');
+      scanSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await delay(400);
+
+      try {
+        scanResult = mode === 'github' ? await scanGitHub(input)
+                   : mode === 'web3'   ? await scanWeb3(input)
+                                       : await scanLocal(input);
+        await delay(400);
+        termLine(`<span class="t-ok">[COMPLETE]</span> Classification resolved. Rendering result...`);
+        await delay(800);
+        renderResult(scanResult);
+      } catch (err) {
+        termLine(`<span style="color:#ff8888">[ERROR]</span> ${err.message}`);
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+        document.querySelectorAll('.scan-btn').forEach(b => b.disabled = false);
+      }
+    };
+
+    // ── Render result ──────────────────────────────────────────────────────────
+    function renderResult(d) {
+      const tier = tierByKey(d.bodyType);
+      const color = tier.col;
+
+      // Sphere
+      const stageEl  = document.getElementById('body-stage');
+      const sphereEl = document.getElementById('result-sphere');
+      stageEl.className = 'body-stage ' + d.bodyType;
+      sphereEl.className = 'r-sphere ' + d.bodyType;
+
+      // Labels
+      document.getElementById('r-class-label').textContent = `Projected Entry Tier — OASIS ${tier.label}`;
+      const nameEl = document.getElementById('r-name');
+      nameEl.textContent = tier.label;
+      nameEl.style.color = color;
+      document.getElementById('r-repo').textContent = d.name;
+      document.getElementById('r-sub').textContent = d.desc || tier.desc;
+
+      // Show "try as token" hint only for DefiLlama-matched results
+      document.getElementById('r-try-token').style.display =
+        (d.source === 'web3' && d.scanType === 'defi') ? 'block' : 'none';
+
+      // Karma callout
+      const karmaNeeded = tier.minKarma || 0;
+      document.getElementById('karma-req-badge').textContent =
+        karmaNeeded === 0 ? 'None (entry level)' : `${karmaNeeded.toLocaleString()} karma pts`;
+      document.getElementById('karma-callout-body').innerHTML =
+        `This is your <strong>projected entry tier</strong> based on ${d.source === 'web3' ? 'on-chain data gravity' : 'codebase metrics'} alone.
+        To hold this position in the OASIS holarchy, your builders' Avatar must also meet
+        the Karma threshold — earned through contributions, quests, and ecosystem participation.
+        <br><br>Karma is immutable and travels with your Avatar across every OASIS application.`;
+
+      // Stats — different tiles for web3 vs code scans
+      let stats;
+      if (d.source === 'web3') {
+        const primary = d.scanType === 'defi'
+          ? { val: fmtUsd(d.tvl),  lbl: 'Total Value Locked', col: color }
+          : { val: fmtUsd(d.mcap), lbl: 'Market Cap',         col: color };
+        const secondary = d.mcap && d.scanType === 'defi'
+          ? { val: fmtUsd(d.mcap),              lbl: 'Token Market Cap',    col: 'var(--amber2)' }
+          : { val: fmtUsd(d.vol24h),             lbl: '24h Volume',         col: 'var(--amber2)' };
+        const tertiary  = d.chainCount > 0
+          ? { val: d.chainCount,                  lbl: 'Chains',             col: 'var(--green)' }
+          : { val: fmtNum(d.twitter) || '—',      lbl: 'Twitter Followers',  col: 'var(--green)' };
+        stats = [primary, secondary, tertiary];
+      } else {
+        const fmt = n => n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n);
+        stats = [
+          { val: d.isEstimate ? '~'+fmt(d.estLoc)   : fmt(d.estLoc),   lbl: 'Lines of Code' + (d.isEstimate?' est.':''), col: color },
+          { val: d.isEstimate ? '~'+fmt(d.estFiles)  : fmt(d.estFiles), lbl: 'Files' + (d.isEstimate?' est.':''),         col: 'var(--amber2)' },
+          { val: d.contribCount > 0 ? d.contribCount+(d.contribCount===100?'+':'') : '—', lbl: 'Contributors', col: 'var(--green)' },
+        ];
+      }
+      document.getElementById('r-stats').innerHTML = stats.map(s =>
+        `<div class="r-stat"><span class="r-stat-val" style="color:${s.col}">${s.val}</span><span class="r-stat-lbl">${s.lbl}</span></div>`
+      ).join('');
+
+      // Meaning paragraph — web3 and code variants
+      const meaningsCode = {
+        moon:      `In OASIS, a <strong style="color:${color}">Moon</strong> is the atomic building block — a self-contained micro-service or micro-app that orbits a larger Planet. It's small today, but every major OAPP started here. Your holons are already being minted.`,
+        planet:    `A <strong style="color:${color}">Planet</strong> is a major module with real weight. In OASIS, Planets host Moons and are themselves hosted by Stars. Your codebase has enough mass to be a meaningful node in the holarchy — independently deployable, with its own children.`,
+        star:      `A <strong style="color:${color}">Star</strong> is a top-level OAPP — a platform in its own right. Your project is large enough to anchor an entire ecosystem. In OASIS, Stars contain Planets and Moons and emit karma to every builder who touches them.`,
+        superstar: `A <strong style="color:${color}">SuperStar</strong> is a mature, multi-domain platform with significant community pull. Only major open source projects reach this tier. Your holons span a vast provider network — replicating across chains and databases simultaneously.`,
+        grandsuperstar: `A <strong style="color:${color}">GrandSuperStar</strong> is galactic-scale infrastructure. Your project is among the largest in any holarchy. You host entire ecosystems inside your holon tree, and your karma radiates across every OASIS application on every provider.`,
+      };
+      const meaningsWeb3 = {
+        moon:      `Every GrandSuperStar was once a Moon. This protocol is early — but it's on-chain, verifiable, and permanent. In OASIS, its smart contracts become holons: portable identities that will follow it as it grows.`,
+        planet:    `Real on-chain gravity. A <strong style="color:${color}">Planet</strong> in OASIS carries enough economic mass to orbit larger protocols while hosting its own Moons. Builders who contribute here earn karma that travels with them across the entire ecosystem.`,
+        star:      `Hundreds of millions locked — this is trusted infrastructure. A <strong style="color:${color}">Star</strong> in OASIS anchors an ecosystem. Its contracts become canonical holons: composable, portable, and visible to every application that speaks OASIS.`,
+        superstar: `Billions on-chain. A <strong style="color:${color}">SuperStar</strong> is foundational to the chains it runs on. In OASIS, it emits karma to every protocol that integrates with it, and its identity is replicated across every provider in the network.`,
+        grandsuperstar: `This is the infrastructure. A <strong style="color:${color}">GrandSuperStar</strong> at this scale defines entire categories of finance and ownership. In the OASIS Omniverse, it sits at the centre of its own solar system — other protocols orbit it.`,
+      };
+      const meanings = d.source === 'web3' ? meaningsWeb3 : meaningsCode;
+      document.getElementById('r-meaning').innerHTML = meanings[d.bodyType];
+
+      // Benefits
+      const codeBenefits = [
+        { icon:'⬡', title:'Holonic Identity',            desc:'Every file becomes an IHolon with a GUID, version history, and cross-chain portability.' },
+        { icon:'⟳', title:'Auto-Failover & Replication', desc:'Write to any provider; OASIS replicates and fails over automatically. No downtime.' },
+        { icon:'★', title:'Karma System',                desc:'Builder contributions are tracked and rewarded across every OASIS application.' },
+        { icon:'⬡', title:'Enter the Omniverse',         desc:'Your project appears as a '+tier.label+' in the live 3D Omniverse — visible to every builder in the ecosystem.' },
+      ];
+      if (d.stars) codeBenefits.unshift({ icon:'◎', title:'Community Signal', desc:`${d.stars.toLocaleString()} GitHub stars → strong karma score from day one.` });
+
+      const web3Benefits = [
+        { icon:'◈', title:'On-Chain Identity as Holons',    desc:'Every smart contract gets a holonic identity — a universal GUID that works across every chain OASIS supports.' },
+        { icon:'⟳', title:'Cross-Chain Portability',        desc:'Your protocol\'s state can replicate across Ethereum, Solana, Polygon and more — no re-deployment needed.' },
+        { icon:'★', title:'Protocol Karma',                  desc:`${tier.label}s emit karma to every wallet and builder that interacts with them. Reputation that travels across the whole OASIS ecosystem.` },
+        { icon:'⬡', title:'Live in the Omniverse',           desc:`Your protocol appears as a glowing ${tier.label} in the Celestial Cyberspace — a real-time representation of its on-chain gravity.` },
+      ];
+      if (d.chains?.length > 1) web3Benefits.push({ icon:'◎', title:'Multi-Chain Verified', desc:`Deployed across ${d.chains.slice(0,4).join(', ')} — each chain a separate OASIS provider node.` });
+
+      const allBenefits = d.source === 'web3' ? web3Benefits : codeBenefits;
+      document.getElementById('r-benefits').innerHTML = allBenefits.map(b =>
+        `<li class="r-ben"><span class="r-ben-icon">${b.icon}</span><div><span class="r-ben-title">${b.title}</span><span class="r-ben-desc">— ${b.desc}</span></div></li>`
+      ).join('');
+
+      // Show result section
+      const sec = document.getElementById('result-section');
+      sec.classList.add('show');
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── Show growth section ────────────────────────────────────────────────────
+    window.showGrowth = function() {
+      if (!scanResult) return;
+      const d = scanResult;
+      const currentIdx = TIERS.findIndex(t => t.key === d.bodyType);
+
+      // Path rail nodes
+      const rail = document.getElementById('path-rail');
+      // Remove old nodes
+      rail.querySelectorAll('.path-node').forEach(n => n.remove());
+
+      TIERS.forEach((tier, i) => {
+        const node = document.createElement('div');
+        node.className = 'path-node';
+        const status = i < currentIdx ? 'reached' : i === currentIdx ? 'current' : 'locked';
+        const sz = tier.size;
+        const sphereStyle = tierSphereStyle(tier.key, sz);
+        node.innerHTML = `
+          <div class="path-sphere ${status}" style="width:${sz}px;height:${sz}px;${sphereStyle}"></div>
+          <div class="path-lbl ${status}">${tier.label}</div>`;
+        rail.appendChild(node);
+      });
+
+      // Fill bar (% to show current position)
+      const fillPct = currentIdx === 0 ? 0 :
+                      currentIdx === TIERS.length-1 ? 100 :
+                      (currentIdx / (TIERS.length - 1)) * 100;
+      setTimeout(() => { document.getElementById('path-fill').style.width = fillPct + '%'; }, 400);
+
+      // Next-level card
+      const nextTier = TIERS[currentIdx + 1];
+      if (nextTier) {
+        const card = document.getElementById('next-level-card');
+        card.style.display = 'block';
+        document.getElementById('nlc-title').textContent = `Reach ${nextTier.label}`;
+
+        let metricsHtml = '';
+        let bars = [];
+
+        if (d.source === 'web3') {
+          if (d.tvl > 0) {
+            const pct = Math.min(100, Math.round((d.tvl / nextTier.minTvl) * 100));
+            metricsHtml += `
+              <div class="nlc-metric">
+                <div class="nlc-metric-label"><span>Total Value Locked</span><span>${fmtUsd(d.tvl)} / ${fmtUsd(nextTier.minTvl)}</span></div>
+                <div class="nlc-bar"><div class="nlc-bar-fill" id="nlc-tvl-bar" style="width:0%"></div></div>
+              </div>`;
+            bars.push({ id: 'nlc-tvl-bar', pct });
+          }
+          if (d.mcap > 0) {
+            const pct = Math.min(100, Math.round((d.mcap / nextTier.minMcap) * 100));
+            metricsHtml += `
+              <div class="nlc-metric" style="margin-top:0.5rem">
+                <div class="nlc-metric-label"><span>Market Cap</span><span>${fmtUsd(d.mcap)} / ${fmtUsd(nextTier.minMcap)}</span></div>
+                <div class="nlc-bar"><div class="nlc-bar-fill" id="nlc-mcap-bar" style="width:0%"></div></div>
+              </div>`;
+            bars.push({ id: 'nlc-mcap-bar', pct });
+          }
+        } else {
+          const locPct  = Math.min(100, Math.round((d.estLoc   / nextTier.minLoc)   * 100));
+          const filePct = Math.min(100, Math.round((d.estFiles / nextTier.minFiles) * 100));
+          metricsHtml = `
+            <div class="nlc-metric">
+              <div class="nlc-metric-label"><span>Lines of code</span><span>${d.isEstimate?'~':''}${(d.estLoc||0).toLocaleString()} / ${nextTier.minLoc.toLocaleString()}</span></div>
+              <div class="nlc-bar"><div class="nlc-bar-fill" id="nlc-loc-bar" style="width:0%"></div></div>
+            </div>
+            <div class="nlc-metric" style="margin-top:0.5rem">
+              <div class="nlc-metric-label"><span>File count</span><span>${d.isEstimate?'~':''}${(d.estFiles||0).toLocaleString()} / ${nextTier.minFiles.toLocaleString()}</span></div>
+              <div class="nlc-bar"><div class="nlc-bar-fill" id="nlc-file-bar" style="width:0%"></div></div>
+            </div>`;
+          bars = [{ id:'nlc-loc-bar', pct:locPct }, { id:'nlc-file-bar', pct:filePct }];
+        }
+
+        // Karma threshold row (always appended)
+        metricsHtml += `
+          <div class="nlc-metric" style="margin-top:0.8rem;border-top:1px solid var(--border);padding-top:0.8rem">
+            <div class="nlc-metric-label">
+              <span style="color:var(--amber)">★ Karma (Avatar prerequisite)</span>
+              <span style="color:var(--amber2)">${nextTier.minKarma.toLocaleString()} pts required</span>
+            </div>
+            <div style="font-family:var(--serif);font-style:italic;font-size:0.72rem;color:var(--muted);margin-top:0.3rem;line-height:1.5">
+              Karma is earned by your builders' Avatars — through contributions, quests, and ecosystem actions.
+              It cannot be bought or transferred. Both data gravity <em>and</em> karma must be met to evolve your tier.
+            </div>
+          </div>`;
+
+        document.getElementById('nlc-metrics').innerHTML = metricsHtml;
+        setTimeout(() => bars.forEach(b => {
+          const el = document.getElementById(b.id);
+          if (el) el.style.width = b.pct + '%';
+        }), 600);
+      }
+
+      // Tier reference grid — show relevant thresholds
+      const isWeb3 = d.source === 'web3';
+      document.getElementById('tier-grid').innerHTML = TIERS.map((tier) => {
+        const sz = 24;
+        const threshold = isWeb3
+          ? (d.tvl > 0 ? `TVL ${fmtUsd(tier.minTvl)}+` : `Mcap ${fmtUsd(tier.minMcap)}+`)
+          : `&gt; ${tier.minFiles.toLocaleString()} files`;
+        const karmaLabel = tier.minKarma === 0 ? 'No karma req.' : `★ ${tier.minKarma.toLocaleString()} karma`;
+        return `<div class="tier-card ${tier.key===d.bodyType?'active':''}">
+          <div class="tier-mini-sphere" style="width:${sz}px;height:${sz}px;border-radius:50%;${tierSphereStyle(tier.key,sz)};${tier.key===d.bodyType?'border:2px solid '+tier.col+';':''}"></div>
+          <div class="tier-card-name">${tier.label}</div>
+          <div class="tier-card-threshold">${threshold}</div>
+          <div class="tier-card-threshold" style="color:var(--amber);margin-top:2px">${karmaLabel}</div>
+        </div>`;
+      }).join('');
+
+      const sec = document.getElementById('growth-section');
+      sec.classList.add('show');
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // ── Show CTA section ───────────────────────────────────────────────────────
+    window.showCta = function() {
+      if (!scanResult) return;
+      const d = scanResult;
+      const tier = tierByKey(d.bodyType);
+
+      // Render the appropriate ownership verification panel
+      const ownEl = document.getElementById('ownership-verify');
+      if (d.source === 'local') {
+        // Local = implicitly verified (server-side access required)
+        ownEl.innerHTML = `
+          <div class="own-panel own-verified">
+            <p class="own-head">00 — Ownership Verification</p>
+            <div style="display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap">
+              <span class="own-badge">✓ Local access verified</span>
+              <span style="font-family:var(--mono);font-size:0.6rem;color:var(--muted)">
+                Only someone with access to this machine can scan a local path via the OASIS API.
+              </span>
+            </div>
+          </div>`;
+        document.getElementById('cta-action').style.display = 'block';
+
+      } else if (d.source === 'github') {
+        // GitHub: file-based proof of repo ownership
+        const [ghOwner, ghRepo] = (d.gitRemote || `https://github.com/${d.name}`)
+          .replace('https://github.com/', '').replace('.git', '').split('/');
+        const verifyCmd = `echo "# OASIS Verification\\nThis repo is being registered in the OASIS holarchy." > OASIS.md && git add OASIS.md && git commit -m "Add OASIS verification" && git push`;
+        ownEl.innerHTML = `
+          <div class="own-panel" id="own-gh-panel">
+            <p class="own-head">00 — Ownership Verification</p>
+            <p class="own-title">Prove you control this repository</p>
+            <p class="own-desc">
+              Add a file called <strong style="color:var(--amber2);font-style:normal">OASIS.md</strong>
+              to the root of <strong style="font-style:normal">${esc(ghOwner)}/${esc(ghRepo)}</strong>.
+              This is the same pattern used by Stripe, Netlify, and others to verify domain/repo ownership
+              — it proves you have push access.
+            </p>
+            <div class="own-step">
+              <p class="own-step-label">Run in your terminal</p>
+              <div class="own-cmd-row">
+                <code id="own-gh-cmd">${esc(verifyCmd)}</code>
+                <button class="own-copy-btn" onclick="ownCopy('own-gh-cmd',this)">copy</button>
+              </div>
+            </div>
+            <div class="own-action-row">
+              <button class="own-verify-btn" id="own-gh-btn" onclick="verifyGitHubOwnership('${esc(ghOwner)}','${esc(ghRepo)}')">
+                ✓ Check verification
+              </button>
+              <span class="own-status" id="own-gh-status">Waiting for OASIS.md to appear in the repo root…</span>
+            </div>
+          </div>`;
+
+      } else if (d.source === 'web3') {
+        // Web3: wallet connect + message sign
+        const hasMetaMask = typeof window !== 'undefined' && !!window.ethereum;
+        ownEl.innerHTML = `
+          <div class="own-panel" id="own-w3-panel">
+            <p class="own-head">00 — Ownership Verification</p>
+            <p class="own-title">Sign with your wallet to verify control</p>
+            <p class="own-desc">
+              Connect a wallet that controls, deployed, or governs
+              <strong style="font-style:normal;color:var(--amber2)">${esc(d.name)}</strong>.
+              You will sign a message — <strong style="font-style:normal">no transaction</strong>
+              will be broadcast and no gas will be spent.
+            </p>
+            <div class="own-action-row" id="own-w3-actions">
+              ${hasMetaMask
+                ? `<button class="own-wallet-btn" id="own-w3-connect" onclick="connectWallet()">
+                     🦊 Connect MetaMask
+                   </button>`
+                : `<p style="font-family:var(--mono);font-size:0.62rem;color:var(--muted)">
+                     MetaMask not detected.
+                     <a href="https://metamask.io" target="_blank" style="color:var(--amber)">Install MetaMask →</a>
+                     or use another EIP-1193 compatible wallet.
+                   </p>`
+              }
+            </div>
+            <div class="own-status" id="own-w3-status" style="margin-top:0.5rem"></div>
+          </div>`;
+      }
+
+      // CTA action area
+      const actionEl = document.getElementById('cta-action');
+      if (d.source === 'local') {
+        // Local path already known — single button
+        actionEl.innerHTML = `
+          <button class="holonize-btn" id="holonize-exec-btn" onclick="runHolonize()">
+            ⬡ Holonize &amp; Enter the Omniverse
+          </button>
+          <div id="holonize-status" style="margin-top:0.8rem;font-size:0.68rem;color:var(--muted)"></div>`;
+      } else {
+        // GitHub URL — guide through the clone → path → holonize steps
+        const cloneUrl = d.gitRemote || `https://github.com/${d.name}`;
+        const suggestedPath = `~/code/${d.shortName}`;
+        const cloneCmd = `git clone ${cloneUrl}`;
+
+        actionEl.innerHTML = `
+          <div class="guided-steps">
+            <div class="guided-intro">
+              OASIS holonization needs access to your <strong>local files</strong> — not just the GitHub
+              metadata we scanned. Follow these three steps to bring <strong>${esc(d.shortName)}</strong>
+              into the Omniverse as a ${esc(tier.label)}.
+            </div>
+
+            <div class="guided-step">
+              <div class="step-num" id="sn1">1</div>
+              <div class="step-body">
+                <div class="step-title">Clone the repository</div>
+                <div class="step-desc">Copy this command and run it in your terminal. It will download the full codebase to your machine.</div>
+                <div class="step-cmd">
+                  <code id="clone-cmd-text">${esc(cloneCmd)}</code>
+                  <button class="step-copy" onclick="copyStep('clone-cmd-text','sn1',this)">copy</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="guided-step">
+              <div class="step-num" id="sn2">2</div>
+              <div class="step-body">
+                <div class="step-title">Enter the path to your local clone</div>
+                <div class="step-desc">Once cloning finishes, paste the full path to the folder on your machine.</div>
+                <div class="step-input-row">
+                  <input id="local-clone-path" class="step-path-input"
+                         placeholder="${esc(suggestedPath)}"
+                         value=""
+                         autocomplete="off" spellcheck="false"
+                         oninput="validateLocalPath()">
+                </div>
+                <div class="step-path-hint">Example: <code style="color:var(--amber2)">/Users/yourname/code/${esc(d.shortName)}</code> — use the absolute path, not <code>~</code></div>
+              </div>
+            </div>
+
+            <div class="guided-step">
+              <div class="step-num" id="sn3">3</div>
+              <div class="step-body">
+                <div class="step-title">Holonize &amp; enter the Omniverse</div>
+                <div class="step-desc">OASIS will scan your local codebase, create holons for every file, and plot your ${esc(tier.label)} in the galaxy.</div>
+                <button class="holonize-btn" id="holonize-exec-btn" onclick="runHolonizeFromPath()" disabled style="opacity:0.45;cursor:not-allowed">
+                  ⬡ Holonize &amp; Enter the Omniverse
+                </button>
+                <div id="holonize-status" style="margin-top:0.75rem;font-size:0.68rem;color:var(--muted)"></div>
+              </div>
+            </div>
+          </div>`;
+
+        window.copyStep = (srcId, numId, btn) => {
+          const text = document.getElementById(srcId)?.textContent || '';
+          navigator.clipboard.writeText(text);
+          btn.textContent = 'copied!';
+          const num = document.getElementById(numId);
+          if (num) num.classList.add('done');
+          setTimeout(() => { btn.textContent = 'copy'; }, 2000);
+        };
+
+        window.validateLocalPath = () => {
+          const val = (document.getElementById('local-clone-path')?.value || '').trim();
+          const btn = document.getElementById('holonize-exec-btn');
+          const sn2 = document.getElementById('sn2');
+          if (val.length > 2) {
+            btn.disabled = false;
+            btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+            if (sn2) sn2.classList.add('done');
+          } else {
+            btn.disabled = true;
+            btn.style.opacity = '0.45'; btn.style.cursor = 'not-allowed';
+            if (sn2) sn2.classList.remove('done');
+          }
+        };
+
+        window.runHolonizeFromPath = async () => {
+          const path = (document.getElementById('local-clone-path')?.value || '').trim();
+          if (!path) return;
+          const btn = document.getElementById('holonize-exec-btn');
+          const status = document.getElementById('holonize-status');
+          const sn3 = document.getElementById('sn3');
+          btn.disabled = true; btn.textContent = '⬡ Holonizing...';
+          status.textContent = 'Scanning your local files — this may take a moment for large projects...';
+          try {
+            const res = await fetch('/api/holonize/filesystem', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path, projectName: d.shortName, link: d.gitRemote, dryRun: false }),
+            });
+            if (!res.ok) {
+              const body = await res.json().catch(() => ({}));
+              throw new Error(body.message || `API returned ${res.status}. Check the path is correct.`);
+            }
+            if (sn3) sn3.classList.add('done');
+            status.innerHTML = '<span style="color:var(--green)">✓ Holonization complete!</span> Entering the Omniverse...';
+            await delay(1800);
+            window.location.href = '/galaxy.html';
+          } catch (e) {
+            status.innerHTML = `<span style="color:#ff8888">✗ ${esc(e.message)}</span>`;
+            btn.disabled = false; btn.textContent = '⬡ Holonize & Enter the Omniverse';
+            btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+          }
+        };
+      }
+
+      const sec = document.getElementById('cta-section');
+      sec.classList.add('show');
+      sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // ── Holonize execution (local path scan flow) ──────────────────────────────
+    window.runHolonize = async function() {
+      if (!scanResult || scanResult.source !== 'local') return;
+      const btn = document.getElementById('holonize-exec-btn');
+      const status = document.getElementById('holonize-status');
+      btn.disabled = true; btn.textContent = '⬡ Holonizing...';
+      status.textContent = 'Scanning your local files — this may take a moment for large projects...';
+      try {
+        const res = await fetch('/api/holonize/filesystem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: scanResult.localPath, projectName: scanResult.name, dryRun: false }),
+        });
+        if (!res.ok) throw new Error('API error ' + res.status);
+        status.innerHTML = '<span style="color:var(--green)">✓ Holonization complete!</span> Entering the Omniverse...';
+        await delay(1600);
+        window.location.href = '/galaxy.html';
+      } catch (e) {
+        status.innerHTML = `<span style="color:#ff8888">✗ ${esc(e.message)}</span>`;
+        btn.disabled = false; btn.textContent = '⬡ Holonize & Enter the Omniverse';
+      }
+    };
+
+    // ── Ownership verification helpers ─────────────────────────────────────────
+
+    window.ownCopy = (srcId, btn) => {
+      const text = document.getElementById(srcId)?.textContent || '';
+      navigator.clipboard.writeText(text);
+      btn.textContent = 'copied!';
+      setTimeout(() => { btn.textContent = 'copy'; }, 2000);
+    };
+
+    window.verifyGitHubOwnership = async (owner, repo) => {
+      const btn    = document.getElementById('own-gh-btn');
+      const status = document.getElementById('own-gh-status');
+      const panel  = document.getElementById('own-gh-panel');
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+      status.className = 'own-status';
+      status.textContent = `Checking ${owner}/${repo} for OASIS.md…`;
+
+      try {
+        const res = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/OASIS.md`);
+        if (res.status === 200) {
+          // File found — verified
+          panel.classList.add('own-verified');
+          status.className = 'own-status ok';
+          status.innerHTML = `✓ OASIS.md found — repo ownership confirmed.`;
+          btn.textContent = '✓ Verified';
+          btn.style.borderColor = 'var(--green)';
+          btn.style.color = 'var(--green)';
+          document.getElementById('cta-action').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('cta-action').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 400);
+        } else if (res.status === 404) {
+          status.className = 'own-status err';
+          status.textContent = 'OASIS.md not found yet. Push it to the repo root and try again.';
+          btn.disabled = false;
+          btn.textContent = '↺ Check again';
+        } else {
+          throw new Error(`GitHub API returned ${res.status}`);
+        }
+      } catch (e) {
+        status.className = 'own-status err';
+        status.textContent = `Error: ${e.message}`;
+        btn.disabled = false;
+        btn.textContent = '↺ Try again';
+      }
+    };
+
+    window.connectWallet = async () => {
+      const status  = document.getElementById('own-w3-status');
+      const actions = document.getElementById('own-w3-actions');
+      const panel   = document.getElementById('own-w3-panel');
+      if (!window.ethereum) {
+        status.className = 'own-status err';
+        status.textContent = 'No EIP-1193 wallet found. Install MetaMask and reload.';
+        return;
+      }
+      try {
+        status.className = 'own-status';
+        status.textContent = 'Requesting wallet access…';
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const address = accounts[0];
+        const short = address.slice(0,6) + '…' + address.slice(-4);
+        status.textContent = '';
+        actions.innerHTML = `
+          <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+            <span class="own-badge" style="color:var(--amber2);border-color:rgba(196,144,106,0.4);background:rgba(196,144,106,0.08)">
+              🦊 ${short}
+            </span>
+            <button class="own-verify-btn" onclick="signOwnership('${address}')">Sign to verify ownership →</button>
+          </div>`;
+      } catch (e) {
+        status.className = 'own-status err';
+        status.textContent = e.code === 4001 ? 'Connection rejected. Please approve in MetaMask.' : e.message;
+      }
+    };
+
+    window.signOwnership = async (address) => {
+      const status = document.getElementById('own-w3-status');
+      const panel  = document.getElementById('own-w3-panel');
+      const d = scanResult;
+      const msg = `I authorise holonization of "${d?.name}" in the OASIS Omniverse.\nThis is a one-time signature — no transaction will be broadcast.\nTimestamp: ${new Date().toISOString()}`;
+      try {
+        status.className = 'own-status';
+        status.textContent = 'Sign the message in your wallet…';
+        const sig = await window.ethereum.request({
+          method: 'personal_sign',
+          params: [msg, address],
+        });
+        // Signature obtained — ownership verified
+        panel.classList.add('own-verified');
+        const short = address.slice(0,6) + '…' + address.slice(-4);
+        document.getElementById('own-w3-actions').innerHTML = `
+          <span class="own-badge">✓ Signed by ${short}</span>`;
+        status.className = 'own-status ok';
+        status.textContent = `Signature confirmed. Wallet ${short} is authorised to holonize this protocol.`;
+        document.getElementById('cta-action').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('cta-action').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 400);
+      } catch (e) {
+        status.className = 'own-status err';
+        status.textContent = e.code === 4001 ? 'Signature rejected. Please sign the message in your wallet.' : e.message;
+      }
+    };
+
+    // ── Reset ──────────────────────────────────────────────────────────────────
+    window.resetScan = function() {
+      ['scan-section', 'result-section', 'growth-section', 'cta-section'].forEach(id => {
+        document.getElementById(id)?.classList.remove('show');
+      });
+      document.querySelectorAll('.scan-btn').forEach(b => b.disabled = false);
+      document.getElementById('terminal').innerHTML = '';
+      document.getElementById('ownership-verify').innerHTML = '';
+      document.getElementById('cta-action').style.display = 'none';
+      scanResult = null;
+      document.getElementById('portal-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // ── Try as token (skip DefiLlama, go straight to CoinGecko) ───────────────
+    window.tryAsToken = async function() {
+      if (!scanResult) return;
+      const raw = document.getElementById('web3-input').value.trim();
+      if (!raw) return;
+      const clean = raw.trim().toLowerCase().replace(/^\$/, '');
+
+      // Hide "try as token" hint while we re-scan
+      document.getElementById('r-try-token').style.display = 'none';
+
+      const scanSec = document.getElementById('scan-section');
+      document.getElementById('terminal').innerHTML = '';
+      scanSec.classList.add('show');
+      scanSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      termLine(`<span class="t-dim">[COINGECKO]</span> Searching token registry for "${raw}"...`);
+      await delay(300);
+      try {
+        const search = await fetch(`https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(clean)}`).then(r => r.json());
+        const coin   = search.coins?.[0];
+        if (!coin) throw new Error(`No token found for "${raw}" on CoinGecko.`);
+
+        const detail = await fetch(
+          `https://api.coingecko.com/api/v3/coins/${coin.id}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false`
+        ).then(r => r.json());
+
+        const mcap      = detail.market_data?.market_cap?.usd || 0;
+        const vol24h    = detail.market_data?.total_volume?.usd || 0;
+        const supply    = detail.market_data?.circulating_supply || null;
+        const twitter   = detail.community_data?.twitter_followers || null;
+        const reddit    = detail.community_data?.reddit_subscribers || null;
+        const platforms = detail.platforms ? Object.keys(detail.platforms).filter(Boolean) : [];
+
+        termLine(`<span class="t-ok">[✓]</span> Token found: <span class="t-val">${detail.name}</span> (${(detail.symbol||'').toUpperCase()})`);
+        termLine(`<span class="t-dim">           </span> Market cap: <span class="t-val">${fmtUsd(mcap)}</span> · 24h volume: <span class="t-val">${fmtUsd(vol24h)}</span>`);
+        if (twitter) termLine(`<span class="t-dim">           </span> Twitter: <span class="t-val">${fmtNum(twitter)} followers</span>`);
+
+        const plainDesc = (detail.description?.en || '').replace(/<[^>]+>/g,'').split('\r\n')[0].slice(0, 200);
+        scanResult = {
+          source: 'web3', scanType: 'token',
+          name: detail.name, shortName: (detail.symbol||detail.name).toUpperCase(),
+          desc: plainDesc || `${detail.name} — cryptocurrency`,
+          tvl: null, mcap, vol24h, supply,
+          chains: platforms, chainCount: platforms.length || 1,
+          category: 'Token',
+          twitter, reddit,
+          logo: detail.image?.large || null,
+          url: detail.links?.homepage?.[0] || null,
+          bodyType: classifyWeb3(0, mcap),
+        };
+
+        termLine(`<span class="t-dim">[CLASSIFY]</span> Applying OASIS celestial hierarchy...`);
+        await delay(700);
+        const tier = tierByKey(scanResult.bodyType);
+        termLine(`<span class="t-ok">[✓ CLASSIFIED]</span> <span class="t-val">${tier.label.toUpperCase()}</span>`);
+        await delay(500);
+        renderResult(scanResult);
+      } catch (err) {
+        termLine(`<span style="color:#ff8888">[ERROR]</span> ${err.message}`);
+      }
+    };
+
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function tierSphereStyle(key, sz) {
+      const s = {
+        moon:      `background:radial-gradient(circle at 35% 30%,#d4d8e8,#a0a5b8 48%,#6b7090);box-shadow:inset -${sz*.1}px -${sz*.1}px ${sz*.3}px rgba(0,0,0,.58)`,
+        planet:    `background:radial-gradient(circle at 35% 30%,#90e4f8,#2e92cc 45%,#0e4878);box-shadow:inset -${sz*.1}px -${sz*.1}px ${sz*.3}px rgba(0,0,0,.5),0 0 ${sz*.5}px rgba(80,190,255,.35)`,
+        star:      `background:radial-gradient(circle at 38% 28%,#fffcc0,#ffd040 28%,#e88010 68%,#c04000);box-shadow:inset -${sz*.1}px -${sz*.1}px ${sz*.3}px rgba(0,0,0,.35),0 0 ${sz*.7}px rgba(255,208,80,.6)`,
+        superstar: `background:radial-gradient(circle at 38% 28%,#fff,#ffe898 14%,#ffb030 50%,#d84000);box-shadow:inset -${sz*.1}px -${sz*.1}px ${sz*.3}px rgba(0,0,0,.3),0 0 ${sz*.8}px rgba(255,200,60,.7)`,
+        grandsuperstar: `background:radial-gradient(circle at 38% 28%,#fff,#e8f4ff 16%,#a8c8ff 48%,#3048c0);box-shadow:inset -${sz*.1}px -${sz*.1}px ${sz*.3}px rgba(0,0,0,.25),0 0 ${sz*.9}px rgba(160,210,255,.75)`,
+      };
+      return s[key] || s.moon;
+    }
+
+    function esc(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+  </script>
+</body>
+</html>

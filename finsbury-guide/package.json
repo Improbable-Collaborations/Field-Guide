@@ -1,0 +1,24 @@
+{
+  "name": "finsbury-guide",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Hitchhiker's Guide to Finsbury Park (London) — MapLibre + Field Guide Web4 Client",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "field-guide-web4-client": "file:../clients/field-guide-web4-client",
+    "maplibre-gl": "^4.7.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2",
+    "vitest": "^4.1.11"
+  }
+}

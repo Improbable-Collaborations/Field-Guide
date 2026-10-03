@@ -1,0 +1,25 @@
+{
+  "questId": "a06c5f9b-1c0e-4ed9-b080-ccbe6602b14d",
+  "name": "Murder Stones Pilgrimage",
+  "createdAt": "2026-08-09T16:15:56.242Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "murder-stones.geojson",
+  "atmosphere": "pilgrimage",
+  "gameSource": "FieldGuide",
+  "requiredPinIds": [
+    "sailors-stone",
+    "thursley-sailor-grave",
+    "hambledon-murder-stone"
+  ],
+  "pinObjectiveMap": {
+    "sailors-stone": "sailors-stone",
+    "thursley-sailor-grave": "thursley-sailor-grave",
+    "hambledon-murder-stone": "hambledon-murder-stone"
+  },
+  "spawnNear": {
+    "pinId": "sailors-stone",
+    "lat": 51.1147,
+    "lon": -0.7184,
+    "note": "≈15 m NE of Sailor's Stone for desk proximity check-in"
+  }
+}

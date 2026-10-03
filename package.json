@@ -1,0 +1,13 @@
+{
+  "name": "field-guide",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Field Guide web surfaces (Playa, Finsbury) plus celestial map pages",
+  "scripts": {
+    "dev": "serve . -l 8787",
+    "start": "serve . -l 8787"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

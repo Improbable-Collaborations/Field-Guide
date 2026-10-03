@@ -1,0 +1,252 @@
+{
+  "type": "FeatureCollection",
+  "name": "luthien-oxford-stone",
+  "description": "Lúthien Oxford Stone. Cemetery · Tolkien stone · Northmoor · Eagle and Child · Lewis at Headington. Geometry mode: desk stand-in. Source: beren-luthien-catalog.json. Wiki: luthien-oxford-stone.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.094,
+          51.524
+        ]
+      },
+      "properties": {
+        "id": "wolvercote-cemetery-gate",
+        "title": "Wolvercote Cemetery",
+        "trail": "luthien-oxford-stone",
+        "questRole": "waypoint",
+        "dropKind": "churchyard",
+        "order": 0,
+        "radiusM": 40,
+        "place": "Wolvercote Cemetery, Oxford",
+        "nation": "England",
+        "placeKind": "churchyard",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "none",
+        "relicId": "cemetery-gate",
+        "relicPrompt": "Enter the municipal cemetery paths.",
+        "riteId": "wolvercote-cemetery-gate:enter",
+        "wikiSlug": "wolvercote-cemetery",
+        "wikiThemeSlug": "luthien-oxford-stone",
+        "narrationText": "Wolvercote Cemetery holds the Tolkien stone a short walk inside: Lúthien and Beren under civil names.",
+        "directionHint": "Cemetery paths, Wolvercote.",
+        "themes": [
+          "epitaph_stone"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Cemetery entrance / main paths.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.7915,
+        "liveLon": -1.2745,
+        "notes": "poseHint=pathside;riteId=wolvercote-cemetery-gate:enter;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.094,
+          51.524
+        ]
+      },
+      "properties": {
+        "id": "wolvercote-tolkien",
+        "title": "Wolvercote Beren and Lúthien",
+        "trail": "luthien-oxford-stone",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 1,
+        "radiusM": 28,
+        "place": "Wolvercote Cemetery, Oxford",
+        "nation": "England",
+        "placeKind": "grave",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "epitaph",
+        "relicId": "beren-luthien-names",
+        "relicPrompt": "Read the names under the civil ones: Lúthien beneath Edith, Beren beneath Ronald.",
+        "riteId": "wolvercote-tolkien:beren-luthien-epitaph",
+        "wikiSlug": "wolvercote-beren-and-luthien",
+        "wikiThemeSlug": "luthien-oxford-stone",
+        "narrationText": "Edith is named Lúthien on this stone; Ronald is named Beren. The chief romance of his legendarium carved into English granite.",
+        "directionHint": "At the shared Tolkien stone, Wolvercote.",
+        "themes": [
+          "epitaph_stone",
+          "edith_source",
+          "legend_romance"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot",
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Wolvercote Cemetery paths. Shared Tolkien stone.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.7915,
+        "liveLon": -1.2745,
+        "notes": "poseHint=pathside;riteId=wolvercote-tolkien:beren-luthien-epitaph;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09376,
+          51.524300000000004
+        ]
+      },
+      "properties": {
+        "id": "northmoor-road-tolkien",
+        "title": "Northmoor Road",
+        "trail": "luthien-oxford-stone",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 2,
+        "radiusM": 30,
+        "place": "Northmoor Road, Oxford",
+        "nation": "England",
+        "placeKind": "memorial",
+        "poseHint": "doorstep",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "one_minute_company",
+        "relicId": "northmoor-pavement",
+        "relicPrompt": "One minute on the pavement where the legendarium was written indoors.",
+        "riteId": "northmoor-road-tolkien:pavement",
+        "wikiSlug": "northmoor-road",
+        "wikiThemeSlug": "luthien-oxford-stone",
+        "narrationText": "20 and 22 Northmoor Road: Oxford homes where Tolkien wrote while teaching. Private houses; the street is the witness.",
+        "directionHint": "Pavement, Northmoor Road.",
+        "themes": [
+          "inklings_oxford"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "partner_required"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "Pavement only; private houses.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.7645,
+        "liveLon": -1.2608,
+        "notes": "poseHint=doorstep;riteId=northmoor-road-tolkien:pavement;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0937,
+          51.5242
+        ]
+      },
+      "properties": {
+        "id": "eagle-and-child-luthien",
+        "title": "Eagle and Child",
+        "trail": "luthien-oxford-stone",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 3,
+        "radiusM": 35,
+        "place": "St Giles', Oxford",
+        "nation": "England",
+        "placeKind": "pub",
+        "poseHint": "doorstep",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/PubThreshold",
+        "momentVerb": "one_minute_company",
+        "relicId": "rabbit-room-reading",
+        "relicPrompt": "One quiet minute for the room where unfinished myth was read aloud.",
+        "riteId": "eagle-and-child-luthien:rabbit-room",
+        "wikiSlug": "eagle-and-child",
+        "wikiThemeSlug": "luthien-oxford-stone",
+        "narrationText": "The Bird and Baby. Inklings heard unfinished pages here, including the deeper legend behind the stone at Wolvercote.",
+        "directionHint": "At the Eagle and Child doorstep, St Giles'.",
+        "themes": [
+          "inklings_oxford",
+          "legend_romance"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "verify_open_status"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "St Giles' doorstep / Rabbit Room lineage. Confirm open status; major refurb history.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.7574,
+        "liveLon": -1.2602,
+        "notes": "poseHint=doorstep;riteId=eagle-and-child-luthien:rabbit-room;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09352,
+          51.5246
+        ]
+      },
+      "properties": {
+        "id": "holy-trinity-headington",
+        "title": "Holy Trinity Headington Quarry",
+        "trail": "luthien-oxford-stone",
+        "questRole": "waypoint",
+        "dropKind": "churchyard",
+        "order": 4,
+        "radiusM": 30,
+        "place": "Headington Quarry, Oxford",
+        "nation": "England",
+        "placeKind": "churchyard",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "one_minute_company",
+        "relicId": "narnia-neighbour",
+        "relicPrompt": "One minute for the Inklings neighbour at Headington Quarry.",
+        "riteId": "holy-trinity-headington:lewis",
+        "wikiSlug": "holy-trinity-headington-quarry",
+        "wikiThemeSlug": "luthien-oxford-stone",
+        "narrationText": "C. S. Lewis worshipped and is buried here. Narnia and Middle-earth's authors rest a short Oxford ride apart.",
+        "directionHint": "Holy Trinity churchyard, Headington Quarry.",
+        "themes": [
+          "inklings_oxford"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Churchyard pathside; Lewis grave.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.7595,
+        "liveLon": -1.212,
+        "notes": "poseHint=pathside;riteId=holy-trinity-headington:lewis;geometryMode=desk_standin"
+      }
+    }
+  ]
+}

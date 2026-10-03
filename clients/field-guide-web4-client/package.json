@@ -1,0 +1,30 @@
+{
+  "name": "field-guide-web4-client",
+  "version": "0.1.0",
+  "description": "Field Guide Web4 Client: browser parity for Unity Field Guide ONODE/STAR/Nuva HTTP APIs",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  }
+}

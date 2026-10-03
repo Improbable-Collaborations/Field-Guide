@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playa del Carmen Ecosystem · OASIS COSMIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pgm-bg:       rgba(3,7,3,0.97);
+  --pgm-panel:    rgba(6,12,6,0.97);
+  --pgm-border:   rgba(74,155,74,0.22);
+  --pgm-border2:  rgba(74,155,74,0.08);
+  --pgm-text:     #e8f5e8;
+  --pgm-muted:    #5a7a5a;
+  --pgm-amber:    #c9a84c;
+  --pgm-amber2:   #e0c97a;
+  --pgm-green:    #4a9b4a;
+  --pgm-bright:   #7ddb7d;
+  --pgm-teal:     #4ecdc4;
+  --pgm-gold:     #c9a84c;
+  --pgm-purple:   #b388ff;
+  --pgm-blue:     #5ab4ff;
+  --pgm-mono:     "JetBrains Mono", monospace;
+  --pgm-serif:    "Cormorant Garamond", Georgia, serif;
+  --pgm-sans:     "Space Grotesk", sans-serif;
+  --pgm-display:  "Bebas Neue", var(--pgm-sans);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #030703; overflow: hidden; font-family: var(--pgm-mono), monospace; color: var(--pgm-text); }
+
+/* ── NAV ──────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 38px;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(3,7,3,0.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pgm-border);
+  padding: 0 1.5rem; z-index: 100;
+  font-family: var(--pgm-mono); font-size: 0.62rem; letter-spacing: 0.09em;
+}
+.nav-brand   { color: var(--pgm-bright); font-weight: 700; white-space: nowrap; font-size: 0.7rem; }
+.nav-loc     { color: var(--pgm-amber); font-family: var(--pgm-serif); font-style: italic; font-size: 0.85rem; white-space: nowrap; }
+.nav-sep     { color: var(--pgm-border); }
+.nav-phase   { color: var(--pgm-muted); white-space: nowrap; }
+.nav-link {
+  padding: 3px 10px; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--pgm-muted); text-decoration: none; border-radius: 3px;
+  transition: all 0.2s; white-space: nowrap; font-family: var(--pgm-mono);
+}
+.nav-link:hover { color: var(--pgm-text); background: rgba(74,155,74,0.07); }
+.nav-link.active { color: var(--pgm-bright); background: rgba(74,155,74,0.1); border: 1px solid rgba(74,155,74,0.25); }
+.nav-spacer  { flex: 1; }
+.nav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pgm-bright); box-shadow: 0 0 6px var(--pgm-bright); animation: pulse-dot 2s infinite; flex-shrink: 0; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── CANVAS + LOADING ─────────────────────────────────────────────── */
+#canvas-container { position: fixed; inset: 0; }
+#loading {
+  position: fixed; inset: 0; background: var(--pgm-bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 200; transition: opacity 0.8s;
+}
+.load-title  { font-family: var(--pgm-display); font-size: 2.2rem; letter-spacing: 0.15em; color: var(--pgm-bright); margin-bottom: 4px; }
+.load-sub    { font-family: var(--pgm-serif); font-style: italic; font-size: 1.1rem; color: var(--pgm-amber); margin-bottom: 28px; }
+.load-bar-bg { width: 220px; height: 2px; background: var(--pgm-border); border-radius: 2px; }
+#load-bar    { height: 2px; width: 0; background: var(--pgm-bright); border-radius: 2px; transition: width 0.1s linear; }
+
+/* ── LABELS ───────────────────────────────────────────────────────── */
+#labels-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+
+/* ── TALLY STRIP ──────────────────────────────────────────────────── */
+#tally {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+  background: rgba(3,7,3,0.88); border-top: 1px solid var(--pgm-border);
+  display: flex; align-items: center; gap: 0; overflow: hidden;
+  z-index: 80; font-family: var(--pgm-mono); font-size: 0.58rem;
+}
+.tally-item { padding: 0 12px; white-space: nowrap; border-right: 1px solid var(--pgm-border2); cursor: pointer; transition: color 0.2s; color: var(--pgm-muted); }
+.tally-item:hover { color: var(--pgm-bright); }
+
+/* ── INFO PANEL (right) ───────────────────────────────────────────── */
+#info-panel {
+  position: fixed; right: 0; top: 38px; bottom: 28px; width: 300px;
+  background: var(--pgm-panel); border-left: 1px solid var(--pgm-border);
+  overflow-y: auto; z-index: 70; font-family: var(--pgm-mono);
+  display: flex; flex-direction: column; transition: transform 0.3s;
+}
+#info-panel.hidden { transform: translateX(100%); }
+.ip-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--pgm-border2); }
+.ip-name   { font-family: var(--pgm-display); font-size: 1.4rem; letter-spacing: 0.08em; line-height: 1.1; }
+.ip-sub    { font-size: 0.6rem; color: var(--pgm-muted); margin-top: 4px; line-height: 1.5; }
+.ip-type-badge {
+  display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 10px;
+  font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--pgm-border);
+  color: var(--pgm-muted);
+}
+.ip-body   { padding: 14px 16px; flex: 1; }
+.ip-desc   { font-size: 0.68rem; line-height: 1.7; color: var(--pgm-muted); margin-bottom: 14px; }
+
+/* Stat grid for info panel */
+.stat-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.stat-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+.stat-tile {
+  background: rgba(74,155,74,0.06); border: 1px solid rgba(74,155,74,0.14);
+  border-radius: 6px; padding: 10px 12px;
+}
+.stat-tile.gold { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.18); }
+.stat-val  { display: block; font-size: 1.3rem; font-family: var(--pgm-display); letter-spacing: 0.05em; line-height: 1; color: var(--pgm-bright); }
+.stat-val.gold  { color: var(--pgm-gold); }
+.stat-val.teal  { color: var(--pgm-teal); }
+.stat-val.amber { color: var(--pgm-amber); }
+.stat-lbl  { display: block; font-size: 0.55rem; color: var(--pgm-muted); margin-top: 3px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.ip-meta   { font-size: 0.6rem; color: var(--pgm-muted); margin-bottom: 4px; }
+.ip-meta strong { color: var(--pgm-text); }
+.ip-divider { border: none; border-top: 1px solid var(--pgm-border2); margin: 10px 0; }
+
+.ip-links-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.ip-link-btn {
+  font-size: 0.58rem; padding: 5px 10px; border-radius: 4px; text-decoration: none;
+  letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; cursor: pointer; border: none;
+  font-family: var(--pgm-mono);
+}
+.ip-link-green { background: rgba(74,155,74,0.12); border: 1px solid rgba(74,155,74,0.3); color: var(--pgm-bright); }
+.ip-link-green:hover { background: rgba(74,155,74,0.22); }
+.ip-link-gold  { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: var(--pgm-gold); }
+.ip-link-gold:hover  { background: rgba(201,168,76,0.22); }
+.ip-link-muted { background: rgba(255,255,255,0.04); border: 1px solid var(--pgm-border); color: var(--pgm-muted); }
+.ip-link-muted:hover { color: var(--pgm-text); }
+
+.karma-bar-wrap { margin: 8px 0 4px; }
+.karma-bar-label { font-size: 0.56rem; color: var(--pgm-muted); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.karma-bar-track { height: 3px; background: rgba(74,155,74,0.12); border-radius: 2px; }
+.karma-bar-fill  { height: 3px; background: var(--pgm-gold); border-radius: 2px; transition: width 0.8s ease; }
+.rank-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 0.62rem; font-family: var(--pgm-mono); color: var(--pgm-gold); background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); padding: 3px 8px; border-radius: 10px; margin-top: 6px; }
+
+/* Features / tag chips */
+.feature-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.feature-chip  { font-size: 0.5rem; padding: 2px 7px; border-radius: 10px; background: rgba(74,155,74,0.08); border: 1px solid rgba(74,155,74,0.2); color: var(--pgm-bright); letter-spacing: 0.06em; }
+
+/* Tip when nothing selected */
+.ip-tip { padding: 40px 20px; text-align: center; color: var(--pgm-muted); font-size: 0.62rem; line-height: 2; }
+.ip-tip-icon { font-family: var(--pgm-serif); font-style: italic; font-size: 1.1rem; color: var(--pgm-green); display: block; margin-bottom: 10px; }
+
+/* ── CONTROLS (bottom-left) ──────────────────────────────────────── */
+#controls {
+  position: fixed; left: 16px; bottom: 40px; z-index: 70;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ctrl-group { display: flex; gap: 4px; }
+.ctrl-btn {
+  font-family: var(--pgm-mono); font-size: 0.55rem; letter-spacing: 0.1em;
+  background: var(--pgm-panel); border: 1px solid var(--pgm-border);
+  color: var(--pgm-muted); padding: 4px 10px; border-radius: 3px; cursor: pointer;
+  transition: all 0.2s; text-transform: uppercase; white-space: nowrap;
+}
+.ctrl-btn:hover  { color: var(--pgm-text); border-color: rgba(74,155,74,0.4); }
+.ctrl-btn.active { color: var(--pgm-bright); border-color: rgba(74,155,74,0.5); background: rgba(74,155,74,0.08); }
+
+/* ── FILTER PANEL (left, below controls) ────────────────────────── */
+#filter-panel {
+  position: fixed; left: 16px; top: 48px; z-index: 70;
+  background: var(--pgm-panel); border: 1px solid var(--pgm-border);
+  border-radius: 6px; padding: 10px 12px; font-family: var(--pgm-mono);
+  font-size: 0.58rem; min-width: 140px;
+}
+.filter-label { color: var(--pgm-muted); letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.52rem; margin-bottom: 8px; }
+.filter-btn {
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  padding: 3px 0; transition: color 0.2s; width: 100%; background: none; border: none;
+  font-family: var(--pgm-mono); font-size: 0.58rem; text-align: left; color: var(--pgm-muted);
+}
+.filter-btn:hover { color: var(--pgm-text); }
+.filter-btn.active { color: var(--pgm-text); }
+.filter-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── MODAL ───────────────────────────────────────────────────────── */
+.modal-back {
+  position: fixed; inset: 0; background: rgba(3,7,3,0.8); backdrop-filter: blur(4px);
+  z-index: 150; display: none; align-items: center; justify-content: center;
+}
+.modal-back.open { display: flex; }
+.modal-card {
+  background: var(--pgm-panel); border: 1px solid var(--pgm-border);
+  border-radius: 10px; width: min(580px, 94vw); max-height: 80vh;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.modal-head {
+  padding: 16px 20px 14px; border-bottom: 1px solid var(--pgm-border2);
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.modal-head-title { font-family: var(--pgm-display); font-size: 1.6rem; letter-spacing: 0.08em; }
+.modal-head-sub   { font-size: 0.6rem; color: var(--pgm-muted); margin-top: 4px; }
+.modal-close      { font-family: var(--pgm-mono); font-size: 0.58rem; background: none; border: 1px solid var(--pgm-border); color: var(--pgm-muted); padding: 4px 10px; border-radius: 3px; cursor: pointer; transition: all 0.2s; }
+.modal-close:hover{ color: var(--pgm-text); }
+.modal-body       { padding: 16px 20px 20px; overflow-y: auto; font-family: var(--pgm-mono); font-size: 0.65rem; line-height: 1.7; }
+.modal-desc       { color: var(--pgm-muted); margin-bottom: 14px; }
+.modal-stat-grid  { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 10px 0; }
+.modal-stat-tile  { background: rgba(74,155,74,0.06); border: 1px solid var(--pgm-border2); border-radius: 6px; padding: 10px; text-align: center; }
+.modal-stat-val   { display: block; font-size: 1.1rem; font-family: var(--pgm-display); color: var(--pgm-bright); }
+.modal-stat-lbl   { display: block; font-size: 0.52rem; color: var(--pgm-muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+.modal-meta-row   { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--pgm-border2); font-size: 0.6rem; }
+.modal-meta-key   { color: var(--pgm-muted); }
+.modal-meta-val   { color: var(--pgm-text); text-align: right; }
+.modal-nest       { margin-top: 10px; }
+.modal-nest summary { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pgm-muted); cursor: pointer; padding: 6px 0; list-style: none; }
+.modal-nest summary::before { content: '▶ '; font-size: 0.5rem; }
+.modal-nest[open] summary::before { content: '▼ '; }
+.modal-nest-body  { }
+.modal-ext-link   { color: var(--pgm-bright); font-size: 0.62rem; text-decoration: none; }
+.modal-ext-link:hover { text-decoration: underline; }
+.modal-lang-chip  { display: inline-block; font-size: 0.5rem; padding: 2px 7px; border-radius: 10px; background: rgba(74,155,74,0.08); border: 1px solid rgba(74,155,74,0.2); color: var(--pgm-bright); margin: 2px; letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">OASIS</span>
+  <span class="nav-sep">·</span>
+  <span class="nav-loc">Pulmón Verde · Playa del Carmen</span>
+  <span class="nav-sep">·</span>
+  <span class="nav-phase">COSMIC ECOSYSTEM VIEW</span>
+  <div class="nav-live-dot"></div>
+  <div class="nav-spacer"></div>
+  <a class="nav-link active" href="playa.html">Cosmic View</a>
+  <a class="nav-link" href="playa-map.html">Ground View</a>
+  <a class="nav-link" href="index.html">Galaxy</a>
+  <a class="nav-link" href="http://localhost:5173/book" target="_blank">↗ Book a Visit</a>
+  <a class="nav-link" href="http://localhost:5173/hotel" target="_blank">↗ Hotel Portal</a>
+</nav>
+
+<div id="canvas-container"></div>
+<div id="labels-overlay"></div>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="load-title">PULMÓN VERDE</div>
+  <div class="load-sub">Playa del Carmen · OASIS Ecosystem View</div>
+  <div class="load-bar-bg"><div id="load-bar"></div></div>
+</div>
+
+<!-- Filter panel -->
+<div id="filter-panel">
+  <div class="filter-label">Filter bodies</div>
+  <button class="filter-btn active" onclick="filterSystems('all')" data-filter="all">
+    <span class="filter-dot" style="background:#e8f5e8"></span> All
+  </button>
+  <button class="filter-btn" onclick="filterSystems('conservation')" data-filter="conservation">
+    <span class="filter-dot" style="background:#4a9b4a"></span> Conservation
+  </button>
+  <button class="filter-btn" onclick="filterSystems('hotel_champion')" data-filter="hotel_champion">
+    <span class="filter-dot" style="background:#c9a84c"></span> Champion Hotels
+  </button>
+  <button class="filter-btn" onclick="filterSystems('hotel_partner')" data-filter="hotel_partner">
+    <span class="filter-dot" style="background:#4ecdc4"></span> Partner Hotels
+  </button>
+  <button class="filter-btn" onclick="filterSystems('hotel_starter')" data-filter="hotel_starter">
+    <span class="filter-dot" style="background:#5ab4ff"></span> Starter Hotels
+  </button>
+  <button class="filter-btn" onclick="filterSystems('anchor')" data-filter="anchor">
+    <span class="filter-dot" style="background:#e0c97a"></span> Region
+  </button>
+</div>
+
+<!-- Controls -->
+<div id="controls">
+  <div class="ctrl-group">
+    <button class="ctrl-btn active" id="orbit-btn" onclick="toggleOrbit()">Orbit ON</button>
+    <button class="ctrl-btn active" id="label-btn" onclick="toggleLabels()">Labels</button>
+    <button class="ctrl-btn active" id="route-btn" onclick="toggleRoutes()">Connections</button>
+  </div>
+  <div class="ctrl-group">
+    <button class="ctrl-btn active" id="sp1" onclick="setSpeed(1)">1×</button>
+    <button class="ctrl-btn" id="sp2" onclick="setSpeed(2)">2×</button>
+    <button class="ctrl-btn" id="sp3" onclick="setSpeed(3)">3×</button>
+  </div>
+</div>
+
+<!-- Info Panel -->
+<div id="info-panel">
+  <div class="ip-tip">
+    <span class="ip-tip-icon">Pulmón Verde</span>
+    Click any celestial body to see live stats.<br>
+    Green connections show sponsorship links.<br>
+    Gold bodies are Champion-tier hotels.
+  </div>
+</div>
+
+<!-- Tally strip (filled by JS) -->
+<div id="tally"></div>
+
+<!-- Modal -->
+<div class="modal-back" id="sysModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title" id="modal-title">—</div>
+        <div class="modal-head-sub"  id="modal-sub">—</div>
+      </div>
+      <button class="modal-close" id="modal-close-btn">Close</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script type="importmap">{ "imports": { "three": "https://esm.sh/three", "three/addons/": "https://esm.sh/three/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ── System Data ──────────────────────────────────────────────────────────────
+const SYSTEMS = [
+
+  // ── ANCHOR ────────────────────────────────────────────────────────────────
+  { name:'Playa del Carmen', shortName:'PDC', type:'anchor',
+    pos:[0, 0, 0],
+    subtitle:'Quintana Roo · Mexico · OASIS Registered Region',
+    region:'Riviera Maya', sector:'Playa del Carmen',
+    cat:'Region Anchor',
+    desc:'Playa del Carmen, Quintana Roo — one of the fastest-growing cities in Mexico and the gateway to the Riviera Maya. This OASIS COSMIC view maps the conservation-hospitality ecosystem centred on Pulmón Verde, the last coastal jungle of PDC. Each hotel is an OASIS Organisation Avatar; each guest becomes a Conservation Passport holder.',
+    localStats: { karma: 145800, avatars: 892, hotels: 24, trees: 847 }
+  },
+
+  // ── CONSERVATION ──────────────────────────────────────────────────────────
+  { name:'Pulmón Verde', shortName:'PULMÓN VERDE', type:'conservation',
+    pos:[-9, 0.4, -12],
+    subtitle:'Conservation Area · 4.5 ha · OASIS STAR OAPP',
+    region:'Playa del Carmen Norte', sector:'Last Coastal Jungle',
+    cat:'Conservation / Phygital Experience',
+    desc:'The last coastal jungle of Playa del Carmen. 4.5 hectares of lowland tropical forest — home to 94+ documented species, hundreds of trees registered as permanent OASIS Holons, and a growing carbon sequestration record. Every registered tree is a GeoSpatialNFT. Every tourist visit is a Chapter in a narrative arc. Every guide session is permanently transcribed into the forest\'s living record.',
+    localStats: { trees: 847, species: 94, co2: 312, hours: 2840, karma: 45200, visitors: 412 },
+    link: 'http://localhost:5173/book',
+    portalLink: 'http://localhost:5173/book',
+    hotelLink: null,
+    features: 'STAR OAPP,GeoSpatialNFT,Chapter System,Conversation Capture,Carbon Credits,PGT Timebank,Conservation Passport,PrivacyMage Trust Graph'
+  },
+
+  // ── CHAMPION HOTELS ───────────────────────────────────────────────────────
+  { name:'Thompson Beach House', shortName:'Thompson', type:'hotel_champion',
+    pos:[9, 0.2, -4],
+    subtitle:'Beachfront Norte · Champion · Rank #1',
+    region:'Playa del Carmen Norte', sector:'5th Ave Beachfront',
+    cat:'Hotel · Champion Partner',
+    desc:'Boutique beachfront hotel on PDC\'s northern shoreline. Rank #1 in the Pulmón Verde hotel leaderboard. 87 guests sent to the conservation experience, 12 trees directly sponsored. The Thompson has the highest Karma total in the network and serves as the flagship anchor partnership.',
+    localStats: { karma: 18450, avatars: 87, trees: 12, co2: 6.2, rank: 1, tier: 'Champion' },
+    link: 'http://localhost:5173/hotel'
+  },
+
+  { name:'Viceroy Riviera Maya', shortName:'Viceroy', type:'hotel_champion',
+    pos:[8, -0.3, 6],
+    subtitle:'Playa del Carmen · Champion · Rank #2',
+    region:'Playa del Carmen', sector:'Beachfront South',
+    cat:'Hotel · Champion Partner',
+    desc:'Five-star beachfront property with strong sustainability commitments. Rank #2. 62 guests sent, 8 trees sponsored. The Viceroy is 1,360 Karma behind #1 — the closest competitive gap in the network.',
+    localStats: { karma: 14200, avatars: 62, trees: 8, co2: 3.9, rank: 2, tier: 'Champion' },
+    link: 'http://localhost:5173/hotel'
+  },
+
+  { name:'Grand Hyatt PDC', shortName:'Grand Hyatt', type:'hotel_champion',
+    pos:[-7, 0.1, 5],
+    subtitle:'Playa del Carmen · Champion · Rank #3',
+    region:'Playa del Carmen', sector:'Beachfront Centro',
+    cat:'Hotel · Champion Partner',
+    desc:'Grand Hyatt Playa del Carmen — flagship Partner-tier hotel in the network. 54 guests sent, 4 trees sponsored. The hotel whose guests include the Reyes-Miller family. First hotel to implement the concierge desk QR code booking flow.',
+    localStats: { karma: 12840, avatars: 54, trees: 4, co2: 2.1, rank: 3, tier: 'Champion' },
+    link: 'http://localhost:5173/hotel'
+  },
+
+  // ── PARTNER HOTELS ────────────────────────────────────────────────────────
+  { name:'Kore Tulum', shortName:'Kore', type:'hotel_partner',
+    pos:[-14, 0.4, -3],
+    subtitle:'Tulum · Partner · Rank #4',
+    region:'Tulum', sector:'Tulum Beach Zone',
+    cat:'Hotel · Partner',
+    desc:'Design-forward eco-resort in Tulum. Rank #4 in the leaderboard. 48 guests sent, 6 trees sponsored. Kore has the highest trees-per-guest ratio of any Partner hotel, reflecting their sustainability-first guest profile.',
+    localStats: { karma: 11200, avatars: 48, trees: 6, co2: 2.8, rank: 4, tier: 'Partner' },
+    link: null
+  },
+
+  { name:'Xcaret Hotel', shortName:'Xcaret', type:'hotel_partner',
+    pos:[6, -0.5, 15],
+    subtitle:'Playa del Carmen · Partner · Rank #5',
+    region:'Playa del Carmen Sur', sector:'Xcaret Eco-Park Zone',
+    cat:'Hotel · Partner',
+    desc:'Part of the Xcaret eco-tourism empire — positioned as a complementary conservation experience. 41 guests sent, 3 trees sponsored. Natural partnership: guests who do Xcaret are already primed for nature-based experiences.',
+    localStats: { karma: 9800, avatars: 41, trees: 3, co2: 1.4, rank: 5, tier: 'Partner' },
+    link: null
+  },
+
+  { name:'Rosewood Mayakoba', shortName:'Rosewood', type:'hotel_partner',
+    pos:[15, 0.2, -6],
+    subtitle:'Mayakoba · Partner · Rank #6',
+    region:'Playa del Carmen Norte', sector:'Mayakoba Lagoon',
+    cat:'Hotel · Partner',
+    desc:'Ultra-luxury resort in the Mayakoba lagoon system. 36 guests sent, 2 trees sponsored. The Rosewood client profile skews older, wealthier, and high-repeat — the ideal segment for Chapter 5 (tree dedications in memory of loved ones).',
+    localStats: { karma: 8600, avatars: 36, trees: 2, co2: 1.0, rank: 6, tier: 'Partner' },
+    link: null
+  },
+
+  { name:'Banyan Tree Mayakoba', shortName:'Banyan Tree', type:'hotel_partner',
+    pos:[13, 0.3, -12],
+    subtitle:'Mayakoba · Partner · Rank #7',
+    region:'Playa del Carmen Norte', sector:'Mayakoba Lagoon',
+    cat:'Hotel · Partner',
+    desc:'Award-winning spa and wellness resort. 31 guests sent, 2 trees sponsored. The wellness-oriented guest profile aligns strongly with the contemplative, story-led nature of the Chapter system — especially Chapter 5 (ancestors, dedication).',
+    localStats: { karma: 7400, avatars: 31, trees: 2, co2: 0.9, rank: 7, tier: 'Partner' },
+    link: null
+  },
+
+  { name:'Fairmont Mayakoba', shortName:'Fairmont', type:'hotel_partner',
+    pos:[17, -0.2, 4],
+    subtitle:'Mayakoba · Partner · Rank #8',
+    region:'Playa del Carmen Norte', sector:'Mayakoba Lagoon',
+    cat:'Hotel · Partner',
+    desc:'Family-friendly luxury in the Mayakoba complex. 27 guests sent, 1 tree sponsored. Strong family and group travel profile — their concierge actively recommends the Young Explorer quest for children.',
+    localStats: { karma: 6200, avatars: 27, trees: 1, co2: 0.6, rank: 8, tier: 'Partner' },
+    link: null
+  },
+
+  // ── STARTER HOTELS ────────────────────────────────────────────────────────
+  { name:'Hotel B Playa', shortName:'Hotel B', type:'hotel_starter',
+    pos:[-20, 0.3, -8],
+    subtitle:'Playa del Carmen · Starter',
+    region:'Playa del Carmen', sector:'5th Ave Boutique Zone',
+    cat:'Hotel · Starter',
+    desc:'Boutique design hotel on 5th Avenue. Starter tier — no trees sponsored yet, but concierge has added the Pulmón Verde QR code to the welcome pack. 14 guests sent in first 2 months.',
+    localStats: { karma: 1400, avatars: 14, trees: 0, co2: 0, rank: 18, tier: 'Starter' },
+    link: null
+  },
+
+  { name:'Aldea Thai', shortName:'Aldea Thai', type:'hotel_starter',
+    pos:[-18, -0.4, 12],
+    subtitle:'Playa del Carmen · Starter',
+    region:'Playa del Carmen', sector:'Centro',
+    cat:'Hotel · Starter',
+    desc:'Playacar boutique hotel known for its Thai-inspired design. Starter tier. 11 guests sent. Popular with European couples — the Chapter 3 (La Flor) sea turtle nesting experience has strong resonance with this demographic.',
+    localStats: { karma: 1100, avatars: 11, trees: 0, co2: 0, rank: 21, tier: 'Starter' },
+    link: null
+  },
+
+  { name:'Mamitas Beach Club', shortName:'Mamitas', type:'hotel_starter',
+    pos:[22, 0.1, 8],
+    subtitle:'Playa del Carmen · Starter',
+    region:'Playa del Carmen', sector:'Beach Club Zone',
+    cat:'Hotel · Starter',
+    desc:'Iconic beach club hotel at the heart of PDC\'s social scene. Not a conservation audience by default — but Starter tier gives them the leaderboard visibility to begin competing. 8 guests sent.',
+    localStats: { karma: 800, avatars: 8, trees: 0, co2: 0, rank: 24, tier: 'Starter' },
+    link: null
+  },
+
+  // ── REGION ────────────────────────────────────────────────────────────────
+  { name:'Riviera Maya', shortName:'Riviera Maya', type:'anchor',
+    pos:[-28, 0.8, 20],
+    subtitle:'Quintana Roo · Expansion Region',
+    region:'Riviera Maya', sector:'Coastal Corridor',
+    cat:'Region',
+    desc:'The Riviera Maya — the 130km coastal corridor from Playa del Carmen to Tulum. The next phase of the Pulmón Verde ecosystem expansion. Conservation areas in Puerto Morelos, Akumal, and Tulum biosphere reserve are being evaluated as OASIS STAR OAPPs. A Conservation Passport earned at Pulmón Verde would be usable at any affiliated site in this corridor.',
+    localStats: { sites: 1, potential: 12, hotelPartners: 24, corridor: '130km' }
+  },
+
+];
+
+// ── Type config ───────────────────────────────────────────────────────────────
+const TYPE_CFG = {
+  anchor:         { color: 0xe0c97a, glow: 0.55, size: 0.55 },
+  conservation:   { color: 0x4a9b4a, glow: 0.80, size: 0.70 },  // Pulmón Verde — large, dominant
+  hotel_champion: { color: 0xc9a84c, glow: 0.55, size: 0.44 },  // gold
+  hotel_partner:  { color: 0x4ecdc4, glow: 0.42, size: 0.34 },  // teal
+  hotel_starter:  { color: 0x5ab4ff, glow: 0.28, size: 0.24 },  // blue, smaller
+};
+
+const TYPE_LABEL = {
+  anchor:         'Region Anchor',
+  conservation:   'Conservation Area · STAR OAPP',
+  hotel_champion: 'Hotel · Champion Tier',
+  hotel_partner:  'Hotel · Partner Tier',
+  hotel_starter:  'Hotel · Starter Tier',
+};
+
+const TYPE_ACCENT = {
+  anchor:         '#e0c97a',
+  conservation:   '#7ddb7d',
+  hotel_champion: '#c9a84c',
+  hotel_partner:  '#4ecdc4',
+  hotel_starter:  '#5ab4ff',
+};
+
+// ── Routes — index pairs defining connection lines ────────────────────────────
+// Connect Pulmón Verde (index 1) to hotels that sponsor trees
+const PV_IDX = 1;
+const ROUTES = [
+  [PV_IDX, 2],  // PV → Thompson
+  [PV_IDX, 3],  // PV → Viceroy
+  [PV_IDX, 4],  // PV → Grand Hyatt
+  [PV_IDX, 5],  // PV → Kore
+  [PV_IDX, 6],  // PV → Xcaret
+  [PV_IDX, 7],  // PV → Rosewood
+  [PV_IDX, 8],  // PV → Banyan Tree
+  [PV_IDX, 9],  // PV → Fairmont
+];
+
+// ── Scene setup ───────────────────────────────────────────────────────────────
+const container = document.getElementById('canvas-container');
+const renderer  = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 38, 52);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.07;
+controls.minDistance     = 4;
+controls.maxDistance     = 300;
+controls.autoRotate      = true;
+controls.autoRotateSpeed = 0.28;
+
+const initPos    = camera.position.clone();
+const initTarget = controls.target.clone();
+
+// ── Background stars ─────────────────────────────────────────────────────────
+(function buildStars() {
+  const n = 8000;
+  const pos = new Float32Array(n * 3);
+  const col = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const r = 200 + Math.random() * 600;
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    pos[i*3]   = r * Math.sin(ph) * Math.cos(th);
+    pos[i*3+1] = r * Math.cos(ph) * 0.3;
+    pos[i*3+2] = r * Math.sin(ph) * Math.sin(th);
+    // Slightly warm tint for jungle sky
+    col[i*3]   = 0.7 + Math.random() * 0.3;
+    col[i*3+1] = 0.85 + Math.random() * 0.15;
+    col[i*3+2] = 0.7 + Math.random() * 0.3;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.5, vertexColors: true, transparent: true, opacity: 0.55 })));
+})();
+
+// ── Ambient glow / nebula (green tint for jungle feel) ───────────────────────
+(function buildNebula() {
+  const n = 3000;
+  const pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const r = 20 + Math.random() * 80;
+    const a = Math.random() * Math.PI * 2;
+    pos[i*3]   = r * Math.cos(a) + (Math.random() - 0.5) * 40;
+    pos[i*3+1] = (Math.random() - 0.5) * 8;
+    pos[i*3+2] = r * Math.sin(a) + (Math.random() - 0.5) * 40;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.3, color: 0x2a5a2a, transparent: true, opacity: 0.18 })));
+})();
+
+// ── Sprite texture ────────────────────────────────────────────────────────────
+function makeGlowTex() {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 64;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(32,32,0,32,32,32);
+  g.addColorStop(0,'rgba(255,255,255,1)');
+  g.addColorStop(0.2,'rgba(255,255,255,0.6)');
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(0,0,64,64);
+  return new THREE.CanvasTexture(c);
+}
+const GLOW_TEX = makeGlowTex();
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function cssColor(hex, alpha) {
+  const r = (hex >> 16) & 255, g = (hex >> 8) & 255, b = hex & 255;
+  return alpha != null ? `rgba(${r},${g},${b},${alpha})` : `rgb(${r},${g},${b})`;
+}
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtNum(n) {
+  if (n == null || n === '') return '—';
+  if (typeof n === 'string') return n;
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'k';
+  return String(n);
+}
+
+// ── Build system markers ──────────────────────────────────────────────────────
+const systemMeshes = [];
+const labelDivs    = [];
+const visualMeshes = [];
+const labelsOverlay = document.getElementById('labels-overlay');
+
+const ringGeo  = new THREE.RingGeometry(0.9, 1.1, 48);
+const ringMat  = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+scene.add(ringMesh);
+let selectedMesh = null;
+
+SYSTEMS.forEach((s, idx) => {
+  const cfg = TYPE_CFG[s.type];
+  if (!cfg) return;
+  const p = new THREE.Vector3(...s.pos);
+
+  // Glow sprite
+  const glowMat = new THREE.SpriteMaterial({ map: GLOW_TEX, color: cfg.color, transparent: true, opacity: cfg.glow, depthWrite: false });
+  const glow    = new THREE.Sprite(glowMat);
+  glow.scale.setScalar(cfg.size * 7.5);
+  glow.position.copy(p);
+  scene.add(glow);
+
+  // Visual sphere
+  const vis = new THREE.Mesh(
+    new THREE.SphereGeometry(Math.max(cfg.size * 0.72, 0.22), 14, 14),
+    new THREE.MeshBasicMaterial({ color: cfg.color })
+  );
+  vis.position.copy(p);
+  scene.add(vis);
+  visualMeshes.push(vis);
+
+  // Hit mesh
+  const mesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial());
+  mesh.position.copy(p);
+  mesh.visible = true;
+  mesh.userData = { ...s, idx, glow, glowMat, visualMesh: vis };
+  scene.add(mesh);
+  systemMeshes.push(mesh);
+
+  // Label
+  const div = document.createElement('div');
+  const clr = cssColor(cfg.color, 0.9);
+  div.style.cssText = [
+    'position:fixed', 'pointer-events:auto', 'cursor:pointer',
+    "font-family:'JetBrains Mono',monospace", 'font-size:10px',
+    `color:${cssColor(cfg.color)}`, 'letter-spacing:0.8px',
+    `text-shadow:0 0 8px ${clr}`,
+    'transition:opacity 0.25s', 'white-space:nowrap', 'padding:3px 7px',
+    'background:rgba(0,4,0,0.45)', 'border-radius:4px',
+    `border:1px solid ${cssColor(cfg.color, 0.22)}`,
+  ].join(';');
+  div.textContent = s.shortName;
+  div.title = s.name;
+  div.onclick = () => selectSystem(systemMeshes[idx]);
+  labelsOverlay.appendChild(div);
+  labelDivs.push({ div, mesh });
+});
+
+// ── Routes (connection lines) ─────────────────────────────────────────────────
+const routeLines = [];
+ROUTES.forEach(([a, b]) => {
+  const sa = SYSTEMS[a], sb = SYSTEMS[b];
+  if (!sa || !sb) return;
+  const pts = [new THREE.Vector3(...sa.pos), new THREE.Vector3(...sb.pos)];
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  const mat = new THREE.LineBasicMaterial({ color: 0x4a9b4a, transparent: true, opacity: 0.35 });
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+  routeLines.push(line);
+});
+
+// ── Nearest visible system (screen-space pick) ────────────────────────────────
+function nearestVisibleSystem(cx, cy, threshPx) {
+  let best = null, bestDist = Infinity;
+  const v = new THREE.Vector3();
+  systemMeshes.forEach(m => {
+    if (!m.visible) return;
+    v.copy(m.position).project(camera);
+    if (v.z >= 1) return;
+    const sx = (v.x * 0.5 + 0.5) * window.innerWidth;
+    const sy = (v.y * -0.5 + 0.5) * window.innerHeight;
+    const d  = Math.hypot(cx - sx, cy - sy);
+    if (d < threshPx && d < bestDist) { bestDist = d; best = m; }
+  });
+  return best;
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+const tooltip = document.createElement('div');
+tooltip.style.cssText = 'position:fixed;pointer-events:none;z-index:90;font-family:"JetBrains Mono",monospace;font-size:0.6rem;background:rgba(3,7,3,0.9);border:1px solid rgba(74,155,74,0.3);padding:5px 10px;border-radius:4px;color:#e8f5e8;display:none';
+document.body.appendChild(tooltip);
+
+renderer.domElement.addEventListener('pointermove', e => {
+  const m = nearestVisibleSystem(e.clientX, e.clientY, 42);
+  if (m) {
+    tooltip.style.display = 'block';
+    tooltip.style.left  = (e.clientX + 14) + 'px';
+    tooltip.style.top   = (e.clientY - 10) + 'px';
+    tooltip.textContent = m.userData.name;
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+
+renderer.domElement.addEventListener('click', e => {
+  const m = nearestVisibleSystem(e.clientX, e.clientY, 48);
+  if (m) selectSystem(m);
+});
+
+// ── selectSystem — info panel ─────────────────────────────────────────────────
+let currentSystem = null;
+
+function selectSystem(mesh) {
+  currentSystem = mesh;
+  window.currentSystem = mesh;
+  const s = mesh.userData;
+  selectedMesh = mesh;
+
+  // Ring
+  ringMesh.position.copy(mesh.position);
+  const cfg = TYPE_CFG[s.type] || TYPE_CFG['anchor'];
+  ringMat.color.set(cfg.color);
+  ringMesh.scale.setScalar(cfg.size * 3.2);
+
+  flyTo(mesh.position);
+  renderInfoPanel(s);
+}
+
+window.selectSystemByName = name => {
+  const m = systemMeshes.find(m => m.userData.name === name);
+  if (m) selectSystem(m);
+};
+
+function renderInfoPanel(s) {
+  const accent = TYPE_ACCENT[s.type] || '#e8f5e8';
+  const stats  = s.localStats || {};
+
+  let html = `
+    <div class="ip-header">
+      <div class="ip-name" style="color:${accent}">${esc(s.name)}</div>
+      <div class="ip-sub">${esc(s.subtitle || '')}</div>
+      <span class="ip-type-badge">${esc(TYPE_LABEL[s.type] || s.type)}</span>
+    </div>
+    <div class="ip-body">
+      <p class="ip-desc">${esc(s.desc || '')}</p>
+  `;
+
+  // ── Conservation stats ──────────────────────────────────────────────────
+  if (s.type === 'conservation') {
+    html += `
+      <div class="stat-grid-4">
+        <div class="stat-tile">
+          <span class="stat-val">${fmtNum(stats.trees)}</span>
+          <span class="stat-lbl">Trees Registered</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val teal">${fmtNum(stats.species)}</span>
+          <span class="stat-lbl">Species Documented</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val">${fmtNum(stats.co2)}t</span>
+          <span class="stat-lbl">CO₂ / year est.</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val amber">${fmtNum(stats.hours)}h</span>
+          <span class="stat-lbl">Volunteer Hours</span>
+        </div>
+      </div>
+      <div class="stat-grid-2">
+        <div class="stat-tile gold">
+          <span class="stat-val gold">${fmtNum(stats.karma)}</span>
+          <span class="stat-lbl">Total Karma</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val">${fmtNum(stats.visitors)}</span>
+          <span class="stat-lbl">Visitors Onboarded</span>
+        </div>
+      </div>
+    `;
+    if (s.features) {
+      html += `<div class="feature-chips">${s.features.split(',').map(f=>`<span class="feature-chip">${esc(f.trim())}</span>`).join('')}</div>`;
+    }
+    html += `
+      <div class="ip-links-row" style="margin-top:14px">
+        <a class="ip-link-btn ip-link-green" href="${esc(s.link||'#')}" target="_blank">↗ Book a Visit</a>
+        <a class="ip-link-btn ip-link-gold" href="http://localhost:5173/passport" target="_blank">↗ My Passport</a>
+        <button class="ip-link-btn ip-link-muted" onclick="openSystemModal(currentSystem.userData)">Full Record</button>
+      </div>
+    `;
+  }
+
+  // ── Hotel stats ─────────────────────────────────────────────────────────
+  else if (s.type.startsWith('hotel_')) {
+    const karmaMax = 20000;
+    const karmaPct = Math.min(100, Math.round((stats.karma || 0) / karmaMax * 100));
+    html += `
+      <div class="rank-chip">
+        Leaderboard Rank
+        <strong style="font-size:0.75rem">#${stats.rank || '—'}</strong>
+        <span style="color:var(--pgm-muted)">&nbsp;of 24 hotels</span>
+      </div>
+      <div class="karma-bar-wrap">
+        <div class="karma-bar-label">
+          <span>Karma</span>
+          <span style="color:var(--pgm-gold)">${fmtNum(stats.karma)}</span>
+        </div>
+        <div class="karma-bar-track"><div class="karma-bar-fill" style="width:${karmaPct}%"></div></div>
+      </div>
+      <div class="stat-grid-4" style="margin-top:10px">
+        <div class="stat-tile gold">
+          <span class="stat-val gold">${fmtNum(stats.karma)}</span>
+          <span class="stat-lbl">Karma</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val">${fmtNum(stats.avatars)}</span>
+          <span class="stat-lbl">Guests Sent</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val teal">${fmtNum(stats.trees)}</span>
+          <span class="stat-lbl">Trees Sponsored</span>
+        </div>
+        <div class="stat-tile">
+          <span class="stat-val">${stats.co2 ? stats.co2+'t' : '—'}</span>
+          <span class="stat-lbl">CO₂ Attributed</span>
+        </div>
+      </div>
+    `;
+    if (s.link) {
+      html += `<div class="ip-links-row" style="margin-top:12px">
+        <a class="ip-link-btn ip-link-gold" href="${esc(s.link)}" target="_blank">↗ Hotel Dashboard</a>
+        <button class="ip-link-btn ip-link-muted" onclick="openSystemModal(currentSystem.userData)">Full Record</button>
+      </div>`;
+    } else {
+      html += `<div class="ip-links-row" style="margin-top:12px">
+        <button class="ip-link-btn ip-link-muted" onclick="openSystemModal(currentSystem.userData)">Full Record</button>
+      </div>`;
+    }
+  }
+
+  // ── Anchor / region stats ────────────────────────────────────────────────
+  else if (s.type === 'anchor') {
+    if (stats.karma) {
+      html += `<div class="stat-grid-4">
+        <div class="stat-tile gold"><span class="stat-val gold">${fmtNum(stats.karma)}</span><span class="stat-lbl">Total Karma</span></div>
+        <div class="stat-tile"><span class="stat-val">${fmtNum(stats.avatars)}</span><span class="stat-lbl">Avatars</span></div>
+        <div class="stat-tile teal"><span class="stat-val teal">${fmtNum(stats.hotels)}</span><span class="stat-lbl">Hotel Partners</span></div>
+        <div class="stat-tile"><span class="stat-val">${fmtNum(stats.trees)}</span><span class="stat-lbl">Trees Registered</span></div>
+      </div>`;
+    }
+  }
+
+  html += `</div>`; // close ip-body
+
+  document.getElementById('info-panel').innerHTML = html;
+  document.getElementById('info-panel').classList.remove('hidden');
+}
+
+window.openSystemModal = function(s) {
+  if (!s) return;
+  const accent = TYPE_ACCENT[s.type] || '#e8f5e8';
+  const stats  = s.localStats || {};
+
+  document.getElementById('modal-title').innerHTML = `<span style="color:${accent}">${esc(s.name)}</span>`;
+  document.getElementById('modal-sub').innerHTML = `
+    <span style="font-family:var(--pgm-mono);font-size:0.6rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(74,155,74,0.15);color:var(--pgm-muted)">${esc(TYPE_LABEL[s.type]||s.type)}</span>
+    &nbsp;<span style="color:var(--pgm-muted)">${esc(s.subtitle||'')}</span>
+  `;
+
+  let body = `<p class="modal-desc">${esc(s.desc||'—')}</p>`;
+
+  // Stats section
+  if (s.type === 'conservation') {
+    body += `
+      <details class="modal-nest" open>
+        <summary>Live Conservation Stats</summary>
+        <div class="modal-nest-body" style="padding:10px 0 6px">
+          <div class="modal-stat-grid">
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#7ddb7d">${fmtNum(stats.trees)}</span><span class="modal-stat-lbl">Trees</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#4ecdc4">${fmtNum(stats.species)}</span><span class="modal-stat-lbl">Species</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#7ddb7d">${fmtNum(stats.co2)}t</span><span class="modal-stat-lbl">CO₂/yr</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#c9a84c">${fmtNum(stats.hours)}h</span><span class="modal-stat-lbl">Vol. Hours</span></div>
+          </div>
+          <div class="modal-meta-row"><span class="modal-meta-key">Total Karma</span><span class="modal-meta-val" style="color:#c9a84c">${fmtNum(stats.karma)}</span></div>
+          <div class="modal-meta-row"><span class="modal-meta-key">Visitors Onboarded</span><span class="modal-meta-val">${fmtNum(stats.visitors)}</span></div>
+        </div>
+      </details>
+    `;
+    if (s.features) {
+      body += `<details class="modal-nest" open><summary>OASIS STAR Features</summary>
+        <div class="modal-nest-body" style="padding:8px 0 6px">
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${s.features.split(',').map(f=>`<span class="modal-lang-chip">${esc(f.trim())}</span>`).join('')}</div>
+        </div>
+      </details>`;
+    }
+    body += `
+      <details class="modal-nest">
+        <summary>Chapter System</summary>
+        <div class="modal-nest-body" style="padding:8px 0 8px;color:var(--pgm-muted);font-size:0.6rem;line-height:1.8">
+          Six chapters across one solar year — each tied to a Yucatán microseason, a Maya cultural thread, and a digital action that permanently updates the forest record.<br><br>
+          Ch.1 La Semilla · Ch.2 La Raíz · Ch.3 La Flor · Ch.4 La Tormenta · Ch.5 El Retorno · Ch.6 El Círculo<br><br>
+          Completing all six chapters earns the Custodian NFT — limited edition, one per year, only available at the winter solstice (Dec 21).
+        </div>
+      </details>
+    `;
+  } else if (s.type.startsWith('hotel_')) {
+    body += `
+      <details class="modal-nest" open>
+        <summary>Hotel Ecosystem Stats</summary>
+        <div class="modal-nest-body" style="padding:10px 0 6px">
+          <div class="modal-stat-grid">
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#c9a84c">${fmtNum(stats.karma)}</span><span class="modal-stat-lbl">Karma</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val">${fmtNum(stats.avatars)}</span><span class="modal-stat-lbl">Guests</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val" style="color:#4ecdc4">${fmtNum(stats.trees)}</span><span class="modal-stat-lbl">Trees</span></div>
+            <div class="modal-stat-tile"><span class="modal-stat-val">${stats.co2 ? stats.co2+'t' : '—'}</span><span class="modal-stat-lbl">CO₂</span></div>
+          </div>
+          <div class="modal-meta-row"><span class="modal-meta-key">Leaderboard Rank</span><span class="modal-meta-val" style="color:#c9a84c">#${stats.rank||'—'} of 24</span></div>
+          <div class="modal-meta-row"><span class="modal-meta-key">Tier</span><span class="modal-meta-val" style="color:${accent}">${esc(stats.tier||'—')}</span></div>
+          <div class="modal-meta-row"><span class="modal-meta-key">Region</span><span class="modal-meta-val">${esc(s.region||'—')}</span></div>
+        </div>
+      </details>
+    `;
+  }
+
+  // Nav data
+  body += `
+    <details class="modal-nest">
+      <summary>Navigation Data</summary>
+      <div class="modal-nest-body" style="padding:6px 0 6px">
+        <div class="modal-meta-row"><span class="modal-meta-key">Region</span><span class="modal-meta-val">${esc(s.region||'—')}</span></div>
+        <div class="modal-meta-row"><span class="modal-meta-key">Sector</span><span class="modal-meta-val">${esc(s.sector||'—')}</span></div>
+        <div class="modal-meta-row"><span class="modal-meta-key">Category</span><span class="modal-meta-val">${esc(s.cat||'—')}</span></div>
+        ${s.pos ? `<div class="modal-meta-row"><span class="modal-meta-key">Coordinates</span><span class="modal-meta-val">${s.pos.map(n=>n.toFixed(1)).join(', ')}</span></div>` : ''}
+      </div>
+    </details>
+  `;
+
+  if (s.link) {
+    body += `<div style="margin-top:14px"><a class="modal-ext-link" href="${esc(s.link)}" target="_blank">↗ ${esc(s.link.replace('https://','').replace('http://',''))}</a></div>`;
+  }
+
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('sysModal').classList.add('open');
+};
+
+
+// ── Modal close ───────────────────────────────────────────────────────────────
+document.getElementById('modal-close-btn').addEventListener('click', () => {
+  document.getElementById('sysModal').classList.remove('open');
+});
+document.getElementById('sysModal').addEventListener('click', e => {
+  if (e.target.id === 'sysModal') document.getElementById('sysModal').classList.remove('open');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('sysModal').classList.remove('open');
+});
+
+// ── Fly-to ────────────────────────────────────────────────────────────────────
+let flyFrom = null, flyProgress = 0, flyTargetVec = null, flyTarget = null;
+function flyTo(pos) {
+  flyFrom = camera.position.clone();
+  const dir = pos.clone().sub(camera.position).normalize();
+  flyTargetVec = pos.clone().sub(dir.multiplyScalar(-24));
+  flyProgress = 0;
+  flyTarget = pos.clone();
+}
+
+// ── Controls ──────────────────────────────────────────────────────────────────
+let orbitOn  = true;
+let labelsOn = true;
+let routesOn = true;
+
+window.toggleOrbit = () => {
+  orbitOn = !orbitOn;
+  controls.autoRotate = orbitOn;
+  document.getElementById('orbit-btn').textContent = orbitOn ? 'Orbit ON' : 'Orbit OFF';
+  document.getElementById('orbit-btn').classList.toggle('active', orbitOn);
+};
+window.setSpeed = n => {
+  controls.autoRotateSpeed = 0.28 * n;
+  [1,2,3].forEach(v => document.getElementById('sp'+v).classList.remove('active'));
+  document.getElementById('sp'+n).classList.add('active');
+};
+window.toggleLabels = () => {
+  labelsOn = !labelsOn;
+  document.getElementById('label-btn').classList.toggle('active', labelsOn);
+};
+window.toggleRoutes = () => {
+  routesOn = !routesOn;
+  routeLines.forEach(l => l.visible = routesOn);
+  document.getElementById('route-btn').classList.toggle('active', routesOn);
+};
+
+// ── Filter ────────────────────────────────────────────────────────────────────
+window.filterSystems = type => {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-filter="${type}"]`)?.classList.add('active');
+
+  systemMeshes.forEach(m => {
+    const t = m.userData.type;
+    const show = type === 'all' || t === type;
+    m.visible = show;
+    if (m.userData.visualMesh) m.userData.visualMesh.visible = show;
+    if (m.userData.glow)       m.userData.glow.visible       = show;
+  });
+};
+
+// ── Labels update ─────────────────────────────────────────────────────────────
+const tmpV = new THREE.Vector3();
+function updateLabels() {
+  labelDivs.forEach(({ div, mesh }) => {
+    if (!mesh.visible) { div.style.opacity = '0'; return; }
+    tmpV.copy(mesh.position).project(camera);
+    div.style.left    = ((tmpV.x * 0.5 + 0.5) * window.innerWidth + 10) + 'px';
+    div.style.top     = ((tmpV.y * -0.5 + 0.5) * window.innerHeight - 5) + 'px';
+    div.style.opacity = (tmpV.z < 1 && labelsOn) ? '1' : '0';
+  });
+}
+
+// ── Tally strip ───────────────────────────────────────────────────────────────
+const tallyEl = document.getElementById('tally');
+SYSTEMS.forEach(s => {
+  const div = document.createElement('div');
+  div.className = 'tally-item';
+  div.textContent = s.shortName;
+  const accent = TYPE_ACCENT[s.type] || '#e8f5e8';
+  div.style.color = accent;
+  div.onclick = () => window.selectSystemByName(s.name);
+  tallyEl.appendChild(div);
+});
+
+// ── Animate ───────────────────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+
+  if (flyFrom && flyTargetVec && flyProgress < 1) {
+    flyProgress = Math.min(1, flyProgress + dt * 0.85);
+    const t = 1 - Math.pow(1 - flyProgress, 3);
+    camera.position.lerpVectors(flyFrom, flyTargetVec, t);
+    controls.target.lerp(flyTarget, t * 0.3);
+    if (flyProgress >= 1) flyFrom = null;
+  }
+
+  if (selectedMesh && ringMat.opacity > 0) {
+    ringMesh.lookAt(camera.position);
+    ringMat.opacity = 0.35 + 0.25 * Math.sin(Date.now() * 0.003);
+  }
+
+  controls.update();
+  updateLabels();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ── Resize ────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── Loading bar ───────────────────────────────────────────────────────────────
+const bar = document.getElementById('load-bar');
+const ld  = document.getElementById('loading');
+let pct = 0;
+const ldr = setInterval(() => {
+  pct += Math.random() * 20;
+  bar.style.width = Math.min(pct, 100) + '%';
+  if (pct >= 100) {
+    clearInterval(ldr);
+    ld.style.opacity = '0';
+    setTimeout(() => ld.style.display = 'none', 850);
+  }
+}, 60);
+
+// ── Select Pulmón Verde by default ───────────────────────────────────────────
+setTimeout(() => {
+  const pv = systemMeshes.find(m => m.userData.type === 'conservation');
+  if (pv) selectSystem(pv);
+}, 1300);
+
+</script>
+</body>
+</html>

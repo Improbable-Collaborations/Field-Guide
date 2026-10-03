@@ -1,0 +1,140 @@
+[
+  {
+    "id": "black-shuck",
+    "title": "Black Shuck",
+    "file": "black-shuck.geojson"
+  },
+  {
+    "id": "mother-ludlam",
+    "title": "Mother Ludlam",
+    "file": "mother-ludlam.geojson"
+  },
+  {
+    "id": "surrey-hills",
+    "title": "Surrey Hills Lore",
+    "file": "surrey-hills-lore.geojson"
+  },
+  {
+    "id": "murder-stones",
+    "title": "Murder Stones",
+    "file": "murder-stones.geojson"
+  },
+  {
+    "id": "stones-of-the-golden-valley",
+    "title": "Stones of the Golden Valley",
+    "file": "stones-of-the-golden-valley.geojson",
+    "wikiSlug": "stones-of-the-golden-valley",
+    "atmosphere": "pilgrimage",
+    "starQuestId": "e5ee3bee-a276-4b6f-bed4-1e95a86ea81e"
+  },
+  {
+    "id": "when-birds-fall-silent",
+    "title": "When Birds Fall Silent",
+    "file": "when-birds-fall-silent.geojson",
+    "wikiSlug": "when-birds-fall-silent",
+    "atmosphere": "omen",
+    "starQuestId": "33ed1ace-32f0-4465-b3c5-1b3e812cc581"
+  },
+  {
+    "id": "cathedrons-dynamic",
+    "title": "Cathedrons: Order I — Awaken",
+    "file": "cathedrons-dynamic.geojson",
+    "wikiSlug": "cathedrons",
+    "atmosphere": "sacred",
+    "starQuestId": "5ce5f7eb-5069-40ac-8895-eeed2b6689bc"
+  },
+  {
+    "id": "wiltshire-crop-circles",
+    "title": "Wiltshire Crop Circles: The Skywatch Set",
+    "file": "wiltshire-crop-circles.geojson",
+    "wikiSlug": "wiltshire-crop-circles",
+    "atmosphere": "skywatch",
+    "starQuestId": "a7c3e910-4b2d-4f18-9e6a-cropcircles2026"
+  },
+  {
+    "id": "living-folk-customs",
+    "title": "Living Folk Customs",
+    "file": "living-folk-customs.geojson"
+  },
+  {
+    "id": "pub-bow-street-law",
+    "title": "Bow Street Law Walk",
+    "file": "pub-bow-street-law.geojson",
+    "wikiSlug": "bow-street-law-walk",
+    "atmosphere": "law",
+    "starQuestId": "ca62cdd7-358f-405b-aa22-d14ffb532f32",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "pub-wapping-rope",
+    "title": "Wapping Rope and Tide",
+    "file": "pub-wapping-rope.geojson",
+    "wikiSlug": "wapping-rope-and-tide",
+    "atmosphere": "pirate_river",
+    "starQuestId": "5e3eaa73-7f35-45d0-8009-8f801882f89e",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "grave-highgate-east",
+    "title": "Highgate East Ideas",
+    "file": "grave-highgate-east.geojson",
+    "wikiSlug": "highgate-east-ideas",
+    "atmosphere": "thinker",
+    "starQuestId": "1d1fb9ec-3868-454d-9076-6a79c5cec924",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "grave-bunhill-ink",
+    "title": "Bunhill Ink",
+    "file": "grave-bunhill-ink.geojson",
+    "wikiSlug": "bunhill-ink",
+    "atmosphere": "writer",
+    "starQuestId": "27f5cfa1-31ad-4b14-abb0-8ada21f60672",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "luthien-oxford-stone",
+    "title": "Lúthien Oxford Stone",
+    "file": "luthien-oxford-stone.geojson",
+    "wikiSlug": "luthien-oxford-stone",
+    "atmosphere": "epitaph_stone",
+    "starQuestId": "2dad483c-4420-4c57-8308-7550fe7a562a",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "luthien-roos-origin",
+    "title": "Roos Hemlock Origin",
+    "file": "luthien-roos-origin.geojson",
+    "wikiSlug": "roos-hemlock-origin",
+    "atmosphere": "glade_origin",
+    "starQuestId": "3e8b5f1a-9c2d-4e6f-a1b0-7d8e9f0a1b2c",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "luthien-legend-map",
+    "title": "Lúthien Legend Map",
+    "file": "luthien-legend-map.geojson",
+    "wikiSlug": "luthien-legend-map",
+    "atmosphere": "legend_romance",
+    "starQuestId": "4f9c6a2b-0d3e-5f70-b2c1-8e9f0a1b2c3d",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "killer-in-the-code",
+    "title": "Killer In The Code",
+    "file": "killer-in-the-code.geojson",
+    "wikiSlug": "killer-in-the-code",
+    "atmosphere": "cipher_noir",
+    "starQuestId": "00df145e-461b-434f-9372-d10c84f2b6df",
+    "geometryMode": "desk_standin"
+  },
+  {
+    "id": "jab-sw1-gloves",
+    "title": "JAB SW1 Street Gloves",
+    "file": "jab-sw1-gloves.geojson",
+    "wikiSlug": "jab-sw1-street-gloves",
+    "atmosphere": "gym_street",
+    "starQuestId": "8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22",
+    "geometryMode": "street_approx"
+  }
+]

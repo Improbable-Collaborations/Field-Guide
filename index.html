@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celestial Cyberspace · OASIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pgm-bg:      rgba(4,4,10,0.97);
+  --pgm-panel:   rgba(10,9,14,0.97);
+  --pgm-border:  rgba(196,144,106,0.18);
+  --pgm-border2: rgba(196,144,106,0.08);
+  --pgm-text:    #f2ebe1;
+  --pgm-muted:   #7a7068;
+  --pgm-amber:   #c4906a;
+  --pgm-amber2:  #e8b565;
+  --pgm-green:   #00cc77;
+  --pgm-teal:    #6ecfb8;
+  --pgm-purple:  #b388ff;
+  --pgm-pink:    #ff6b9e;
+  --pgm-blue:    #5ab4ff;
+  --pgm-mono:    "JetBrains Mono", monospace;
+  --pgm-serif:   "Newsreader", Georgia, serif;
+  --pgm-sans:    "Space Grotesk", sans-serif;
+  --pgm-display: "Bebas Neue", var(--pgm-sans);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #04040a; overflow: hidden; font-family: var(--pgm-mono), monospace; color: var(--pgm-text); }
+
+/* ── NAV ──────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 38px;
+  display: flex; align-items: center; gap: 0.5rem;
+  background: rgba(4,4,10,0.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pgm-border);
+  padding: 0 1.5rem; z-index: 100;
+  font-family: var(--pgm-mono); font-size: 0.62rem; letter-spacing: 0.09em;
+}
+.nav-brand { color: var(--pgm-amber); font-weight: 700; white-space: nowrap; }
+.nav-sep   { color: var(--pgm-border); }
+.nav-phase { color: var(--pgm-muted); white-space: nowrap; }
+.nav-link {
+  padding: 3px 10px; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--pgm-muted); text-decoration: none; border-radius: 3px;
+  transition: all 0.2s; white-space: nowrap; font-family: var(--pgm-mono);
+}
+.nav-link:hover { color: var(--pgm-text); background: rgba(196,144,106,0.07); }
+.nav-link.active {
+  color: var(--pgm-amber2); background: rgba(196,144,106,0.1);
+  border: 1px solid rgba(196,144,106,0.25);
+}
+.nav-link.live-badge::after {
+  content: 'LIVE'; font-size: 0.45rem; background: var(--pgm-green); color: #000;
+  border-radius: 3px; padding: 1px 4px; margin-left: 5px; vertical-align: middle;
+}
+.nav-spacer { flex: 1; }
+.nav-precheck-btn {
+  font-family: var(--pgm-mono); font-size: 0.58rem; letter-spacing: 0.1em;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--pgm-amber2);
+  border: 1px solid rgba(196,144,106,0.4); border-radius: 4px;
+  padding: 0.22rem 0.65rem; white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s;
+}
+.nav-precheck-btn:hover { background: rgba(196,144,106,0.1); border-color: rgba(196,144,106,0.65); }
+.nav-live {
+  display: flex; align-items: center; gap: 5px;
+  color: var(--pgm-amber2); font-size: 0.58rem;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--pgm-green); animation: blink 2s ease-in-out infinite;
+}
+.btn-reset {
+  padding: 3px 10px; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  background: transparent; color: var(--pgm-muted); border: 1px solid var(--pgm-border);
+  border-radius: 3px; cursor: pointer; transition: all 0.2s; font-family: var(--pgm-mono);
+}
+.btn-reset:hover { color: var(--pgm-text); border-color: rgba(196,144,106,0.5); }
+
+/* ── INFO PANEL ───────────────────────────────────────────────────── */
+#info-panel {
+  position: fixed; top: 84px; right: 14px;
+  width: 290px; max-height: calc(100vh - 130px);
+  background: rgba(10,9,14,0.96); backdrop-filter: blur(16px);
+  border: 1px solid var(--pgm-border); border-radius: 8px;
+  z-index: 100; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.ip-eyebrow {
+  padding: 7px 14px 6px; flex-shrink: 0;
+  border-bottom: 1px solid var(--pgm-border);
+  font-family: var(--pgm-mono); font-size: 0.52rem;
+  text-transform: uppercase; letter-spacing: 0.18em; color: var(--pgm-amber);
+}
+#ip-content {
+  flex: 1; overflow-y: auto; padding: 12px 14px;
+  scrollbar-width: thin; scrollbar-color: rgba(212,165,100,0.2) transparent;
+  min-width: 0;
+}
+#ip-content::-webkit-scrollbar { width: 4px; }
+#ip-content::-webkit-scrollbar-thumb { background: rgba(212,165,100,0.2); border-radius: 2px; }
+
+/* System name + badges */
+.ip-sys-name {
+  font-family: var(--pgm-display); font-size: 1.5rem; font-weight: 400;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  line-height: 1.1; margin-bottom: 2px; word-break: break-word;
+}
+.ip-sys-sub {
+  font-family: var(--pgm-mono); font-size: 0.58rem; color: var(--pgm-muted);
+  margin-bottom: 8px; word-break: break-word;
+}
+.ip-badge-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.pgm-badge {
+  font-family: var(--pgm-mono); font-size: 0.54rem; letter-spacing: 0.05em;
+  text-transform: uppercase; padding: 2px 7px;
+  border-radius: 10px; border: 1px solid var(--pgm-border); color: var(--pgm-muted);
+  white-space: nowrap;
+}
+
+/* Description */
+.ip-sys-desc {
+  font-family: "Newsreader", Georgia, serif; font-size: 0.8rem; line-height: 1.55;
+  color: rgba(242,235,225,0.75); font-style: italic;
+  margin-bottom: 10px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--pgm-border);
+  word-break: break-word;
+}
+
+/* Meta rows — grid layout prevents the flex collapse bug */
+.ip-meta-row {
+  display: grid; grid-template-columns: 72px 1fr;
+  font-family: var(--pgm-mono); font-size: 0.62rem;
+  margin-bottom: 4px; gap: 6px;
+}
+.ip-meta-key { color: var(--pgm-muted); }
+.ip-meta-val { color: var(--pgm-text); text-align: right; overflow-wrap: anywhere; }
+
+/* Stat tiles */
+.ip-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+.oapp-stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin: 8px 0; }
+.oapp-stat-tile {
+  padding: 6px 4px; border-radius: 5px;
+  border: 1px solid rgba(0,229,255,0.18); background: rgba(0,229,255,0.04);
+  text-align: center;
+}
+.oapp-stat-val {
+  font-family: var(--pgm-mono); font-size: 0.78rem; font-weight: 700;
+  color: #00e5ff; line-height: 1; display: block;
+}
+.oapp-stat-lbl {
+  font-family: var(--pgm-mono); font-size: 0.42rem; color: var(--pgm-muted);
+  margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; display: block;
+}
+.oapp-stat-loading { opacity: 0.4; animation: blink 1.5s ease-in-out infinite; }
+.ip-stat-tile {
+  padding: 7px 8px; border-radius: 6px;
+  border: 1px solid var(--pgm-border); background: rgba(0,0,0,0.25);
+  text-align: center;
+}
+.ip-stat-val {
+  font-family: var(--pgm-sans); font-size: 1rem; font-weight: 700;
+  line-height: 1; display: block;
+}
+.ip-stat-label {
+  font-family: var(--pgm-mono); font-size: 0.5rem; color: var(--pgm-muted);
+  margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; display: block;
+}
+
+/* Divider */
+.ip-divider { height: 1px; background: var(--pgm-border); margin: 8px 0; }
+
+/* Commit/activity bar */
+.ip-activity-bar { margin: 6px 0; }
+.ip-activity-bar-track { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.ip-activity-bar-fill  { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#6ecfb8,#e8b565); }
+
+/* Ext link */
+.ip-ext-link {
+  display: block; margin-top: 10px;
+  font-family: var(--pgm-mono); font-size: 0.58rem;
+  color: var(--pgm-teal); text-decoration: none;
+  padding: 5px 10px; border: 1px solid rgba(110,207,184,0.25); border-radius: 3px;
+  transition: all 0.15s; overflow-wrap: anywhere;
+}
+.ip-ext-link:hover { background: rgba(110,207,184,0.08); color: #fff; }
+
+/* Full details button */
+.ip-full-btn {
+  display: block; width: 100%; margin-top: 10px;
+  font-family: var(--pgm-mono); font-size: 0.58rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 8px 14px;
+  border: 1px solid var(--pgm-border); background: transparent;
+  color: var(--pgm-amber); cursor: pointer; transition: all 0.15s;
+}
+.ip-full-btn:hover { border-color: var(--pgm-amber); background: rgba(232,181,101,0.06); color: var(--pgm-text); }
+
+/* ── CELESTIAL BODY VISUAL ────────────────────────────────────────── */
+.cb-visual {
+  display: flex; justify-content: center; align-items: center;
+  margin: 0 0 16px; padding-top: 4px; position: relative;
+}
+.cb-sphere {
+  border-radius: 50%; flex-shrink: 0; position: relative;
+}
+.cb-moon .cb-sphere {
+  width: 48px; height: 48px;
+  background: radial-gradient(circle at 35% 30%, #d4d8e8 0%, #a0a5b8 48%, #6b7090 100%);
+  box-shadow: inset -5px -5px 14px rgba(0,0,0,0.58), 0 0 16px rgba(180,188,210,0.2);
+}
+.cb-planet .cb-sphere {
+  width: 62px; height: 62px;
+  background: radial-gradient(circle at 35% 30%, #90e4f8 0%, #2e92cc 45%, #0e4878 100%);
+  box-shadow: inset -8px -8px 20px rgba(0,0,0,0.5), 0 0 28px rgba(80,190,255,0.4), 0 0 60px rgba(80,190,255,0.12);
+}
+/* Ring for planet — scaleY flattens a circle into an oval */
+.cb-planet::before {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  width: 108px; height: 108px; border-radius: 50%;
+  border: 2.5px solid rgba(96,200,255,0.38);
+  transform: translate(-50%, -50%) scaleY(0.18);
+  pointer-events: none; z-index: 2;
+}
+.cb-star .cb-sphere {
+  width: 68px; height: 68px;
+  background: radial-gradient(circle at 38% 28%, #fffcc0 0%, #ffd040 28%, #e88010 68%, #c04000 100%);
+  box-shadow: inset -10px -10px 24px rgba(0,0,0,0.35),
+              0 0 40px rgba(255,208,80,0.6), 0 0 80px rgba(255,140,0,0.2);
+}
+.cb-superstar .cb-sphere {
+  width: 80px; height: 80px;
+  background: radial-gradient(circle at 38% 28%, #ffffff 0%, #ffe898 14%, #ffb030 50%, #d84000 100%);
+  box-shadow: inset -12px -12px 28px rgba(0,0,0,0.3),
+              0 0 50px rgba(255,200,60,0.7), 0 0 100px rgba(255,140,0,0.3);
+}
+.cb-grandstar .cb-sphere {
+  width: 90px; height: 90px;
+  background: radial-gradient(circle at 38% 28%, #ffffff 0%, #e8f4ff 16%, #a8c8ff 48%, #3048c0 100%);
+  box-shadow: inset -14px -14px 32px rgba(0,0,0,0.25),
+              0 0 60px rgba(160,210,255,0.75), 0 0 120px rgba(80,140,255,0.3);
+}
+.cb-label {
+  position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
+  font-family: var(--pgm-mono); font-size: 0.44rem;
+  color: var(--pgm-muted); letter-spacing: 0.12em; white-space: nowrap; text-transform: uppercase;
+}
+
+/* ── CONTRIBUTOR / TEAM SECTION ──────────────────────────────────── */
+.ip-team-section { margin: 10px 0 6px; }
+.ip-team-label {
+  font-family: var(--pgm-mono); font-size: 0.5rem;
+  color: var(--pgm-muted); letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 7px; display: flex; justify-content: space-between; align-items: center;
+}
+.ip-team-count { color: var(--pgm-text); font-size: 0.55rem; letter-spacing: 0; }
+.avatar-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.avatar-chip {
+  width: 30px; height: 30px; border-radius: 7px;
+  font-family: var(--pgm-mono); font-size: 0.6rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: default; position: relative; flex-shrink: 0;
+  transition: transform 0.15s; border: 1px solid;
+}
+.avatar-chip:hover { transform: scale(1.12); }
+.avatar-chip:hover::after {
+  content: attr(title); position: absolute; bottom: calc(100% + 5px); left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,8,20,0.96); border: 1px solid var(--pgm-border);
+  color: var(--pgm-text); font-size: 0.5rem; padding: 3px 7px;
+  border-radius: 3px; white-space: nowrap; z-index: 999; pointer-events: none; font-weight: 400;
+}
+/* contributor-row used inside the modal */
+.contributor-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.78rem;
+}
+.contrib-name { flex: 1; font-family: var(--pgm-sans); font-size: 0.78rem; }
+.contrib-sub  { font-family: var(--pgm-mono); font-size: 0.6rem; color: var(--pgm-muted); }
+.contrib-commits { font-family: var(--pgm-mono); font-size: 0.62rem; color: var(--pgm-teal); }
+
+/* ── LINKS ROW ───────────────────────────────────────────────────── */
+.ip-links-row { display: flex; gap: 6px; margin: 8px 0 6px; flex-wrap: wrap; }
+.ip-link-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 4px;
+  font-family: var(--pgm-mono); font-size: 0.58rem; letter-spacing: 0.02em;
+  text-decoration: none; border: 1px solid; transition: opacity 0.15s;
+}
+.ip-link-btn:hover { opacity: 0.72; }
+.ip-link-gh  { background: rgba(90,180,255,0.08); border-color: rgba(90,180,255,0.3); color: #5ab4ff; }
+.ip-link-web { background: rgba(110,207,184,0.08); border-color: rgba(110,207,184,0.3); color: var(--pgm-teal); }
+
+/* ── FILTER PANEL ─────────────────────────────────────────────────── */
+#filter-panel {
+  position: fixed; top: 84px; left: 14px; width: 172px;
+  background: rgba(10,9,14,0.96); backdrop-filter: blur(12px);
+  border: 1px solid var(--pgm-border); border-radius: 6px;
+  padding: 10px 12px; z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.fp-title {
+  font-family: var(--pgm-mono); font-size: 0.5rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--pgm-amber); margin-bottom: 8px;
+}
+.fp-item {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
+  font-family: var(--pgm-mono); font-size: 0.58rem; cursor: pointer;
+  transition: color 0.2s; color: var(--pgm-muted); user-select: none;
+}
+.fp-item:hover { color: var(--pgm-text); }
+.fp-item.disabled { opacity: 0.3; }
+.fp-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.fp-line { width: 12px; height: 2px; flex-shrink: 0; border-radius: 1px; }
+.fp-count { margin-left: auto; font-size: 0.52rem; color: var(--pgm-muted); opacity: 0.6; }
+
+/* ── BOTTOM CONTROLS ──────────────────────────────────────────────── */
+#controls {
+  position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; align-items: center; z-index: 100;
+}
+.ctrl-group {
+  display: flex; align-items: stretch;
+  background: rgba(4,4,10,0.92); backdrop-filter: blur(8px);
+  border: 1px solid var(--pgm-border); border-radius: 4px; overflow: hidden;
+}
+.ctrl-btn {
+  padding: 5px 11px; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
+  background: transparent; color: var(--pgm-muted); border: none;
+  cursor: pointer; font-family: var(--pgm-mono); transition: all 0.18s; white-space: nowrap;
+}
+.ctrl-btn:hover { background: rgba(196,144,106,0.07); color: var(--pgm-text); }
+.ctrl-btn.active { background: rgba(196,144,106,0.12); color: var(--pgm-amber2); }
+.ctrl-divider { width: 1px; background: var(--pgm-border); align-self: stretch; }
+
+/* ── TEA COUNTER ──────────────────────────────────────────────────── */
+#tea-panel {
+  position: fixed; bottom: 36px; right: 14px;
+  background: rgba(4,4,10,0.92); backdrop-filter: blur(8px);
+  border: 1px solid var(--pgm-border); border-radius: 6px;
+  padding: 8px 12px; z-index: 100; text-align: right; min-width: 140px;
+}
+.tea-label { font-family: var(--pgm-mono); font-size: 0.48rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pgm-amber); margin-bottom: 2px; }
+.tea-val { font-family: var(--pgm-display); font-size: 1.6rem; color: var(--pgm-amber2); letter-spacing: 0.04em; }
+.tea-unit { font-size: 0.6rem; color: rgba(232,181,101,0.5); margin-left: 3px; }
+.tea-sub { font-family: var(--pgm-mono); font-size: 0.5rem; color: var(--pgm-muted); margin-top: 1px; }
+.tea-sub span { color: var(--pgm-green); }
+
+/* ── SPRINT PANEL ─────────────────────────────────────────────────── */
+#sprint-panel {
+  position: fixed; bottom: 36px; left: 14px;
+  background: rgba(4,4,10,0.92); backdrop-filter: blur(8px);
+  border: 1px solid var(--pgm-border); border-radius: 6px;
+  padding: 8px 12px; z-index: 100; min-width: 140px;
+}
+.sp-label { font-family: var(--pgm-mono); font-size: 0.48rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pgm-amber); margin-bottom: 4px; }
+.sp-name  { font-family: var(--pgm-mono); font-size: 0.6rem; color: var(--pgm-text); margin-bottom: 5px; }
+.sp-bar-wrap { height: 2px; background: rgba(196,144,106,0.12); border-radius: 1px; overflow: hidden; margin-bottom: 3px; }
+.sp-bar   { height: 100%; background: linear-gradient(90deg, var(--pgm-amber), var(--pgm-green)); border-radius: 1px; }
+.sp-sub   { font-family: var(--pgm-mono); font-size: 0.5rem; color: var(--pgm-muted); }
+.sp-sub span { color: var(--pgm-amber2); }
+
+/* ── LOADING ─────────────────────────────────────────────────────── */
+#loading {
+  position: fixed; inset: 0; background: #04040a;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 200; transition: opacity 0.8s;
+}
+.ld-title { font-family: var(--pgm-display); font-size: 2.2rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pgm-amber2); margin-bottom: 4px; }
+.ld-sub   { font-family: var(--pgm-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--pgm-muted); margin-bottom: 8px; text-align: center; line-height: 2; }
+.ld-quote { font-family: var(--pgm-serif); font-size: 0.85rem; color: rgba(196,144,106,0.35); font-style: italic; max-width: 360px; text-align: center; margin-bottom: 2rem; line-height: 1.6; }
+.ld-bar-wrap { width: 220px; height: 1px; background: rgba(196,144,106,0.15); border-radius: 1px; overflow: hidden; }
+.ld-bar { height: 100%; background: var(--pgm-amber2); width: 0%; transition: width 0.06s; }
+
+/* ── TOOLTIP ─────────────────────────────────────────────────────── */
+#tooltip {
+  position: fixed; pointer-events: none;
+  background: rgba(14,12,10,0.96); border: 1px solid var(--pgm-border);
+  border-radius: 4px; padding: 5px 10px;
+  font-family: var(--pgm-mono); font-size: 10px; color: var(--pgm-text);
+  z-index: 150; display: none; letter-spacing: 0.5px;
+}
+
+/* ── HINT ────────────────────────────────────────────────────────── */
+.hint {
+  position: fixed; bottom: 76px; left: 50%; transform: translateX(-50%);
+  font-family: var(--pgm-mono); font-size: 0.5rem; color: rgba(196,144,106,0.2);
+  letter-spacing: 0.12em; text-transform: uppercase; z-index: 99;
+  pointer-events: none; white-space: nowrap;
+}
+
+/* ── MODAL (PGM-style) ───────────────────────────────────────────── */
+.modal-back {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(6,5,4,0.78); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+.modal-back.open { opacity: 1; pointer-events: auto; }
+.modal-card {
+  width: min(580px,100%); max-height: min(88vh,760px);
+  display: flex; flex-direction: column;
+  border: 1px solid var(--pgm-border); border-radius: 10px;
+  background: var(--pgm-panel);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+}
+.modal-head {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  padding: 14px 18px; border-bottom: 1px solid var(--pgm-border); flex-shrink: 0;
+}
+.modal-head-title  { font-family: var(--pgm-display); font-size: 1.4rem; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.15; }
+.modal-head-sub    { font-family: var(--pgm-mono); font-size: 0.62rem; color: var(--pgm-muted); margin-top: 3px; }
+.modal-close {
+  font-family: var(--pgm-mono); font-size: 0.6rem; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 6px 12px; flex-shrink: 0;
+  border: 1px solid var(--pgm-border); background: transparent;
+  color: var(--pgm-muted); cursor: pointer; transition: all 0.15s;
+}
+.modal-close:hover { color: var(--pgm-text); border-color: var(--pgm-amber); }
+.modal-body {
+  overflow-y: auto; padding: 18px 18px 24px; flex: 1;
+  scrollbar-width: thin; scrollbar-color: rgba(212,165,100,0.2) transparent;
+}
+.modal-body::-webkit-scrollbar { width: 4px; }
+.modal-body::-webkit-scrollbar-thumb { background: rgba(212,165,100,0.2); border-radius: 2px; }
+
+/* Modal inner components */
+.modal-desc {
+  font-family: var(--pgm-serif); font-size: 0.9rem; line-height: 1.6;
+  color: rgba(242,235,225,0.82); margin-bottom: 16px;
+}
+.modal-section-title {
+  font-family: var(--pgm-mono); font-size: 0.58rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--pgm-muted); margin-bottom: 8px; margin-top: 16px;
+}
+.modal-meta-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--pgm-mono); font-size: 0.68rem; padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04); gap: 12px;
+}
+.modal-meta-key { color: var(--pgm-muted); flex-shrink: 0; }
+.modal-meta-val { color: var(--pgm-text); text-align: right; word-break: break-all; }
+.modal-stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 12px 0; }
+.modal-stat-tile {
+  padding: 10px 8px; border-radius: 6px;
+  border: 1px solid var(--pgm-border); background: rgba(0,0,0,0.3);
+  text-align: center;
+}
+.modal-stat-val { font-family: var(--pgm-display); font-size: 1.3rem; font-weight: 400; letter-spacing: 0.04em; display: block; }
+.modal-stat-lbl { font-family: var(--pgm-mono); font-size: 0.52rem; color: var(--pgm-muted); display: block; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; }
+.modal-nest {
+  margin-top: 8px; border: 1px solid var(--pgm-border); border-radius: 7px;
+  overflow: hidden;
+}
+.modal-nest > summary {
+  cursor: pointer; padding: 9px 12px; list-style: none;
+  font-family: var(--pgm-mono); font-size: 0.65rem; color: var(--pgm-amber);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.modal-nest > summary::-webkit-details-marker { display: none; }
+.modal-nest > summary::after { content: " +"; color: var(--pgm-muted); }
+.modal-nest[open] > summary::after { content: " −"; }
+.modal-nest-body { padding: 0 12px 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+.modal-lang-chip {
+  display: inline-block; font-family: var(--pgm-mono); font-size: 0.58rem;
+  padding: 2px 8px; border-radius: 10px; margin: 3px 3px 0 0;
+  border: 1px solid rgba(110,207,184,0.25); color: var(--pgm-teal);
+  background: rgba(110,207,184,0.06);
+}
+.modal-ext-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--pgm-mono); font-size: 0.62rem; color: var(--pgm-teal);
+  text-decoration: none; padding: 5px 12px;
+  border: 1px solid rgba(110,207,184,0.25); border-radius: 3px;
+  transition: all 0.15s; margin-right: 6px; margin-top: 10px;
+  word-break: break-all;
+}
+.modal-ext-link:hover { background: rgba(110,207,184,0.1); color: #fff; }
+
+/* ── TALLY STRIP ─────────────────────────────────────────────────── */
+#tally-strip {
+  position: fixed; top: 38px; left: 0; right: 0; z-index: 99;
+  background: rgba(4,4,10,0.97); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pgm-border); height: 34px;
+  display: flex; align-items: center; gap: 0 10px;
+  padding: 0 14px; overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap;
+}
+#tally-strip::-webkit-scrollbar { display: none; }
+.tally-label {
+  font-family: var(--pgm-mono); font-size: 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.16em; color: var(--pgm-amber);
+  flex-shrink: 0; margin-right: 2px;
+}
+.tally-chip {
+  display: flex; align-items: baseline; gap: 4px;
+  font-family: var(--pgm-mono); font-size: 0.55rem;
+  padding: 2px 8px; border-radius: 4px; border: 1px solid var(--pgm-border);
+  flex-shrink: 0; cursor: pointer; transition: background 0.12s;
+}
+.tally-chip:hover { background: rgba(196,144,106,0.06); }
+.tally-chip .tv { font-size: 0.78rem; font-weight: 600; }
+.tally-chip .tl { color: var(--pgm-muted); }
+.tally-chip.t-anchor   { border-color: rgba(196,144,106,0.35); }
+.tally-chip.t-anchor .tv   { color: var(--pgm-amber2); }
+.tally-chip.t-live     { border-color: rgba(0,204,119,0.35); }
+.tally-chip.t-live .tv     { color: #00cc77; }
+.tally-chip.t-building { border-color: rgba(255,187,51,0.30); }
+.tally-chip.t-building .tv { color: #ffbb33; }
+.tally-chip.t-partner  { border-color: rgba(110,207,184,0.28); }
+.tally-chip.t-partner .tv  { color: var(--pgm-teal); }
+.tally-chip.t-concept  { border-color: rgba(179,136,255,0.25); }
+.tally-chip.t-concept .tv  { color: var(--pgm-purple); }
+.tally-chip.t-canon    { border-color: rgba(255,107,158,0.25); }
+.tally-chip.t-canon .tv    { color: var(--pgm-pink); }
+.tally-chip.t-oapp     { border-color: rgba(0,229,255,0.35); }
+.tally-chip.t-oapp .tv { color: #00e5ff; }
+.tally-chip.t-holonized { border-color: rgba(232,181,101,0.40); }
+.tally-chip.t-holonized .tv { color: var(--pgm-amber2); font-weight: 700; }
+.tally-sep { width: 1px; height: 16px; background: var(--pgm-border); flex-shrink: 0; }
+.live-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--pgm-green); box-shadow: 0 0 5px var(--pgm-green);
+  margin-left: auto; animation: blink 2.4s ease-in-out infinite; flex-shrink: 0;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── ACTIVITY TICKER ─────────────────────────────────────────────── */
+#activity-ticker {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
+  background: rgba(4,4,10,0.97); border-top: 1px solid var(--pgm-border); height: 24px;
+  overflow: hidden;
+}
+.ticker-marquee-wrap {
+  overflow: hidden; height: 100%;
+  mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+}
+.ticker-marquee {
+  display: flex; gap: 60px; padding: 5px 0;
+  width: max-content; animation: ticker-scroll 300s linear infinite;
+}
+.ticker-marquee:hover { animation-play-state: paused; }
+@keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-item { font-family: var(--pgm-mono); font-size: 0.6rem; color: var(--pgm-muted); white-space: nowrap; flex-shrink: 0; }
+.ticker-item .ti-name { color: var(--pgm-text); }
+.ticker-item .ti-dot { margin: 0 8px; color: var(--pgm-border); }
+
+/* ── LANG CHIPS (info panel) ─────────────────────────────────────── */
+.lang-chip-row { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 6px; }
+.lang-chip {
+  font-family: var(--pgm-mono); font-size: 0.56rem; padding: 2px 7px;
+  border-radius: 10px; border: 1px solid rgba(110,207,184,0.25);
+  color: var(--pgm-teal); background: rgba(110,207,184,0.06); white-space: nowrap;
+}
+
+/* ── STATUS DOT ──────────────────────────────────────────────────── */
+.status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; flex-shrink: 0; vertical-align: middle; }
+.status-dot.live     { background: var(--pgm-green); box-shadow: 0 0 5px rgba(0,204,119,0.5); animation: blink 2s ease-in-out infinite; }
+.status-dot.building { background: #ffbb33; }
+.status-dot.concept  { background: var(--pgm-purple); }
+.status-dot.partner  { background: var(--pgm-teal); }
+.status-dot.anchor   { background: var(--pgm-amber2); box-shadow: 0 0 4px rgba(232,181,101,0.5); }
+.status-dot.oapp     { background: #00e5ff; box-shadow: 0 0 5px rgba(0,229,255,0.6); animation: blink 2.5s ease-in-out infinite; }
+.status-dot.moon     { background: #b0b8cc; }
+.status-dot.planet   { background: #60c8ff; }
+.status-dot.star,.status-dot.superstar,.status-dot.grandstar,.status-dot.grandsuperstar { background: #ffd050; box-shadow: 0 0 6px rgba(255,208,80,0.6); animation: blink 3s ease-in-out infinite; }
+
+/* ── COMMIT / ACTIVITY BAR ───────────────────────────────────────── */
+.commit-bar { display: flex; align-items: center; gap: 8px; margin: 4px 0 6px; }
+.commit-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.commit-bar-fill  { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #5ab4ff, #6ecfb8); transition: width 0.6s ease; }
+.commit-bar-label { font-family: var(--pgm-mono); font-size: 0.58rem; color: var(--pgm-muted); white-space: nowrap; }
+
+/* ── METRIC TILES (info panel expandable) ────────────────────────── */
+.ip-metrics-section {
+  margin-top: 10px; border: 1px solid var(--pgm-border); border-radius: 6px; overflow: hidden;
+}
+.ip-metrics-section > summary {
+  cursor: pointer; padding: 7px 10px; list-style: none;
+  font-family: var(--pgm-mono); font-size: 0.58rem;
+  color: var(--pgm-muted); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.ip-metrics-section > summary::-webkit-details-marker { display: none; }
+.ip-metrics-section > summary::after { content: " +"; }
+.ip-metrics-section[open] > summary { color: var(--pgm-teal); }
+.ip-metrics-section[open] > summary::after { content: " −"; }
+.ip-metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 0 8px 8px; }
+.ip-metric-tile {
+  padding: 6px 8px; border-radius: 5px;
+  border: 1px solid var(--pgm-border); background: rgba(0,0,0,0.25);
+  font-size: 0.52rem; color: var(--pgm-muted);
+}
+.ip-metric-tile b { display: block; font-family: var(--pgm-sans); font-size: 0.88rem; color: var(--pgm-text); margin-bottom: 1px; }
+
+/* ── MOBILE CONTROLS ─────────────────────────────────────────────── */
+#mobile-bar {
+  display: none;
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 110; gap: 8px; align-items: center;
+}
+.mob-btn {
+  font-family: var(--pgm-mono); font-size: 0.52rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 6px 14px;
+  background: rgba(4,4,10,0.96); border: 1px solid var(--pgm-border);
+  border-radius: 20px; color: var(--pgm-muted); cursor: pointer;
+  transition: all 0.2s; white-space: nowrap; backdrop-filter: blur(8px);
+}
+.mob-btn:hover, .mob-btn.active { color: var(--pgm-amber2); border-color: rgba(196,144,106,0.5); }
+
+/* Info panel drag handle on mobile */
+.ip-handle {
+  display: none; justify-content: center; padding: 8px 0 4px; cursor: pointer;
+}
+.ip-handle-bar {
+  width: 36px; height: 3px; border-radius: 2px;
+  background: rgba(196,144,106,0.3);
+}
+
+/* ── FILTER PANEL — RAIL STYLE ───────────────────────────────────── */
+details.fp-section {
+  margin-bottom: 5px; border: 1px solid var(--pgm-border); border-radius: 4px;
+  background: rgba(196,144,106,0.03);
+}
+details.fp-section > summary {
+  padding: 6px 8px; cursor: pointer; list-style: none;
+  font-family: var(--pgm-mono); font-size: 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--pgm-muted);
+}
+details.fp-section > summary::-webkit-details-marker { display: none; }
+details.fp-section[open] > summary { color: var(--pgm-amber); }
+.fp-section-body { padding: 0 4px 5px; }
+
+/* ── TIER SIZE LEGEND ────────────────────────────────────────────── */
+.tier-size-legend { display: flex; flex-direction: column; gap: 4px; padding: 4px 2px 2px; }
+.tsl-row { display: flex; align-items: center; gap: 7px; }
+.tsl-sphere {
+  border-radius: 50%; flex-shrink: 0;
+  box-shadow: 0 0 4px currentColor;
+}
+.tsl-label { font-family: var(--pgm-mono); font-size: 0.5rem; color: var(--pgm-muted); flex: 1; }
+.tsl-class { font-family: var(--pgm-mono); font-size: 0.48rem; color: var(--pgm-muted); opacity: 0.6; margin-left: auto; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav { padding: 0 1rem; gap: 0.4rem; }
+  .nav-phase { display: none; }
+  .nav-link:not(.active) { display: none; }
+  .nav-precheck-btn { font-size: 0.52rem; padding: 0.18rem 0.5rem; }
+
+  #tally-strip { top: 38px; gap: 0 6px; padding: 0 10px; }
+  .tally-label { display: none; }
+  .tally-chip .tv { font-size: 0.72rem; }
+
+  /* Side panels off by default; toggled via JS */
+  #filter-panel { display: none; left: 10px; right: 10px; width: auto; top: 80px; }
+  #filter-panel.mob-open { display: block; z-index: 200; }
+
+  /* Info panel: bottom sheet */
+  #info-panel {
+    top: auto !important; bottom: 0; left: 0; right: 0;
+    width: 100%; max-height: 55vh; border-radius: 12px 12px 0 0;
+    border-left: none; border-right: none; border-bottom: none;
+    border-top: 1px solid var(--pgm-border);
+    transform: translateY(calc(100% - 46px));
+    transition: transform 0.32s cubic-bezier(0.16,1,0.3,1);
+  }
+  #info-panel.mob-open { transform: translateY(0); }
+  .ip-handle { display: flex; }
+  .ip-eyebrow { cursor: pointer; user-select: none; }
+
+  #tea-panel    { display: none; }
+  #sprint-panel { display: none; }
+
+  #controls {
+    bottom: 68px; gap: 4px; flex-wrap: wrap;
+    justify-content: center; max-width: calc(100vw - 20px);
+  }
+  .ctrl-btn { padding: 5px 9px; font-size: 0.5rem; }
+
+  .hint { display: none; }
+  #activity-ticker { height: 20px; }
+  #mobile-bar { display: flex; }
+}
+
+@media (max-width: 480px) {
+  nav { padding: 0 0.75rem; }
+  .nav-precheck-btn { display: none; }
+  #info-panel { max-height: 62vh; }
+  #controls { bottom: 72px; }
+  .ctrl-btn { padding: 4px 7px; font-size: 0.48rem; }
+  .tally-chip { padding: 2px 5px; }
+  .tally-sep { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="ld-title">Celestial Cyberspace</div>
+  <div class="ld-sub">Rendering holonic galaxy map<br>Syncing star clusters and route overlays</div>
+  <div class="ld-quote">"Space is big. Really big. You just won't believe how vastly, hugely, mind-bogglingly big it is."</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="load-bar"></div></div>
+</div>
+
+<!-- Nav -->
+<nav>
+  <span class="nav-brand">⬡ OASIS</span>
+  <span class="nav-sep">|</span>
+  <span class="nav-phase">CELESTIAL CYBERSPACE</span>
+  <a href="https://heart-of-gold.vercel.app" class="nav-link live-badge" target="_blank" style="margin-left:0.5rem">Heart of Gold</a>
+  <a href="#" class="nav-link active">Galaxy Map</a>
+  <div class="nav-spacer"></div>
+  <button class="btn-reset" onclick="resetCamera()">↺ Reset View</button>
+  <a href="/holonize.html" class="nav-precheck-btn">⬡ Pre-Check →</a>
+  <div class="nav-live"><span class="nav-dot"></span>ACTIVE</div>
+</nav>
+
+<!-- Tally strip -->
+<div id="tally-strip">
+  <span class="tally-label">Live tally</span>
+  <div class="tally-chip t-live" onclick="filterSystems('live')" title="Live systems">
+    <span class="tv" id="tv-live">—</span><span class="tl">live</span>
+  </div>
+  <div class="tally-chip t-oapp" onclick="filterSystems('oapp')" title="Holonic OAPPs">
+    <span class="tv" id="tv-oapp">—</span><span class="tl">OAPPs</span>
+  </div>
+  <div class="tally-chip t-building" onclick="filterSystems('building')" title="Building">
+    <span class="tv" id="tv-building">—</span><span class="tl">building</span>
+  </div>
+  <div class="tally-chip t-partner" onclick="filterSystems('partner')" title="Partners">
+    <span class="tv" id="tv-partner">—</span><span class="tl">partners</span>
+  </div>
+  <div class="tally-chip t-concept" onclick="filterSystems('concept')" title="Concepts">
+    <span class="tv" id="tv-concept">—</span><span class="tl">concepts</span>
+  </div>
+  <div class="tally-sep"></div>
+  <div class="tally-chip t-holonized" onclick="filterSystems('holonized')" title="Holonized projects">
+    <span class="tv" id="tv-holonized">—</span><span class="tl">holonized</span>
+  </div>
+  <span class="live-dot" style="margin-left:auto"></span>
+</div>
+
+<!-- Activity ticker -->
+<div id="activity-ticker">
+  <div class="ticker-marquee-wrap">
+    <div class="ticker-marquee" id="ticker-marquee">
+      <span class="ticker-item">Loading galaxy data…</span>
+    </div>
+  </div>
+</div>
+
+<!-- 3D canvas -->
+<div id="canvas-container" style="width:100vw;height:100vh"></div>
+
+<!-- Mobile bottom bar (hidden on desktop via CSS) -->
+<div id="mobile-bar">
+  <button class="mob-btn" id="mob-filter-btn" onclick="toggleMobFilter()">⬡ Filter</button>
+  <button class="mob-btn" id="mob-info-btn" onclick="toggleMobInfo()">◎ Info</button>
+  <button class="mob-btn" onclick="resetCamera()">↺ Reset</button>
+</div>
+
+<!-- Info panel (PGM-styled) -->
+<div id="info-panel">
+  <div class="ip-handle" onclick="toggleMobInfo()"><div class="ip-handle-bar"></div></div>
+  <div class="ip-eyebrow" onclick="toggleMobInfo()">Selected System</div>
+  <div id="ip-content" style="display:flex;align-items:center;justify-content:center;min-height:120px;">
+    <p style="font-family:var(--pgm-mono);font-size:0.7rem;color:var(--pgm-muted);text-align:center;font-style:italic;line-height:1.6;">
+      Click any system<br>to explore it
+    </p>
+  </div>
+</div>
+
+<!-- Filter panel -->
+<div id="filter-panel">
+  <div class="fp-title">Filter</div>
+
+  <details class="fp-section" open>
+    <summary>System Types</summary>
+    <div class="fp-section-body">
+      <div class="fp-item" data-type="all" onclick="filterSystems('all')" id="fp-all">
+        <div class="fp-dot" style="background:#ffffff;opacity:0.4"></div>
+        <span>All</span><span class="fp-count" id="fc-all">—</span>
+      </div>
+      <div class="fp-item" data-type="live" onclick="filterSystems('live')" id="fp-live">
+        <div class="fp-dot" style="background:#00ee88"></div>
+        <span>Live</span><span class="fp-count" id="fc-live">—</span>
+      </div>
+      <div class="fp-item" data-type="oapp" onclick="filterSystems('oapp')" id="fp-oapp">
+        <div class="fp-dot" style="background:#00e5ff"></div>
+        <span>Holonic OAPPs</span><span class="fp-count" id="fc-oapp">—</span>
+      </div>
+      <div class="fp-item" data-type="building" onclick="filterSystems('building')" id="fp-building">
+        <div class="fp-dot" style="background:#ffbb33"></div>
+        <span>Building</span><span class="fp-count" id="fc-building">—</span>
+      </div>
+      <div class="fp-item" data-type="partner" onclick="filterSystems('partner')" id="fp-partner">
+        <div class="fp-dot" style="background:#00ddcc"></div>
+        <span>Partners</span><span class="fp-count" id="fc-partner">—</span>
+      </div>
+      <div class="fp-item" data-type="concept" onclick="filterSystems('concept')" id="fp-concept">
+        <div class="fp-dot" style="background:#cc88ff"></div>
+        <span>Concepts</span><span class="fp-count" id="fc-concept">—</span>
+      </div>
+    </div>
+  </details>
+
+  <details class="fp-section" open>
+    <summary>Holonized</summary>
+    <div class="fp-section-body">
+      <div class="fp-item" data-type="holonized" onclick="filterSystems('holonized')" id="fp-holonized">
+        <div class="fp-dot" style="background:#ffd050"></div>
+        <span>All holonized</span><span class="fp-count" id="fc-holonized">—</span>
+      </div>
+      <div id="fp-holonized-list" style="margin-top:4px"></div>
+    </div>
+  </details>
+
+  <details class="fp-section" open>
+    <summary>Tier Sizes</summary>
+    <div class="fp-section-body">
+      <div class="tier-size-legend">
+        <div class="tsl-row">
+          <div class="tsl-sphere" style="width:22px;height:22px;background:radial-gradient(circle at 38% 32%,#e8f0ff,#a8c8ff 48%,#3048c0);color:#a8c8ff"></div>
+          <span class="tsl-label">Grand SuperStar</span>
+        </div>
+        <div class="tsl-row">
+          <div class="tsl-sphere" style="width:16px;height:16px;background:radial-gradient(circle at 38% 32%,#fffcc0,#ffd040 28%,#e88010 68%,#c04000);color:#ffd040"></div>
+          <span class="tsl-label">SuperStar</span>
+        </div>
+        <div class="tsl-row">
+          <div class="tsl-sphere" style="width:11px;height:11px;background:radial-gradient(circle at 38% 32%,#fffcc0,#ffd040 28%,#e88010);color:#ffd040"></div>
+          <span class="tsl-label">Star</span>
+        </div>
+        <div class="tsl-row">
+          <div class="tsl-sphere" style="width:7px;height:7px;background:radial-gradient(circle at 38% 32%,#90e4f8,#2e92cc,#0e4878);color:#60c8ff"></div>
+          <span class="tsl-label">Planet</span>
+        </div>
+        <div class="tsl-row">
+          <div class="tsl-sphere" style="width:4px;height:4px;background:radial-gradient(circle at 35% 30%,#d4d8e8,#a0a5b8,#6b7090);color:#b0b8cc"></div>
+          <span class="tsl-label">Moon</span>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="fp-section" id="fp-tech-section">
+    <summary>Tech Stack</summary>
+    <div class="fp-section-body" id="fp-tech-body">
+      <p style="font-family:var(--pgm-mono);font-size:0.52rem;color:var(--pgm-muted);padding:4px 4px;opacity:0.6;line-height:1.6">Holonize a project<br>to see its languages</p>
+    </div>
+  </details>
+</div>
+
+<!-- Controls -->
+<div id="controls">
+  <div class="ctrl-group">
+    <button class="ctrl-btn active" id="orbit-btn" onclick="toggleOrbit()">Orbit ON</button>
+  </div>
+  <div class="ctrl-group">
+    <button class="ctrl-btn active" id="sp1" onclick="setSpeed(1)">1×</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="sp2" onclick="setSpeed(2)">2×</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="sp3" onclick="setSpeed(3)">3×</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn" id="sp5" onclick="setSpeed(5)">5×</button>
+  </div>
+  <div class="ctrl-group">
+    <button class="ctrl-btn active" id="view-btn"  onclick="toggleView()">Map View</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn active" id="label-btn" onclick="toggleLabels()">Labels</button>
+    <div class="ctrl-divider"></div>
+    <button class="ctrl-btn active" id="route-btn" onclick="toggleRoutes()">Routes</button>
+  </div>
+</div>
+
+<!-- TEA panel -->
+<div id="tea-panel">
+  <div class="tea-label">Pangalactic Timebank</div>
+  <div class="tea-val">2,142<span class="tea-unit">TEA</span></div>
+  <div class="tea-sub">W12 · <span>+42 hrs pledged</span></div>
+</div>
+
+<!-- Sprint panel -->
+<div id="sprint-panel">
+  <div class="sp-label">Active Quest Cycle</div>
+  <div class="sp-name">Fabulous Machine · W12</div>
+  <div class="sp-bar-wrap"><div class="sp-bar" style="width:14%"></div></div>
+  <div class="sp-sub">Day <span>6</span> of 42 · <span>36</span> remaining</div>
+</div>
+
+<div class="hint">Scroll to zoom · Drag to rotate · Click a system</div>
+<div id="tooltip"></div>
+
+<!-- System detail modal -->
+<div class="modal-back" id="sysModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title" id="modal-title">—</div>
+        <div class="modal-head-sub"  id="modal-sub">—</div>
+      </div>
+      <button class="modal-close" id="modal-close-btn">Close</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script type="importmap">{ "imports": { "three": "https://esm.sh/three", "three/addons/": "https://esm.sh/three/examples/jsm/" } }</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ── System Data ──────────────────────────────────────────────────────────────
+const SYSTEMS = [
+
+  // ── LIVE TOOLS ────────────────────────────────────────────────────────────
+  { name:'Heart of Gold', shortName:'HoG', type:'live',
+    pos:[10.9, 0.4, 5.1],
+    subtitle:'Builder Onboarding · LIVE',
+    region:'Inner Arm', sector:'Improbability Drive Sector',
+    cat:'Live Tool',
+    desc:'Voice-driven builder onboarding powered by Marvin AI. Creates OASIS avatars, issues holonic identity, drops builders into their dashboard. Onboards in under 5 minutes. Powered by the Infinite Improbability Drive.',
+    link:'https://heart-of-gold.vercel.app' },
+
+  { name:'OASIS', shortName:'OASIS', type:'live',
+    pos:[-5.5, -0.2, 11.8],
+    subtitle:'Holonic Identity Layer · LIVE',
+    region:'Inner Arm', sector:'Open Source Sector',
+    cat:'Live Tool',
+    desc:'Open API for Scalable Interdimensional Systems. Persistent holonic identity — builder profiles, NFT certification, guide authorship, skill graph, cross-game portability. The sovereign identity layer of the Fabulous Machine. API live at api.oasisweb4.one.',
+    link:'https://api.oasisweb4.one' },
+
+  { name:'Marvin', shortName:'Marvin', type:'live',
+    pos:[-10.3, 0.9, -3.8],
+    subtitle:'AI Guide Agent · LIVE',
+    region:'Inner Arm', sector:'Sirius Cybernetics Sector',
+    cat:'Character Agent',
+    desc:'"I\'ve calculated your odds of success to be approximately 1 in 827,435,891. I mention this not to discourage you — I\'m far too depressed for that." Marvin is the primary AI guide agent: GPT-4o reasoning, ElevenLabs voice, OpenSERV-compatible, x402 micropayment settlement per guide session.',
+    link: null },
+
+  { name:'Zaphod', shortName:'Zaphod', type:'live',
+    pos:[7.7, -0.7, -9.2],
+    subtitle:'AI Hype Agent · LIVE',
+    region:'Inner Arm', sector:'Betelgeuse Sector',
+    cat:'Character Agent',
+    desc:'"I am so amazingly cool you could keep a side of meat in me for a month." Zaphod Beeblebrox — two heads, three arms, one brain cell between them — is the AI hype + quest-creation agent. Runs on OpenSERV, settles in x402/USDC. He just makes things happen.',
+    link: null },
+
+  // ── IN BUILD ──────────────────────────────────────────────────────────────
+  { name:'Pan Galactic Monitor', shortName:'PG Monitor', type:'oapp',
+    pos:[21.2, 0.8, 5.7],
+    subtitle:'Builder Intelligence Globe · Holonic OAPP · STAR Registered',
+    region:'Mid Arm', sector:'Deep Field Sector',
+    cat:'Platform / Holonic OAPP',
+    desc:'Global 3D intelligence dashboard for the Fabulous Machine. Maps sites, builders, pledges, time exchanges, guides, hackathons, and equity deals across the network. Each pin is an OASIS Holon; builders link to OASIS Avatars; exchanges and pledges sync karma to the OASIS reputation layer. Providers: MongoDB, IPFS, Holochain.',
+    oappId: 'b0bf0be6-4462-46da-a910-03d0081b48b3',
+    oappType: 'OAPPTemplate',
+    oappFeatures: 'Avatar Auth,Karma Sync,AvatarDetail Skills,Holon Storage,Multi-Provider,STAR Registered',
+    link: null },
+
+  { name:'Pan Galactic Timebank', shortName:'PG Timebank', type:'oapp',
+    pos:[13.9, -0.9, -8.0],
+    subtitle:'TEA Currency · Holonic OAPP · STAR Registered',
+    region:'Mid Arm', sector:'Time Vortex Sector',
+    cat:'Infrastructure / Holonic OAPP',
+    desc:'Tracks Time, Energy, and Attention (TEA) — the core currency of the Fabulous Machine. Registered as a STAR OAPP Template with full holonic integration: OASIS Avatar authentication, karma sync at clearing, skills and offers mirrored to OASIS AvatarDetail, per-circle provider selection across MongoDB, Solana, IPFS, and Holochain. Circles, pledges, hour exchanges, $SAFE token hooks, dynamic equity (Slicing the Pie). 42 hours per 6-week quest cycle.',
+    oappId: '06ee81c2-4feb-471c-a726-5f37cf1d8134',
+    oappType: 'OAPPTemplate',
+    oappFeatures: 'Avatar Auth,Karma Sync,AvatarDetail Skills,Provider Selection,STAR Holons,C# OAPP',
+    link: 'https://pgt.oasisweb4.one' },
+
+  { name:'Anarchive', shortName:'Anarchive', type:'building',
+    pos:[18.4, 0.3, -18.4],
+    subtitle:'Federated Knowledge Store · In Build',
+    region:'Mid Arm', sector:'Library of Babel Sector',
+    cat:'Infrastructure',
+    desc:'The Hitchhikers\' federated knowledge base. Linked to Obsidian Cloud, populated by Marvin guide sessions and builder outputs. Each guide session writes its reasoning and outputs here permanently. "An extraordinary book — never actually read by anyone, used mainly as a doorstop in the Sirius B system."',
+    link: null },
+
+  { name:'Trillian', shortName:'Trillian', type:'building',
+    pos:[-19.6, 1.0, -13.8],
+    subtitle:'AI Research Agent · Planned',
+    region:'Mid Arm', sector:'Magrathea Approach',
+    cat:'Character Agent',
+    desc:'"The only person in the known universe to have plotted a course from Rickmansworth to the Restaurant at the End of the Universe." Trillian is the research + synthesis agent — pulling from the Anarchive, translating across Circles, synthesising knowledge for the Babel Fish layer.',
+    link: null },
+
+  { name:'IDA', shortName:'IDA', type:'building',
+    pos:[3.8, -0.8, -21.7],
+    subtitle:'Interdimensional Dollar · Planned',
+    region:'Mid Arm', sector:'Currency Exchange Sector',
+    cat:'Token / Currency',
+    desc:'The Fabulous Machine\'s native currency unit — issued on quest completion, verifiable via OASIS holons. Interoperable with $SAFE, community time currencies, and quadratic funding pools. "Don\'t Panic — and don\'t spend it all in one dimension."',
+    link: null },
+
+  // ── CONCEPTS ──────────────────────────────────────────────────────────────
+  { name:'Circles', shortName:'Circles', type:'concept',
+    pos:[9.6, 0.2, 11.5],
+    subtitle:'Holonic Groups · Core Concept',
+    region:'Inner Arm', sector:'Assembly Sector',
+    cat:'Fabulous Machine',
+    desc:'The basic organisational unit of the Fabulous Machine. Individuals form Circles; Circles form Circles of Circles. Each Circle is holonic — whole unto itself, part of a greater whole. Legally solid on the back end, human and machine legible, sovereign at every level.',
+    link: null },
+
+  { name:'Quests', shortName:'Quests', type:'concept',
+    pos:[9.8, -0.3, -13.9],
+    subtitle:'42-Day Cycles · Core Concept',
+    region:'Inner Arm', sector:'Temporal Mechanics Sector',
+    cat:'Fabulous Machine',
+    desc:'The core unit of meaningful work. Specific, time-bound, measurable — running on 42-day cycles (matching agile best practice and Hitchhiker lore). Two cycles ≈ 90 days ≈ one season. Groups level up or down to stay in their zone of optimum development.',
+    link: null },
+
+  { name:'Babel Fish', shortName:'Babel Fish', type:'concept',
+    pos:[-12.7, 0.6, 5.9],
+    subtitle:'Universal Translation · Core Concept',
+    region:'Mid Arm', sector:'Linguistics Sector',
+    cat:'Fabulous Machine',
+    desc:'"The Babel fish is small, yellow, leech-like, and probably the oddest thing in the Universe." The Babel Fish layer of the Fabulous Machine translates words, concepts, and meaning across languages, cultures, and paradigms — a multi-perspectival AI engine that prevents tribal calcification.',
+    link: null },
+
+  { name:'Pangalactic Lottery', shortName:'PG Lottery', type:'concept',
+    pos:[-12.9, 1.1, -15.3],
+    subtitle:'Go-to-Market · Concept',
+    region:'Outer Arm', sector:'Revenue Sector',
+    cat:'Fabulous Machine',
+    desc:'"Should be the biggest lottery on the planet." Owned by everyone, not-for-profit — prize money flows back to infrastructure. Free entry via time donations. The viral go-to-market mechanism for the Fabulous Machine. Technically easy to do. Legally elegant via the Omni-Federation structure.',
+    link: null },
+
+  // ── PARTNERS ──────────────────────────────────────────────────────────────
+  { name:'OpenSERV', shortName:'OpenSERV', type:'partner',
+    pos:[-36.3, 0.9, -16.9],
+    subtitle:'Agent Infrastructure · Partner',
+    region:'Mid Arm', sector:'Builders Fund Sector',
+    cat:'Partner',
+    desc:'Decentralised AI agent platform. Provides BRAID identity stack, x402/USDC micropayment settlement, ERC-8004 agent hooks. Marvin, Zaphod, and Trillian run on OpenSERV. Builders Fund target: $110K pilot, $550K full program across 42 events and 5,000+ builders.',
+    link: null },
+
+  { name:'OpenImpact', shortName:'OpenImpact', type:'partner',
+    pos:[25.2, 0.6, 36.0],
+    subtitle:'Impact Marketplace · Partner',
+    region:'Mid Arm', sector:'Impact Cluster',
+    cat:'Partner',
+    desc:'Impact marketplace and funding infrastructure. Connects project teams with impact investors using transparent contribution tracking. OASIS provides the identity and skill-verification layer for all participants in the OpenImpact ecosystem.',
+    link: null },
+
+  { name:'Voiceback', shortName:'Voiceback', type:'partner',
+    pos:[-20.6, -0.5, -29.5],
+    subtitle:'Community Voice Platform · Partner',
+    region:'Mid Arm', sector:'Communications Sector',
+    cat:'Partner',
+    desc:'Real-time voice feedback platform enabling communities to speak back to institutions, governments, and organisations. OASIS provides the holonic identity layer — ensuring every voice is verifiable, sovereign, and portable across platforms.',
+    link: null },
+
+  { name:'Pangea', shortName:'Pangea', type:'partner',
+    pos:[20.0, -0.9, -34.6],
+    subtitle:'Holofractal Data Architecture · Partner',
+    region:'Mid Arm', sector:'Impact Cluster',
+    cat:'Partner',
+    desc:'API-up platform tested with 500+ groups in 50 countries. People → Circles → Projects → Orgs → Resources, all holofractal. Built with $1M+ over several years. Geospatial tagging, federated knowledge, full security/permissioning. OASIS bridges as the identity and interoperability layer.',
+    link: null },
+
+  { name:'BRAID', shortName:'BRAID', type:'partner',
+    pos:[10.9, 1.3, -40.6],
+    subtitle:'Privacy-Preserving Identity · Partner',
+    region:'Mid Arm', sector:'Privacy Layer Sector',
+    cat:'Partner',
+    desc:'Privacy-preserving decentralised identity layer. The foundation for Hitchhiker Passports — bottom-up data sovereignty. Complements OASIS holons: BRAID handles cryptographic identity roots; OASIS handles the rich skill, contribution, and cross-platform portability layer.',
+    link: null },
+
+  { name:'LIONSBERG', shortName:'LIONSBERG', type:'partner',
+    pos:[-18.6, 0.2, -39.9],
+    subtitle:'Fair Shares Commons · Partner',
+    region:'Mid Arm', sector:'Governance Sector',
+    cat:'Partner',
+    desc:'501c3 legal structure enabling crowdfunding, holofractal governance, and omni-federation. The "Fair Shares Commons" — dynamic equity, Slicing the Pie, progressive pledging. All IP co-created under Lionsburg federates into shared co-stewardship. The legal spine of the Fabulous Machine.',
+    link: null },
+
+  { name:'Lexon', shortName:'Lexon', type:'partner',
+    pos:[-47.3, 0.7, -8.3],
+    subtitle:'Human-Legible Smart Contracts · Partner',
+    region:'Outer Arm', sector:'Legal Layer Sector',
+    cat:'Partner',
+    desc:'Smart contract language that is simultaneously machine-executable and human-readable. Used to encode Circle agreements, Quest commitments, and governance rules in the Fabulous Machine. Code can be law, and law can be understood by grandmothers.',
+    link: null },
+
+  { name:'Gatherverse', shortName:'Gatherverse', type:'partner',
+    pos:[10.4, 0.8, 38.6],
+    subtitle:'XR / VR Festival · Partner',
+    region:'Outer Arm', sector:'Extended Reality Sector',
+    cat:'Partner',
+    desc:'Immersive XR/VR festival dedicated to improving humanity. Alina presenting on OASIS and the Fabulous Machine. Target venue for the first major public demonstration of the full stack — Heart of Gold live onboarding, Pan Galactic Monitor globe, and Marvin running in real time.',
+    link: null },
+
+  { name:'United Earth Networks', shortName:'UEN', type:'partner',
+    pos:[-37.6, -0.7, 13.7],
+    subtitle:'Earth Governance Network · Partner',
+    region:'Mid Arm', sector:'Federation Sector',
+    cat:'Partner',
+    desc:'Global coordination network. One of the federating partner organisations in the Omni-Federation structure. Connecting bioregional governance, indigenous sovereignty frameworks, and planetary systems thinking to the Fabulous Machine\'s holofractal architecture.',
+    link: null },
+
+];
+
+// Type config — sizes are deliberately dramatic so tier is immediately visible
+const TYPE_CFG = {
+  anchor:       { color: 0xc4906a, glow: 0.60, size: 0.70 },  // amber — Sol
+  live:         { color: 0x00cc77, glow: 0.50, size: 0.44 },
+  oapp:         { color: 0x00e5ff, glow: 0.48, size: 0.42 },  // live holonic OAPP
+  building:     { color: 0xffbb33, glow: 0.38, size: 0.36 },
+  partner:      { color: 0x6ecfb8, glow: 0.35, size: 0.34 },
+  concept:      { color: 0xcc88ff, glow: 0.32, size: 0.30 },
+  fictional:    { color: 0xff6b9e, glow: 0.28, size: 0.26 },
+  // Holonized tiers — size gap is 6× from moon to grandsuperstar
+  grandsuperstar:{ color: 0xe8f0ff, glow: 0.90, size: 1.20 },
+  grandstar:    { color: 0xe8f0ff, glow: 0.90, size: 1.20 },
+  superstar:    { color: 0xffe080, glow: 0.72, size: 0.88 },
+  star:         { color: 0xffd050, glow: 0.58, size: 0.60 },
+  planet:       { color: 0x60c8ff, glow: 0.40, size: 0.38 },
+  moon:         { color: 0xb0b8cc, glow: 0.22, size: 0.20 },
+};
+
+// ── Scene setup ──────────────────────────────────────────────────────────────
+const container = document.getElementById('canvas-container');
+const renderer  = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 62, 88);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.07;
+controls.minDistance     = 4;
+controls.maxDistance     = 450;
+controls.autoRotate      = true;
+controls.autoRotateSpeed = 0.35;
+
+const initPos    = camera.position.clone();
+const initTarget = controls.target.clone();
+
+// ── Galaxy ───────────────────────────────────────────────────────────────────
+(function buildGalaxy() {
+  const N = 95000, arms = 4, spin = 3.9;
+  const pos = new Float32Array(N * 3);
+  const col = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    const arm   = Math.floor(Math.random() * arms);
+    const r     = Math.pow(Math.random(), 0.6) * 100 + 0.3;
+    const theta = (arm / arms) * Math.PI * 2 + r * spin * 0.01 + (Math.random() - 0.5) * 0.5;
+    pos[i*3]   = Math.cos(theta) * r + (Math.random()-.5)*r*0.13;
+    pos[i*3+1] = (Math.random()-.5)*(2.2/(r*0.06+1));
+    pos[i*3+2] = Math.sin(theta) * r + (Math.random()-.5)*r*0.13;
+    const t = r/100, br = 0.1 + Math.random()*0.55;
+    col[i*3]   = (0.3+t*0.6)*br; col[i*3+1] = (0.5+(1-t)*0.4)*br; col[i*3+2] = (0.85+(1-t)*0.15)*br;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(col,3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ size:0.21, vertexColors:true, transparent:true, opacity:0.8, sizeAttenuation:true })));
+})();
+
+// Background stars
+(function buildStars() {
+  const N = 15000;
+  const pos = new Float32Array(N*3);
+  for (let i=0;i<N;i++) { pos[i*3]=(Math.random()-.5)*950; pos[i*3+1]=(Math.random()-.5)*950; pos[i*3+2]=(Math.random()-.5)*950; }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({ size:0.11, color:0xffffff, transparent:true, opacity:0.25 })));
+})();
+
+
+// ── System markers ───────────────────────────────────────────────────────────
+const systemMeshes = [];   // invisible hit spheres (raycasted)
+const visualMeshes = [];   // visible colored spheres (rendered)
+const labelDivs    = [];
+
+SYSTEMS.forEach((s, idx) => {
+  const cfg = TYPE_CFG[s.type];
+  const p   = new THREE.Vector3(...s.pos);
+
+  const glowMat = new THREE.SpriteMaterial({ color: cfg.color, transparent:true, opacity: cfg.glow, depthWrite:false });
+  const glow    = new THREE.Sprite(glowMat);
+  glow.scale.setScalar(cfg.size * 7.5);
+  glow.position.copy(p);
+  scene.add(glow);
+
+  // Visual sphere — size as designed, not used for raycasting
+  const visualR = Math.max(cfg.size * 0.52, 0.32);
+  const visual  = new THREE.Mesh(
+    new THREE.SphereGeometry(visualR, 12, 12),
+    new THREE.MeshBasicMaterial({ color: cfg.color })
+  );
+  visual.position.copy(p);
+  scene.add(visual);
+  visualMeshes.push(visual);
+
+  // Proxy mesh — zero-size, just carries userData for screen-space hit detection
+  const mesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial());
+  mesh.position.copy(p);
+  mesh.visible = true;
+  mesh.userData = { ...s, idx, glow, glowMat, visualMesh: visual };
+  scene.add(mesh);
+  systemMeshes.push(mesh);
+
+  const div = document.createElement('div');
+  div.style.cssText = [
+    'position:fixed', 'pointer-events:none',
+    "font-family:'JetBrains Mono',monospace",
+    'font-size:9px', `color:${cssColor(cfg.color)}`,
+    'letter-spacing:0.06em',
+    `text-shadow:0 0 8px ${cssColor(cfg.color, 0.7)}`,
+    'transition:opacity 0.25s', 'white-space:nowrap',
+  ].join(';');
+  div.textContent = s.shortName;
+  document.body.appendChild(div);
+  labelDivs.push({ div, mesh });
+});
+
+function cssColor(hex, a=1) {
+  const r=(hex>>16)&255, g=(hex>>8)&255, b=hex&255;
+  return a<1 ? `rgba(${r},${g},${b},${a})` : `rgb(${r},${g},${b})`;
+}
+
+// ── Routes ───────────────────────────────────────────────────────────────────
+const routeLines = [];
+const ROUTES = [
+  [0,1],[0,4],[1,4],[2,3],
+  [1,5],[4,5],[5,6],[5,9],[1,12],[1,13],
+  [12,15],[13,15],[15,16],
+];
+ROUTES.forEach(([a,b]) => {
+  const pa = new THREE.Vector3(...SYSTEMS[a].pos);
+  const pb = new THREE.Vector3(...SYSTEMS[b].pos);
+  const geo = new THREE.BufferGeometry().setFromPoints([pa,pb]);
+  const mat = new THREE.LineBasicMaterial({ color:0x3a6a9f, transparent:true, opacity:0.22 });
+  const line = new THREE.Line(geo, mat);
+  scene.add(line);
+  routeLines.push(line);
+});
+
+// ── Selection ring ───────────────────────────────────────────────────────────
+const ringGeo  = new THREE.RingGeometry(0.85, 1.05, 32);
+const ringMat  = new THREE.MeshBasicMaterial({ color:0xffffff, transparent:true, opacity:0, side:THREE.DoubleSide });
+const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+scene.add(ringMesh);
+let selectedMesh = null;
+
+// ── Filter state ─────────────────────────────────────────────────────────────
+let activeFilter = 'all';
+
+window.filterSystems = type => {
+  activeFilter = type;
+  document.querySelectorAll('.fp-item').forEach(el => {
+    const t = el.dataset.type;
+    el.classList.toggle('disabled', t !== 'all' && type !== 'all' && t !== type);
+  });
+  systemMeshes.forEach(mesh => {
+    const show = type === 'all' || mesh.userData.type === type;
+    mesh.visible = show;
+    mesh.userData.glow.visible = show;
+    if (mesh.userData.visualMesh) mesh.userData.visualMesh.visible = show;
+  });
+  labelDivs.forEach(({div, mesh}) => {
+    if (!mesh.visible) div.style.opacity = '0';
+  });
+};
+
+// Populate counts
+const typeCounts = {};
+SYSTEMS.forEach(s => { typeCounts[s.type] = (typeCounts[s.type]||0)+1; });
+document.getElementById('fc-all').textContent = SYSTEMS.length;
+Object.entries(typeCounts).forEach(([t,n]) => {
+  const fc = document.getElementById('fc-'+t); if (fc) fc.textContent = n;
+  const tv = document.getElementById('tv-'+t); if (tv) tv.textContent = n;
+});
+
+// ── Screen-space hit detection ───────────────────────────────────────────────
+// Projects every system to 2D and finds the nearest one within a pixel
+// threshold — reliable at any zoom level, far better than 3D raycasting.
+const tooltip = document.getElementById('tooltip');
+const _ssVec  = new THREE.Vector3();
+
+function nearestVisibleSystem(clientX, clientY, thresholdPx) {
+  let best = null, bestDist = thresholdPx;
+  systemMeshes.forEach(mesh => {
+    if (!mesh.visible) return;
+    _ssVec.copy(mesh.position).project(camera);
+    if (_ssVec.z > 1) return; // behind camera
+    const sx = (_ssVec.x *  0.5 + 0.5) * window.innerWidth;
+    const sy = (_ssVec.y * -0.5 + 0.5) * window.innerHeight;
+    const d  = Math.hypot(sx - clientX, sy - clientY);
+    if (d < bestDist) { bestDist = d; best = mesh; }
+  });
+  return best;
+}
+
+renderer.domElement.addEventListener('pointermove', e => {
+  const hit = nearestVisibleSystem(e.clientX, e.clientY, 52);
+  if (hit) {
+    tooltip.style.display = 'block';
+    tooltip.style.left    = (e.clientX + 14) + 'px';
+    tooltip.style.top     = (e.clientY - 10) + 'px';
+    tooltip.textContent   = hit.userData.name;
+    renderer.domElement.style.cursor = 'pointer';
+  } else {
+    tooltip.style.display = 'none';
+    renderer.domElement.style.cursor = '';
+  }
+});
+
+renderer.domElement.addEventListener('click', e => {
+  const hit = nearestVisibleSystem(e.clientX, e.clientY, 60);
+  if (hit) {
+    selectSystem(hit);
+    window._mobAutoOpenInfo?.();
+  }
+});
+
+// ── Helper: HTML-escape ───────────────────────────────────────────────────────
+function esc(x) {
+  if (x == null) return '';
+  const d = document.createElement('div'); d.textContent = String(x); return d.innerHTML;
+}
+
+// ── Type → accent colour mapping ─────────────────────────────────────────────
+const TYPE_ACCENT = {
+  anchor:         'var(--pgm-amber2)',
+  live:           'var(--pgm-green)',
+  oapp:           '#00e5ff',
+  building:       '#ffbb33',
+  partner:        'var(--pgm-teal)',
+  concept:        'var(--pgm-purple)',
+  fictional:      'var(--pgm-pink)',
+  moon:           '#b0b8cc',
+  planet:         '#60c8ff',
+  star:           '#ffd050',
+  superstar:      '#ffe080',
+  grandstar:      '#e8f0ff',
+  grandsuperstar: '#e8f0ff',
+};
+
+const TYPE_LABEL = {
+  anchor:         'Origin Anchor',
+  live:           'Live · Deployed',
+  oapp:           'Holonic OAPP',
+  building:       'In Build',
+  partner:        'Partner',
+  concept:        'Core Concept',
+  fictional:      'Canon',
+  moon:           'Moon',
+  planet:         'Planet',
+  star:           'Star',
+  superstar:      'SuperStar',
+  grandstar:      'GrandSuperStar',
+  grandsuperstar: 'GrandSuperStar',
+};
+
+// ── selectSystem — builds PGM-style detail panel ─────────────────────────────
+// ── Avatar colour helpers ──────────────────────────────────────────────────
+const AVATAR_COLORS = ['#6ecfb8','#e8b565','#5ab4ff','#b388ff','#ff9e4c','#ff6b9e','#64c8e8'];
+function avatarColor(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = ((h * 31) + name.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+
+// ── CSS-drawn celestial body visual ───────────────────────────────────────
+function buildCbVisual(type) {
+  const label = { moon:'Moon', planet:'Planet', star:'Star', superstar:'SuperStar', grandstar:'GrandSuperStar', grandsuperstar:'GrandSuperStar' }[type] || type;
+  const cssType = (type === 'grandsuperstar') ? 'grandstar' : type;
+  return `<div class="cb-visual cb-${cssType}"><div class="cb-sphere"><span class="cb-label">${esc(label)}</span></div></div>`;
+}
+
+function selectSystem(mesh) {
+  selectedMesh = mesh;
+  const s   = mesh.userData;
+  const cfg = TYPE_CFG[s.type];
+
+  // Selection ring
+  ringMesh.position.copy(mesh.position);
+  ringMat.color.setHex(cfg.color);
+  ringMat.opacity = 0.6;
+  ringMesh.lookAt(camera.position);
+  // Scale ring to hug the visual sphere, not the invisible hit sphere
+  const visualR = mesh.userData.visualMesh
+    ? mesh.userData.visualMesh.geometry.parameters.radius
+    : Math.max(cfg.size * 0.52, 0.32);
+  ringMesh.scale.setScalar(visualR / 0.95);
+  ringGeo.computeBoundingSphere();
+
+  // Store for modal
+  window._selectedSystem = s;
+
+  const accent     = TYPE_ACCENT[s.type] || 'var(--pgm-amber)';
+  const typeLabel  = TYPE_LABEL[s.type]  || s.type;
+
+  // ── Badge row ────────────────────────────────────────────────────────────
+  const statusBadgeColor = {
+    live: 'rgba(110,207,184,0.15)', oapp: 'rgba(0,229,255,0.12)', building: 'rgba(232,181,101,0.15)',
+    anchor: 'rgba(90,180,255,0.15)', partner: 'rgba(0,221,204,0.12)',
+    concept: 'rgba(179,136,255,0.12)', fictional: 'rgba(255,107,158,0.12)',
+    moon: 'rgba(176,184,204,0.12)', planet: 'rgba(96,200,255,0.12)',
+    star: 'rgba(255,208,80,0.12)', superstar: 'rgba(255,224,128,0.12)',
+    grandstar: 'rgba(255,240,160,0.12)',
+  }[s.type] || 'rgba(232,181,101,0.12)';
+
+  // ── Status dot ────────────────────────────────────────────────────────────
+  const dotClass = s.type;
+  const dotHtml  = `<span class="status-dot ${dotClass}"></span>`;
+
+  let badgesHtml = `
+    <span class="pgm-badge" style="background:${statusBadgeColor};border-color:${accent}40;color:${accent}">${dotHtml}${esc(typeLabel)}</span>
+  `;
+  if (s.holonized) {
+    badgesHtml += `<span class="pgm-badge" style="background:rgba(232,181,101,0.08);border-color:rgba(232,181,101,0.35);color:var(--pgm-amber)">Holonized</span>`;
+  }
+
+  // ── Meta rows ─────────────────────────────────────────────────────────────
+  let metaHtml = '';
+  if (s.region) metaHtml += `<div class="ip-meta-row"><span class="ip-meta-key">Region</span><span class="ip-meta-val">${esc(s.region)}</span></div>`;
+  if (s.sector) metaHtml += `<div class="ip-meta-row"><span class="ip-meta-key">Sector</span><span class="ip-meta-val">${esc(s.sector)}</span></div>`;
+  if (s.cat)    metaHtml += `<div class="ip-meta-row"><span class="ip-meta-key">Category</span><span class="ip-meta-val">${esc(s.cat)}</span></div>`;
+
+  // ── Holonized extras: team + links + stats ───────────────────────────────
+  let holonizedHtml = '';
+  if (s.holonized) {
+    const fileCount = (s.totalFiles || 0).toLocaleString();
+    const locCount  = (s.totalLoc   || 0).toLocaleString();
+    const holDate   = s.holonizedAt ? new Date(s.holonizedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : null;
+    const gitShort  = s.gitRemote  ? s.gitRemote.replace('https://github.com/','') : null;
+
+    // Language chips
+    const langChips = s.languages
+      ? s.languages.split(',').map(l=>`<span class="lang-chip">${esc(l.trim())}</span>`).join('')
+      : '';
+
+    // Commit-style activity bar
+    const locNum   = s.totalLoc || 0;
+    const locPct   = Math.min(100, Math.round(locNum / 500));
+    const locLabel = locNum > 1000 ? `${(locNum/1000).toFixed(1)}k lines` : `${locNum} lines`;
+
+    // Team / contributor avatar chips
+    const contribs = s.contributors || [];
+    const teamHtml = contribs.length > 0
+      ? `<div class="ip-team-section">
+           <div class="ip-team-label">
+             <span>Team</span>
+             <span class="ip-team-count">${contribs.length} contributor${contribs.length>1?'s':''}</span>
+           </div>
+           <div class="avatar-row">
+             ${contribs.map(c => {
+               const color = avatarColor(c.name);
+               const tip = c.commits > 0
+                 ? `${c.name} · ${c.commits} commit${c.commits>1?'s':''}`
+                 : (c.role ? `${c.name} · ${c.role}` : c.name);
+               return `<div class="avatar-chip" title="${esc(tip)}" style="border-color:${color}42;background:${color}18;color:${color}">${esc(c.initials||'??')}</div>`;
+             }).join('')}
+           </div>
+         </div>` : '';
+
+    // Links row — separate GitHub (from git remote) and Website (from link field)
+    const ghLink  = s.gitRemote ? `<a class="ip-link-btn ip-link-gh"  href="${esc(s.gitRemote)}" target="_blank">↗ GitHub</a>`  : '';
+    const webLink = s.link      ? `<a class="ip-link-btn ip-link-web" href="${esc(s.link)}"      target="_blank">↗ Website</a>` : '';
+    const linksHtml = (ghLink || webLink) ? `<div class="ip-links-row">${ghLink}${webLink}</div>` : '';
+
+    // Metrics expandable
+    const metricTiles = [
+      { val: fileCount, lbl: 'files' },
+      { val: locCount,  lbl: 'lines of code' },
+      { val: s.languages ? s.languages.split(',').length : 0, lbl: 'languages' },
+      { val: TYPE_LABEL[s.type]?.split(' ').slice(-1)[0] || s.type, lbl: 'celestial class' },
+    ].map(m => `<div class="ip-metric-tile"><b>${m.val}</b>${m.lbl}</div>`).join('');
+
+    holonizedHtml = `
+      ${teamHtml}
+      ${linksHtml}
+      <div class="ip-divider"></div>
+      <div class="ip-stat-grid">
+        <div class="ip-stat-tile">
+          <span class="ip-stat-val" style="color:${accent}">${fileCount}</span>
+          <span class="ip-stat-label">Files</span>
+        </div>
+        <div class="ip-stat-tile">
+          <span class="ip-stat-val" style="color:var(--pgm-teal)">${locCount}</span>
+          <span class="ip-stat-label">Lines of Code</span>
+        </div>
+      </div>
+      <div class="commit-bar">
+        <div class="commit-bar-track"><div class="commit-bar-fill" style="width:${locPct}%"></div></div>
+        <span class="commit-bar-label">${locLabel}</span>
+      </div>
+      ${langChips ? `<div class="lang-chip-row">${langChips}</div>` : ''}
+      ${holDate   ? `<div class="ip-meta-row"><span class="ip-meta-key">Holonized</span><span class="ip-meta-val">${holDate}</span></div>` : ''}
+      ${gitShort  ? `<div class="ip-meta-row"><span class="ip-meta-key">Repository</span><span class="ip-meta-val" style="font-size:0.58rem">${esc(gitShort)}</span></div>` : ''}
+      <details class="ip-metrics-section">
+        <summary>More metrics</summary>
+        <div class="ip-metric-grid">${metricTiles}</div>
+      </details>
+    `;
+  }
+
+  // ── External link (non-holonized only) ────────────────────────────────────
+  const linkUrl  = !s.holonized ? (s.link || null) : null;
+  const linkHtml = linkUrl
+    ? `<a class="ip-ext-link" href="${esc(linkUrl)}" target="_blank">↗ ${esc(linkUrl.replace('https://',''))}</a>`
+    : '';
+
+  // ── OASIS OAPP integration section ────────────────────────────────────────
+  let oappHtml = '';
+  if (s.type === 'oapp') {
+    const featChips = (s.oappFeatures || '')
+      .split(',').map(f => `<span class="lang-chip">${esc(f.trim())}</span>`).join('');
+    oappHtml = `
+      <div class="ip-divider"></div>
+      <div class="ip-meta-row">
+        <span class="ip-meta-key" style="color:#00e5ff;opacity:0.9">⬡ OASIS</span>
+        <span class="ip-meta-val" style="color:#00e5ff;font-weight:600">STAR Registered OAPP</span>
+      </div>
+      ${s.oappType ? `<div class="ip-meta-row"><span class="ip-meta-key">Type</span><span class="ip-meta-val" style="color:#00e5ff">${esc(s.oappType)}</span></div>` : ''}
+      <div class="oapp-stat-grid" id="oapp-stats-ip">
+        <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="avatars">—</span><span class="oapp-stat-lbl">Avatars</span></div>
+        <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="karma">—</span><span class="oapp-stat-lbl">Karma</span></div>
+        <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="circles">—</span><span class="oapp-stat-lbl">Circles</span></div>
+        <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="tea">—</span><span class="oapp-stat-lbl">TEA hrs</span></div>
+      </div>
+      ${s.oappId ? `<div class="ip-meta-row"><span class="ip-meta-key">OAPP ID</span><span class="ip-meta-val" style="font-size:0.5rem;word-break:break-all;opacity:0.7">${esc(s.oappId)}</span></div>` : ''}
+      ${featChips ? `<div class="lang-chip-row" style="margin-top:6px">${featChips}</div>` : ''}
+    `;
+  }
+
+  // ── Compose ───────────────────────────────────────────────────────────────
+  const cbVisual = s.holonized ? buildCbVisual(s.type) : '';
+  const ipEl = document.getElementById('ip-content');
+  ipEl.removeAttribute('style');
+  ipEl.innerHTML = `
+    ${cbVisual}
+    <h2 class="ip-sys-name" style="color:${accent}">${esc(s.name)}</h2>
+    <p class="ip-sys-sub">${esc(s.subtitle || '')}</p>
+    <div class="ip-badge-row">${badgesHtml}</div>
+    <p class="ip-sys-desc">${esc(s.desc || '')}</p>
+    <div class="ip-meta-row"><span class="ip-meta-key">Region</span><span class="ip-meta-val">${esc(s.region||'—')}</span></div>
+    <div class="ip-meta-row"><span class="ip-meta-key">Sector</span><span class="ip-meta-val">${esc(s.sector||'—')}</span></div>
+    <div class="ip-meta-row"><span class="ip-meta-key">Category</span><span class="ip-meta-val">${esc(s.cat||'—')}</span></div>
+    ${oappHtml}
+    ${holonizedHtml}
+    ${linkHtml}
+    <button class="ip-full-btn" onclick="openSystemModal(window._selectedSystem)">Full details →</button>
+  `;
+
+  // Populate OAPP live stats asynchronously
+  if (s.type === 'oapp' && s.oappId) {
+    fetchOappStats(s.oappId).then(data => applyOappStats('oapp-stats-ip', data));
+  }
+}
+
+// ── openSystemModal ───────────────────────────────────────────────────────────
+window.openSystemModal = function(s) {
+  if (!s) return;
+  const accent    = TYPE_ACCENT[s.type] || 'var(--pgm-amber)';
+  const typeLabel = TYPE_LABEL[s.type]  || s.type;
+
+  document.getElementById('modal-title').innerHTML = `<span style="color:${accent}">${esc(s.name)}</span>`;
+  document.getElementById('modal-sub').innerHTML   = `
+    <span style="font-family:var(--pgm-mono);font-size:0.6rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--pgm-border);color:var(--pgm-muted)">${esc(typeLabel)}</span>
+    &nbsp; <span style="color:var(--pgm-muted)">${esc(s.subtitle||'')}</span>
+  `;
+
+  let body = `<p class="modal-desc">${esc(s.desc || '—')}</p>`;
+
+  // ── Navigation data (collapsible) ─────────────────────────────────────────
+  let navRows = `
+    <div class="modal-meta-row"><span class="modal-meta-key">Region</span><span class="modal-meta-val">${esc(s.region||'—')}</span></div>
+    <div class="modal-meta-row"><span class="modal-meta-key">Sector</span><span class="modal-meta-val">${esc(s.sector||'—')}</span></div>
+    <div class="modal-meta-row"><span class="modal-meta-key">Category</span><span class="modal-meta-val">${esc(s.cat||'—')}</span></div>
+    <div class="modal-meta-row"><span class="modal-meta-key">Type</span><span class="modal-meta-val" style="color:${accent}">${esc(typeLabel)}</span></div>
+  `;
+  if (s.pos) {
+    const [x,y,z] = s.pos.map(n=>n.toFixed(1));
+    navRows += `<div class="modal-meta-row"><span class="modal-meta-key">Coordinates</span><span class="modal-meta-val">${x}, ${y}, ${z}</span></div>`;
+  }
+  body += `
+    <details class="modal-nest" open>
+      <summary>Navigation Data</summary>
+      <div class="modal-nest-body" style="padding:8px 12px 10px">${navRows}</div>
+    </details>
+  `;
+
+  // ── OASIS OAPP integration (collapsible) ─────────────────────────────────
+  if (s.type === 'oapp') {
+    const modalFeatChips = (s.oappFeatures || '')
+      .split(',').map(f => `<span class="modal-lang-chip">${esc(f.trim())}</span>`).join('');
+    body += `
+      <details class="modal-nest" open>
+        <summary>OASIS Live Stats</summary>
+        <div class="modal-nest-body" style="padding:10px 12px 12px">
+          <div class="oapp-stat-grid" id="oapp-stats-modal" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">
+            <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="avatars" style="font-size:1.1rem">—</span><span class="oapp-stat-lbl">Avatars</span></div>
+            <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="karma"   style="font-size:1.1rem">—</span><span class="oapp-stat-lbl">Karma</span></div>
+            <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="circles" style="font-size:1.1rem">—</span><span class="oapp-stat-lbl">Circles</span></div>
+            <div class="oapp-stat-tile oapp-stat-loading"><span class="oapp-stat-val" data-stat="tea"     style="font-size:1.1rem">—</span><span class="oapp-stat-lbl">TEA hrs</span></div>
+          </div>
+          ${s.oappId ? `<div class="modal-meta-row"><span class="modal-meta-key">OAPP ID</span><span class="modal-meta-val" style="font-size:0.56rem;word-break:break-all">${esc(s.oappId)}</span></div>` : ''}
+          ${s.oappType ? `<div class="modal-meta-row"><span class="modal-meta-key">OAPP Type</span><span class="modal-meta-val" style="color:#00e5ff">${esc(s.oappType)}</span></div>` : ''}
+          ${modalFeatChips ? `<div style="margin-top:8px">${modalFeatChips}</div>` : ''}
+          <p style="font-family:var(--pgm-mono);font-size:0.62rem;line-height:1.6;color:var(--pgm-muted);margin-top:10px">
+            All member records stored as OASIS <strong style="color:var(--pgm-text)">IHolon</strong> objects replicated across the selected provider network. Members identified by OASIS Avatar. Time contributions tracked as karma across the full OASIS ecosystem.
+          </p>
+        </div>
+      </details>
+    `;
+  }
+
+  // ── Holonized code stats (collapsible) ────────────────────────────────────
+  if (s.holonized) {
+    const locNum   = s.totalLoc || 0;
+    const locPct   = Math.min(100, Math.round(locNum / 500));
+    const holDate  = s.holonizedAt ? new Date(s.holonizedAt).toLocaleString('en-GB',{
+      day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'
+    }) : null;
+    const langChips = s.languages
+      ? s.languages.split(',').map(l=>`<span class="modal-lang-chip">${esc(l.trim())}</span>`).join('')
+      : '';
+    const classLabel = TYPE_LABEL[s.type]?.split(' ').slice(-1)[0] || s.type;
+
+    body += `
+      <details class="modal-nest" open>
+        <summary>Codebase Analysis</summary>
+        <div class="modal-nest-body" style="padding:8px 12px 12px">
+          <div class="modal-stat-grid">
+            <div class="modal-stat-tile">
+              <span class="modal-stat-val" style="color:${accent}">${(s.totalFiles||0).toLocaleString()}</span>
+              <span class="modal-stat-lbl">files</span>
+            </div>
+            <div class="modal-stat-tile">
+              <span class="modal-stat-val" style="color:var(--pgm-teal)">${(s.totalLoc||0).toLocaleString()}</span>
+              <span class="modal-stat-lbl">lines of code</span>
+            </div>
+            <div class="modal-stat-tile">
+              <span class="modal-stat-val" style="color:var(--pgm-purple)">${esc(classLabel)}</span>
+              <span class="modal-stat-lbl">celestial class</span>
+            </div>
+          </div>
+          <div class="commit-bar" style="margin:8px 0">
+            <div class="commit-bar-track"><div class="commit-bar-fill" style="width:${locPct}%"></div></div>
+            <span class="commit-bar-label">${locNum > 1000 ? (locNum/1000).toFixed(1)+'k' : locNum} LOC</span>
+          </div>
+          ${langChips ? `<div style="margin-top:6px">${langChips}</div>` : ''}
+        </div>
+      </details>
+    `;
+
+    // Team / contributors section in modal
+    const modalContribs = s.contributors || [];
+    if (modalContribs.length > 0) {
+      const contribRows = modalContribs.map(c => {
+        const color = avatarColor(c.name);
+        const sub   = c.role ? c.role : (c.commits > 0 ? `${c.commits} commit${c.commits>1?'s':''}` : null);
+        return `<div class="contributor-row">
+          <div class="avatar-chip" style="width:32px;height:32px;border-radius:8px;border:1px solid ${color}42;background:${color}18;color:${color};font-size:0.65rem;font-weight:700;flex-shrink:0">${esc(c.initials||'??')}</div>
+          <div style="flex:1;min-width:0">
+            <div class="contrib-name">${esc(c.name)}</div>
+            ${sub ? `<div class="contrib-sub">${esc(sub)}</div>` : ''}
+          </div>
+          ${c.commits > 0 ? `<span class="contrib-commits">${c.commits}c</span>` : ''}
+        </div>`;
+      }).join('');
+      body += `
+        <details class="modal-nest" open>
+          <summary>Team · ${modalContribs.length} contributor${modalContribs.length>1?'s':''}</summary>
+          <div class="modal-nest-body" style="padding:6px 12px 10px">${contribRows}</div>
+        </details>
+      `;
+    }
+
+    // Links in modal
+    const modalGh  = s.gitRemote ? `<a class="ip-link-btn ip-link-gh"  href="${esc(s.gitRemote)}" target="_blank" style="font-size:0.62rem">↗ GitHub</a>`  : '';
+    const modalWeb = s.link      ? `<a class="ip-link-btn ip-link-web" href="${esc(s.link)}"      target="_blank" style="font-size:0.62rem">↗ Website</a>` : '';
+    if (modalGh || modalWeb) {
+      body += `<div class="ip-links-row" style="margin:10px 0 4px">${modalGh}${modalWeb}</div>`;
+    }
+
+    body += `
+      <details class="modal-nest">
+        <summary>OASIS Holonization</summary>
+        <div class="modal-nest-body" style="padding:10px 12px 12px">
+          ${holDate ? `<div class="modal-meta-row"><span class="modal-meta-key">Holonized at</span><span class="modal-meta-val">${holDate}</span></div>` : ''}
+          ${s.gitRemote ? `<div class="modal-meta-row"><span class="modal-meta-key">Git remote</span><span class="modal-meta-val" style="font-size:0.6rem">${esc(s.gitRemote)}</span></div>` : ''}
+          <p style="font-family:var(--pgm-mono);font-size:0.62rem;line-height:1.6;color:var(--pgm-muted);margin-top:10px">
+            All files stored as OASIS <strong style="color:var(--pgm-text)">IHolon</strong> objects. Each file's metadata, content preview, language type, git context, and path are queryable across the full provider network.
+          </p>
+          <p style="font-family:var(--pgm-mono);font-size:0.62rem;color:var(--pgm-muted);margin-top:6px">
+            Classified as <span style="color:${accent}">${esc(TYPE_LABEL[s.type]||s.type)}</span> based on file count and LOC thresholds in the OASIS Celestial Body Classification System.
+          </p>
+        </div>
+      </details>
+    `;
+  }
+
+  // ── External links ────────────────────────────────────────────────────────
+  const linkUrl = s.link || (s.holonized ? s.gitRemote : null);
+  if (linkUrl) {
+    body += `<div style="margin-top:14px">
+      <a class="modal-ext-link" href="${esc(linkUrl)}" target="_blank">↗ ${esc(linkUrl.replace('https://',''))}</a>
+    </div>`;
+  }
+
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('sysModal').classList.add('open');
+
+  // Populate OAPP live stats in modal asynchronously
+  if (s.type === 'oapp' && s.oappId) {
+    fetchOappStats(s.oappId).then(data => applyOappStats('oapp-stats-modal', data));
+  }
+};
+
+// ── Modal close ───────────────────────────────────────────────────────────────
+document.getElementById('modal-close-btn').addEventListener('click', () => {
+  document.getElementById('sysModal').classList.remove('open');
+});
+document.getElementById('sysModal').addEventListener('click', e => {
+  if (e.target.id === 'sysModal') document.getElementById('sysModal').classList.remove('open');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('sysModal').classList.remove('open');
+});
+
+// Fly-to animation
+let flyTarget = null, flyProgress = 0, flyFrom = null, flyTargetVec = null;
+function flyTo(pos) {
+  flyFrom    = camera.position.clone();
+  const dir  = pos.clone().sub(camera.position).normalize();
+  flyTargetVec = pos.clone().sub(dir.multiplyScalar(-28));
+  flyProgress  = 0;
+  flyTarget    = pos.clone();
+}
+
+// ── Controls ─────────────────────────────────────────────────────────────────
+let orbitOn  = true;
+let labelsOn = true;
+let routesOn = true;
+let mapView  = true;
+
+window.toggleOrbit = () => {
+  orbitOn = !orbitOn;
+  controls.autoRotate = orbitOn;
+  const btn = document.getElementById('orbit-btn');
+  btn.textContent = orbitOn ? 'Orbit ON' : 'Orbit OFF';
+  btn.classList.toggle('active', orbitOn);
+};
+window.setSpeed = n => {
+  controls.autoRotateSpeed = 0.35 * n;
+  [1,2,3,5].forEach(v => document.getElementById('sp'+v).classList.remove('active'));
+  document.getElementById('sp'+n).classList.add('active');
+};
+window.toggleLabels = () => {
+  labelsOn = !labelsOn;
+  document.getElementById('label-btn').classList.toggle('active', labelsOn);
+};
+window.toggleRoutes = () => {
+  routesOn = !routesOn;
+  routeLines.forEach(l => l.visible = routesOn);
+  document.getElementById('route-btn').classList.toggle('active', routesOn);
+};
+window.toggleView = () => {
+  mapView = !mapView;
+  document.getElementById('view-btn').classList.toggle('active', mapView);
+  flyTo(mapView ? new THREE.Vector3(0,62,88) : new THREE.Vector3(0,170,0));
+};
+window.resetCamera = () => {
+  flyTo(new THREE.Vector3(0,0,0));
+  setTimeout(() => { camera.position.copy(initPos); controls.target.copy(initTarget); }, 50);
+};
+
+// ── Labels ───────────────────────────────────────────────────────────────────
+const tmpV = new THREE.Vector3();
+function updateLabels() {
+  labelDivs.forEach(({ div, mesh }) => {
+    if (!mesh.visible) { div.style.opacity = '0'; return; }
+    tmpV.copy(mesh.position).project(camera);
+    div.style.left    = ((tmpV.x*.5+.5)*window.innerWidth+10)+'px';
+    div.style.top     = ((tmpV.y*-.5+.5)*window.innerHeight-5)+'px';
+    div.style.opacity = (tmpV.z < 1 && labelsOn) ? '1' : '0';
+  });
+}
+
+// ── Animate ──────────────────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+
+  if (flyFrom && flyTargetVec && flyProgress < 1) {
+    flyProgress = Math.min(1, flyProgress + dt * 0.9);
+    const t = 1 - Math.pow(1-flyProgress, 3);
+    camera.position.lerpVectors(flyFrom, flyTargetVec, t);
+    controls.target.lerp(flyTarget, t * 0.3);
+    if (flyProgress >= 1) flyFrom = null;
+  }
+
+  if (selectedMesh && ringMat.opacity > 0) {
+    ringMesh.lookAt(camera.position);
+    const pulse = 0.35 + 0.25 * Math.sin(Date.now() * 0.003);
+    ringMat.opacity = pulse;
+  }
+
+  controls.update();
+  updateLabels();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ── Resize ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── Loading bar ───────────────────────────────────────────────────────────────
+const bar = document.getElementById('load-bar');
+const ld  = document.getElementById('loading');
+let pct   = 0;
+const ldr = setInterval(() => {
+  pct += Math.random()*22;
+  bar.style.width = Math.min(pct,100)+'%';
+  if (pct>=100) {
+    clearInterval(ldr);
+    ld.style.opacity='0';
+    setTimeout(()=>ld.style.display='none', 850);
+  }
+}, 65);
+
+// Select Sol by default after load
+setTimeout(() => {
+  const sol = systemMeshes.find(m=>m.userData.type==='anchor');
+  if (sol) selectSystem(sol);
+}, 1200);
+
+// ── OASIS Holonized Apps — live fetch ────────────────────────────────────────
+// Set to your deployed OASIS API base URL, e.g. 'https://api.oasisweb4.one'
+// Leave empty to use relative URLs (works when served by the .NET host directly)
+const OASIS_API = window.__OASIS_API__ || '';
+
+// ── OAPP live stats fetch ─────────────────────────────────────────────────────
+// Expected endpoint: GET /api/oapp/{oappId}/stats
+// Expected response: { avatarCount, karmaTotal, circleCount, transactionCount, lastActiveAt }
+const _oappStatsCache = {};
+async function fetchOappStats(oappId) {
+  if (_oappStatsCache[oappId]) return _oappStatsCache[oappId];
+  if (!OASIS_API) return null;
+  try {
+    const ctrl = new AbortController();
+    const tid   = setTimeout(() => ctrl.abort(), 6000);
+    const r = await fetch(`${OASIS_API}/api/oapp/${oappId}/stats`, { signal: ctrl.signal });
+    clearTimeout(tid);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    _oappStatsCache[oappId] = data;
+    return data;
+  } catch { return null; }
+}
+
+function applyOappStats(containerId, data) {
+  const el = document.getElementById(containerId);
+  if (!el || !el.isConnected || !data) return;
+  const fmt = n => n == null ? '—' : n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n);
+  el.querySelectorAll('[data-stat]').forEach(span => {
+    const key = span.dataset.stat;
+    const map = { avatars: data.avatarCount, karma: data.karmaTotal, circles: data.circleCount, tea: data.transactionCount };
+    if (map[key] != null) { span.textContent = fmt(map[key]); span.closest('.oapp-stat-tile')?.classList.remove('oapp-stat-loading'); }
+  });
+}
+
+function addHolonizedSystem(entry) {
+  const typeMap = { grandsuperstar:'grandsuperstar', grandstar:'grandstar', superstar:'superstar', star:'star', planet:'planet', moon:'moon' };
+  const sysType = typeMap[entry.bodyType] || 'star';
+  const cfg     = TYPE_CFG[sysType];
+  if (!cfg) return;
+
+  const pos = entry.pos && entry.pos.length === 3
+    ? entry.pos
+    : [Math.cos(Math.random()*Math.PI*2)*20, (Math.random()-.5)*2, Math.sin(Math.random()*Math.PI*2)*20];
+
+  const s = {
+    name:         entry.name,
+    shortName:    entry.shortName || entry.name,
+    type:         sysType,
+    pos,
+    subtitle:     entry.subtitle    || `${entry.totalFiles} files · Holonized`,
+    region:       entry.region      || 'OASIS Sector',
+    sector:       entry.sector      || `${entry.languages || '—'} · OASIS`,
+    cat:          entry.cat         || `Holonized ${sysType.charAt(0).toUpperCase()+sysType.slice(1)}`,
+    desc:         entry.desc        || `Holonized from ${entry.gitRemote || 'local filesystem'}.`,
+    link:         entry.link        || entry.website || null,
+    holonized:    true,
+    totalFiles:   entry.totalFiles,
+    totalLoc:     entry.totalLoc,
+    languages:    entry.languages,
+    gitRemote:    entry.gitRemote    || null,
+    holonizedAt:  entry.holonizedAt  || null,
+    contributors: entry.contributors || [],
+  };
+
+  if (systemMeshes.some(m => m.userData.name === s.name)) return;
+
+  const p = new THREE.Vector3(...s.pos);
+
+  const glowMat = new THREE.SpriteMaterial({ color: cfg.color, transparent:true, opacity: cfg.glow, depthWrite:false });
+  const glow    = new THREE.Sprite(glowMat);
+  glow.scale.setScalar(cfg.size * 7.5);
+  glow.position.copy(p);
+  scene.add(glow);
+
+  // Holonized spheres — visual sphere + invisible hit sphere
+  const holVisual = new THREE.Mesh(
+    new THREE.SphereGeometry(Math.max(cfg.size * 0.72, 0.32), 12, 12),
+    new THREE.MeshBasicMaterial({ color: cfg.color })
+  );
+  holVisual.position.copy(p);
+  scene.add(holVisual);
+  visualMeshes.push(holVisual);
+
+  const mesh = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial());
+  mesh.position.copy(p);
+  mesh.visible = true;
+  mesh.userData = { ...s, idx: systemMeshes.length, glow, glowMat, visualMesh: holVisual };
+  scene.add(mesh);
+  systemMeshes.push(mesh);
+
+  const div = document.createElement('div');
+  const baseGlow = cssColor(cfg.color, 0.85);
+  div.style.cssText = [
+    'position:fixed',
+    'pointer-events:auto',
+    'cursor:pointer',
+    "font-family:'JetBrains Mono',monospace",
+    'font-size:10px',
+    `color:${cssColor(cfg.color)}`,
+    'letter-spacing:0.8px',
+    `text-shadow:0 0 8px ${baseGlow}`,
+    'transition:opacity 0.25s, transform 0.12s, background 0.12s',
+    'white-space:nowrap',
+    'padding:3px 7px',
+    'background:rgba(0,4,16,0.45)',
+    'border-radius:4px',
+    `border:1px solid ${cssColor(cfg.color, 0.22)}`,
+  ].join(';');
+  div.textContent = s.shortName;
+  div.title = s.name;
+  div.onclick = () => window.selectSystemByName(s.name);
+  div.onmouseenter = () => {
+    div.style.transform = 'scale(1.18)';
+    div.style.background = `${cssColor(cfg.color, 0.15)}`;
+    div.style.textShadow = `0 0 16px ${cssColor(cfg.color)}`;
+  };
+  div.onmouseleave = () => {
+    div.style.transform = '';
+    div.style.background = 'rgba(0,4,16,0.45)';
+    div.style.textShadow = `0 0 8px ${baseGlow}`;
+  };
+  document.body.appendChild(div);
+  labelDivs.push({ div, mesh });
+
+  renderTally();
+  renderTicker();
+}
+
+// Filter 'holonized' shows all celestial body types
+const _origFilter = window.filterSystems;
+window.filterSystems = type => {
+  if (type === 'holonized') {
+    activeFilter = type;
+    document.querySelectorAll('.fp-item').forEach(el => {
+      el.classList.toggle('disabled', el.dataset.type !== 'all' && el.dataset.type !== 'holonized');
+    });
+    const holonTypes = new Set(['moon','planet','star','superstar','grandstar','grandsuperstar']);
+    systemMeshes.forEach(mesh => {
+      const show = holonTypes.has(mesh.userData.type);
+      mesh.visible = show;
+      mesh.userData.glow.visible = show;
+    });
+    labelDivs.forEach(({div, mesh}) => { if (!mesh.visible) div.style.opacity = '0'; });
+  } else {
+    _origFilter(type);
+  }
+};
+
+async function fetchHolonizedApps() {
+  try {
+    const r = await fetch(OASIS_API + '/api/holonize/map-entries');
+    if (!r.ok) return;
+    const entries = await r.json();
+    if (Array.isArray(entries)) entries.forEach(addHolonizedSystem);
+  } catch { /* API offline — galaxy-map still works standalone */ }
+}
+
+window.addHolonizedSystem = addHolonizedSystem;
+// Expose select-by-name helper so javascript: URLs and dev tooling can trigger the info panel
+window.selectSystemByName = function(name) {
+  const m = systemMeshes.find(x => x.userData && x.userData.name === name);
+  if (!m) return false;
+  selectSystem(m);
+  flyTo(m.position);
+  const ip = document.getElementById('info-panel');
+  if (ip) { ip.style.display = 'block'; ip.style.opacity = '1'; ip.style.pointerEvents = 'auto'; }
+  return true;
+};
+
+// ── renderTally — populates the tally strip and filter panel counts ───────────
+function renderTally() {
+  const counts = {};
+  for (const m of systemMeshes) {
+    const t = m.userData.type;
+    counts[t] = (counts[t] || 0) + 1;
+  }
+  const holonTypes = new Set(['moon','planet','star','superstar','grandstar','grandsuperstar']);
+  const holonCount = Object.entries(counts).filter(([t])=>holonTypes.has(t)).reduce((a,[,v])=>a+v,0);
+  const totalCount = systemMeshes.length;
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  // Filter panel
+  set('fc-all',      totalCount);
+  set('fc-anchor',   counts['anchor']   || 0);
+  set('fc-live',     counts['live']     || 0);
+  set('fc-building', counts['building'] || 0);
+  set('fc-partner',  counts['partner']  || 0);
+  set('fc-concept',  counts['concept']  || 0);
+  set('fc-fictional',counts['fictional']|| 0);
+  set('fc-holonized',holonCount);
+
+  // Tally strip
+  set('tv-anchor',   counts['anchor']   || 0);
+  set('tv-live',     counts['live']     || 0);
+  set('tv-building', counts['building'] || 0);
+  set('tv-partner',  counts['partner']  || 0);
+  set('tv-concept',  counts['concept']  || 0);
+  set('tv-fictional',counts['fictional']|| 0);
+  set('tv-holonized',holonCount);
+
+  // Holonized list in filter panel
+  const holonized = systemMeshes.filter(m => new Set(['moon','planet','star','superstar','grandstar','grandsuperstar']).has(m.userData.type));
+  const listEl = document.getElementById('fp-holonized-list');
+  if (listEl && holonized.length) {
+    listEl.innerHTML = holonized.map(m => {
+      const s   = m.userData;
+      const cfg = TYPE_CFG[s.type];
+      const col = cssColor(cfg.color);
+      return `<div class="fp-item" onclick="window.selectSystemByName('${esc(s.name)}')" style="padding-left:6px;cursor:pointer" title="${esc(s.name)}">
+        <div class="fp-dot" style="background:${col}"></div>
+        <span style="font-size:9px">${esc(s.shortName||s.name)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Tech stack in filter panel
+  const allLangs = {};
+  holonized.forEach(m => {
+    if (m.userData.languages) {
+      m.userData.languages.split(',').forEach(l => {
+        const lang = l.trim();
+        if (lang) allLangs[lang] = (allLangs[lang] || 0) + 1;
+      });
+    }
+  });
+  const techEl = document.getElementById('fp-tech-body');
+  if (techEl && Object.keys(allLangs).length) {
+    techEl.innerHTML = Object.entries(allLangs)
+      .sort((a,b) => b[1] - a[1])
+      .map(([lang]) => `<span class="lang-chip" style="margin:2px 2px 0">${esc(lang)}</span>`)
+      .join('');
+    techEl.style.padding = '4px 6px 8px';
+  }
+}
+
+// ── renderTicker — builds the scrolling activity ticker ──────────────────────
+function renderTicker() {
+  const items = systemMeshes.map(m => {
+    const s   = m.userData;
+    const col = TYPE_ACCENT[s.type] || 'var(--pgm-amber)';
+    const sub = s.holonized
+      ? `${(s.totalFiles||0).toLocaleString()} files · ${(s.totalLoc||0).toLocaleString()} LOC`
+      : (s.subtitle || TYPE_LABEL[s.type] || '');
+    return `<span class="ticker-item"><span class="ti-name" style="color:${col}">${esc(s.shortName||s.name)}</span><span class="ti-dot">·</span>${esc(sub)}</span>`;
+  });
+
+  if (!items.length) return;
+  const doubled = [...items, ...items]; // duplicate for seamless loop
+  const ticker = document.getElementById('ticker-marquee');
+  if (ticker) ticker.innerHTML = doubled.join('');
+}
+
+// Call both after initial systems render
+setTimeout(() => { renderTally(); renderTicker(); }, 300);
+
+setTimeout(fetchHolonizedApps, 1500);
+
+// ── STARNET auto-discovery ────────────────────────────────────────────────────
+// Any OAPP registered in STARNET automatically appears as a celestial body.
+// No manual entry required. Two auth modes:
+//   1. Unauthenticated: tries /api/OAPPs/search (works for published public OAPPs)
+//   2. Authenticated: uses window.__OASIS_JWT__ if set, calls /api/OAPPs for all
+//
+// How to set your OASIS API and JWT in any host page:
+//   <script>
+//     window.__OASIS_API__ = 'http://localhost:5001';
+//     window.__OASIS_JWT__ = 'eyJhbGci...'; // optional: get from /api/Avatar/Authenticate
+//   </script>
+//
+// Position encoding:
+//   New OAPPs land in the "outer discovery arm" (radius 28–48) unless the OAPP
+//   author encodes a specific galaxy position in ourWorldLat / ourWorldLong when
+//   registering:
+//     ourWorldLat  (-90 → +90)   maps to  x  (-45 → +45)
+//     ourWorldLong (-180 → +180) maps to  z  (-45 → +45)
+//   If both are 0 (the default), position is derived deterministically from the UUID.
+
+// Collect static OAPP IDs so we never duplicate them
+const _staticOappIds = new Set(
+  SYSTEMS.filter(s => s.oappId).map(s => s.oappId)
+);
+
+function _positionFromUuid(uuid) {
+  // Derive a stable position in the outer discovery arm from the UUID hex string.
+  const hex = uuid.replace(/-/g, '');
+  const angle  = (parseInt(hex.slice(0,  8), 16) / 0xffffffff) * Math.PI * 2;
+  const radius = 28 + (parseInt(hex.slice(8, 16), 16) / 0xffffffff) * 20; // 28–48
+  const y      = ((parseInt(hex.slice(16, 24), 16) / 0xffffffff) - 0.5) * 8; // -4..+4
+  return [
+    Math.round(Math.cos(angle) * radius * 10) / 10,
+    Math.round(y * 10) / 10,
+    Math.round(Math.sin(angle) * radius * 10) / 10,
+  ];
+}
+
+function _oappTypeLabel(t) {
+  return { 0:'OAPP', 1:'Console OAPP', 2:'WebAPI OAPP', 3:'Blazor OAPP',
+           4:'MAUI OAPP', 5:'OAPP Template', 6:'Generated Code' }[t] || 'OAPP';
+}
+
+function _oappToSystem(oapp) {
+  const pos = (oapp.ourWorldLat || oapp.ourWorldLong)
+    ? [
+        Math.round(oapp.ourWorldLat  / 90  * 45 * 10) / 10,
+        0,
+        Math.round(oapp.ourWorldLong / 180 * 45 * 10) / 10,
+      ]
+    : _positionFromUuid(oapp.id);
+
+  const typeLabel = _oappTypeLabel(oapp.oAPPType);
+
+  return {
+    name:         oapp.name,
+    shortName:    oapp.name.length > 16 ? oapp.name.slice(0, 14) + '…' : oapp.name,
+    type:         'oapp',
+    pos,
+    subtitle:     `${typeLabel} · Holonic OAPP · STAR Registered`,
+    region:       'Outer Arm',
+    sector:       'STARNET Discovery Sector',
+    cat:          `${typeLabel} / Holonic OAPP`,
+    desc:         oapp.description || `${oapp.name} — registered on STARNET.`,
+    oappId:       oapp.id,
+    oappType:     typeLabel,
+    oappFeatures: 'STAR Registered,Holonic',
+    link:         oapp.link || null,
+    _fromStarnet: true,
+  };
+}
+
+async function fetchStarnetOapps() {
+  if (!OASIS_API) return;
+  const jwt = window.__OASIS_JWT__ || null;
+
+  // Try authenticated list first; fall back to public search
+  const endpoints = jwt
+    ? [`${OASIS_API}/api/OAPPs`, `${OASIS_API}/api/OAPPs/search?searchTerm=`]
+    : [`${OASIS_API}/api/OAPPs/search?searchTerm=`];
+
+  for (const url of endpoints) {
+    try {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), 8000);
+      const headers = { Accept: 'application/json' };
+      if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+
+      const r = await fetch(url, { signal: ctrl.signal, headers });
+      clearTimeout(tid);
+      if (!r.ok) continue;
+
+      const body = await r.json();
+      // Unwrap OASIS envelope: body.result or body.results or body (array)
+      const list = Array.isArray(body) ? body
+        : Array.isArray(body?.result)   ? body.result
+        : Array.isArray(body?.results)  ? body.results
+        : [];
+
+      if (!list.length) continue;
+
+      let added = 0;
+      for (const oapp of list) {
+        if (!oapp?.id || !oapp?.name) continue;
+        if (_staticOappIds.has(oapp.id)) continue;          // already in static list
+        if (systemMeshes.some(m => m.userData.oappId === oapp.id)) continue; // already rendered
+
+        const sys = _oappToSystem(oapp);
+        // Re-use the existing addHolonizedSystem infrastructure
+        const entry = {
+          name:        sys.name,
+          shortName:   sys.shortName,
+          bodyType:    'star',   // renders as a star — overridden below
+          pos:         sys.pos,
+          subtitle:    sys.subtitle,
+          region:      sys.region,
+          sector:      sys.sector,
+          cat:         sys.cat,
+          desc:        sys.desc,
+          link:        sys.link,
+        };
+
+        // Use addOappSystem (the oapp-type-aware variant) instead of addHolonizedSystem
+        _addStarnetOapp(sys);
+        added++;
+      }
+
+      if (added > 0) { renderTally(); renderTicker(); }
+      return; // success — stop trying endpoints
+    } catch { continue; }
+  }
+}
+
+function _addStarnetOapp(s) {
+  if (systemMeshes.some(m => m.userData.name === s.name)) return;
+
+  const cfg = TYPE_CFG['oapp'];
+  if (!cfg) return;
+
+  const p = new THREE.Vector3(...s.pos);
+
+  const glowMat = new THREE.SpriteMaterial({ color: cfg.color, transparent:true, opacity: cfg.glow, depthWrite:false });
+  const glow    = new THREE.Sprite(glowMat);
+  glow.scale.setScalar(cfg.size * 7.5);
+  glow.position.copy(p);
+  scene.add(glow);
+
+  const geo = new THREE.SphereGeometry(cfg.size * 0.001, 8, 8);
+  const mat = new THREE.MeshBasicMaterial({ color: cfg.color });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(p);
+  scene.add(mesh);
+
+  const visualGeo = new THREE.SphereGeometry(cfg.size * 0.95, 16, 16);
+  const visualMat = new THREE.MeshBasicMaterial({ color: cfg.color });
+  const visualMesh = new THREE.Mesh(visualGeo, visualMat);
+  visualMesh.position.copy(p);
+  scene.add(visualMesh);
+
+  mesh.userData = { ...s, glow, visualMesh, _fromStarnet: true };
+
+  const div = document.createElement('div');
+  div.className = 'sys-label';
+  div.textContent = s.shortName || s.name;
+  div.dataset.type = 'oapp';
+  document.getElementById('labels-overlay').appendChild(div);
+
+  systemMeshes.push(mesh);
+  labelDivs.push({ div, mesh });
+  _staticOappIds.add(s.oappId);
+}
+
+// Fetch STARNET OAPPs 2 seconds after page load (after the static scene is built)
+setTimeout(fetchStarnetOapps, 2000);
+
+// ── Mobile panel toggles ──────────────────────────────────────────────────────
+window.toggleMobFilter = function() {
+  const fp  = document.getElementById('filter-panel');
+  const btn = document.getElementById('mob-filter-btn');
+  const open = fp.classList.toggle('mob-open');
+  btn.classList.toggle('active', open);
+  if (open) {
+    document.getElementById('info-panel').classList.remove('mob-open');
+    document.getElementById('mob-info-btn').classList.remove('active');
+  }
+};
+window.toggleMobInfo = function() {
+  const ip  = document.getElementById('info-panel');
+  const btn = document.getElementById('mob-info-btn');
+  const open = ip.classList.toggle('mob-open');
+  btn.classList.toggle('active', open);
+  if (open) {
+    document.getElementById('filter-panel').classList.remove('mob-open');
+    document.getElementById('mob-filter-btn').classList.remove('active');
+  }
+};
+// Auto-open info panel when a system is tapped on mobile
+window._mobAutoOpenInfo = function() {
+  if (window.innerWidth <= 768) {
+    document.getElementById('info-panel').classList.add('mob-open');
+    document.getElementById('mob-info-btn').classList.add('active');
+    document.getElementById('filter-panel').classList.remove('mob-open');
+    document.getElementById('mob-filter-btn').classList.remove('active');
+  }
+};
+</script>
+</body>
+</html>

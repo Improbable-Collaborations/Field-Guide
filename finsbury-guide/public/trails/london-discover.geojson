@@ -1,0 +1,455 @@
+{
+  "type": "FeatureCollection",
+  "name": "london-discover",
+  "description": "Curated central London places for dense map proof. OSM Overpass fills the rest live.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0759, 51.5081] },
+      "properties": {
+        "id": "london-tower",
+        "title": "Tower of London",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 1,
+        "radiusM": 80,
+        "place": "Historic fortress",
+        "markerStyle": "discover-poi",
+        "narrationText": "Nearly a thousand years of royal power, prisoners, and ravens.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0754, 51.5055] },
+      "properties": {
+        "id": "london-tower-bridge",
+        "title": "Tower Bridge",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 2,
+        "radiusM": 70,
+        "place": "Attraction",
+        "markerStyle": "discover-poi",
+        "narrationText": "The bridge Londoners still confuse with London Bridge.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0860, 51.5101] },
+      "properties": {
+        "id": "london-monument",
+        "title": "The Monument",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 3,
+        "radiusM": 55,
+        "place": "Historic memorial",
+        "markerStyle": "discover-poi",
+        "narrationText": "Marks the Great Fire of 1666. Climb for City views.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0983, 51.5138] },
+      "properties": {
+        "id": "london-st-pauls",
+        "title": "St Paul's Cathedral",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 4,
+        "radiusM": 80,
+        "place": "Cathedral",
+        "markerStyle": "discover-poi",
+        "narrationText": "Wren's dome. Whispering Gallery. Blitz survival.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0972, 51.5081] },
+      "properties": {
+        "id": "london-globe",
+        "title": "Shakespeare's Globe",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 5,
+        "radiusM": 60,
+        "place": "Theatre",
+        "markerStyle": "discover-poi",
+        "narrationText": "Open-air playhouse on the Bankside stage of Elizabethan London.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0994, 51.5076] },
+      "properties": {
+        "id": "london-tate-modern",
+        "title": "Tate Modern",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 6,
+        "radiusM": 70,
+        "place": "Gallery",
+        "markerStyle": "discover-poi",
+        "narrationText": "Power station turned modern art magnet.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1269, 51.5194] },
+      "properties": {
+        "id": "london-british-museum",
+        "title": "British Museum",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 7,
+        "radiusM": 80,
+        "place": "Museum",
+        "markerStyle": "discover-poi",
+        "narrationText": "Rosetta Stone, Parthenon sculptures, and a free city of rooms.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1281, 51.5081] },
+      "properties": {
+        "id": "london-trafalgar",
+        "title": "Trafalgar Square",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 8,
+        "radiusM": 70,
+        "place": "Attraction",
+        "markerStyle": "discover-poi",
+        "narrationText": "Nelson on his column. Lions. Protests. Pigeons.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1246, 51.5007] },
+      "properties": {
+        "id": "london-big-ben",
+        "title": "Elizabeth Tower",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 9,
+        "radiusM": 60,
+        "place": "Historic landmark",
+        "markerStyle": "discover-poi",
+        "narrationText": "The bell is Big Ben. The tower is Elizabeth Tower.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1273, 51.4994] },
+      "properties": {
+        "id": "london-westminster-abbey",
+        "title": "Westminster Abbey",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 10,
+        "radiusM": 70,
+        "place": "Historic church",
+        "markerStyle": "discover-poi",
+        "narrationText": "Coronations, poets, and a thousand years of English ceremony.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1419, 51.5014] },
+      "properties": {
+        "id": "london-buckingham",
+        "title": "Buckingham Palace",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 11,
+        "radiusM": 90,
+        "place": "Attraction",
+        "markerStyle": "discover-poi",
+        "narrationText": "Changing the Guard draws the crowds. The palace holds the rooms.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1764, 51.4967] },
+      "properties": {
+        "id": "london-nhm",
+        "title": "Natural History Museum",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 12,
+        "radiusM": 80,
+        "place": "Museum",
+        "markerStyle": "discover-poi",
+        "narrationText": "Dippy's hall. Blue whale. Victorian cathedral of nature.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1720, 51.4966] },
+      "properties": {
+        "id": "london-vanda",
+        "title": "Victoria and Albert Museum",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 13,
+        "radiusM": 70,
+        "place": "Museum",
+        "markerStyle": "discover-poi",
+        "narrationText": "Design, fashion, and the world's decorative arts attic.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1225, 51.5118] },
+      "properties": {
+        "id": "london-covent-garden",
+        "title": "Covent Garden",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 14,
+        "radiusM": 70,
+        "place": "Market",
+        "markerStyle": "discover-poi",
+        "narrationText": "Apple market, street performers, and the old flower sellers' stage.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0907, 51.5055] },
+      "properties": {
+        "id": "london-borough-market",
+        "title": "Borough Market",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 15,
+        "radiusM": 60,
+        "place": "Market",
+        "markerStyle": "discover-poi",
+        "narrationText": "Food under the railway arches by London Bridge.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1197, 51.5033] },
+      "properties": {
+        "id": "london-eye",
+        "title": "London Eye",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 16,
+        "radiusM": 70,
+        "place": "Attraction",
+        "markerStyle": "discover-poi",
+        "narrationText": "Millennium wheel. Slow orbit over the Thames.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1203, 51.5080] },
+      "properties": {
+        "id": "london-cleopatra",
+        "title": "Cleopatra's Needle",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 17,
+        "radiusM": 50,
+        "place": "Historic monument",
+        "markerStyle": "discover-poi",
+        "narrationText": "Ancient Egyptian obelisk on the Embankment, older than London.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1103, 51.5127] },
+      "properties": {
+        "id": "london-temple-church",
+        "title": "Temple Church",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 18,
+        "radiusM": 55,
+        "place": "Historic church",
+        "markerStyle": "discover-poi",
+        "narrationText": "Round church of the Knights Templar between Fleet Street and the river.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1340, 51.5101] },
+      "properties": {
+        "id": "london-piccadilly",
+        "title": "Piccadilly Circus",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 19,
+        "radiusM": 55,
+        "place": "Attraction",
+        "markerStyle": "discover-poi",
+        "narrationText": "Eros, neon, and the West End's busy crossroads.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1426, 51.5414] },
+      "properties": {
+        "id": "london-camden",
+        "title": "Camden Market",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 20,
+        "radiusM": 80,
+        "place": "Market",
+        "markerStyle": "discover-poi",
+        "narrationText": "Locks, stalls, and north London counterculture.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0005, 51.4769] },
+      "properties": {
+        "id": "london-greenwich-obs",
+        "title": "Royal Observatory Greenwich",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 21,
+        "radiusM": 70,
+        "place": "Museum",
+        "markerStyle": "discover-poi",
+        "narrationText": "Prime Meridian. Where the world's clocks still argue.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0096, 51.4827] },
+      "properties": {
+        "id": "london-cutty-sark",
+        "title": "Cutty Sark",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 22,
+        "radiusM": 60,
+        "place": "Museum",
+        "markerStyle": "discover-poi",
+        "narrationText": "Tea clipper dry-docked in Greenwich.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1608, 51.5395] },
+      "properties": {
+        "id": "london-primrose-hill",
+        "title": "Primrose Hill",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 23,
+        "radiusM": 70,
+        "place": "Viewpoint",
+        "markerStyle": "discover-poi",
+        "narrationText": "Skyline picnic hill above Regent's Park.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0718, 51.5220] },
+      "properties": {
+        "id": "london-brick-lane",
+        "title": "Brick Lane",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 24,
+        "radiusM": 70,
+        "place": "Street",
+        "markerStyle": "discover-poi",
+        "narrationText": "Curry houses, street art, and East End layers.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0885, 51.5142] },
+      "properties": {
+        "id": "london-bank",
+        "title": "Bank of England",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 25,
+        "radiusM": 60,
+        "place": "Historic building",
+        "markerStyle": "discover-poi",
+        "narrationText": "The Old Lady of Threadneedle Street.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1050, 51.5142] },
+      "properties": {
+        "id": "london-fleet-street",
+        "title": "Fleet Street",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 26,
+        "radiusM": 55,
+        "place": "Historic street",
+        "markerStyle": "discover-poi",
+        "narrationText": "Press barons, Sweeney Todd lore, and the City's ink memory.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1774, 51.5025] },
+      "properties": {
+        "id": "london-albert-memorial",
+        "title": "Albert Memorial",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 27,
+        "radiusM": 55,
+        "place": "Historic memorial",
+        "markerStyle": "discover-poi",
+        "narrationText": "Victoria's gothic shrine to Albert, facing the Albert Hall.",
+        "wikiSlug": "city-discover"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1596, 51.5121] },
+      "properties": {
+        "id": "london-speakers-corner",
+        "title": "Speakers' Corner",
+        "trail": "city-discover",
+        "questRole": "optional",
+        "order": 28,
+        "radiusM": 55,
+        "place": "Historic site",
+        "markerStyle": "discover-poi",
+        "narrationText": "Hyde Park's free-speech corner since the Victorian era.",
+        "wikiSlug": "city-discover"
+      }
+    }
+  ]
+}

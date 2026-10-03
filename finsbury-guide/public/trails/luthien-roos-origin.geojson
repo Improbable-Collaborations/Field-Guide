@@ -1,0 +1,205 @@
+{
+  "type": "FeatureCollection",
+  "name": "luthien-roos-origin",
+  "description": "Roos Hemlock Origin. Hull garrison city · All Saints umbels · Dents Garth · commemorative glade. Geometry mode: desk stand-in. Source: beren-luthien-catalog.json. Wiki: roos-hemlock-origin.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0934,
+          51.52475
+        ]
+      },
+      "properties": {
+        "id": "kingston-upon-hull",
+        "title": "Kingston upon Hull",
+        "trail": "luthien-roos-origin",
+        "questRole": "waypoint",
+        "dropKind": "memorial",
+        "order": 0,
+        "radiusM": 60,
+        "place": "Kingston upon Hull",
+        "nation": "England",
+        "placeKind": "memorial",
+        "poseHint": "doorstep",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "none",
+        "relicId": "humber-garrison",
+        "relicPrompt": "Hold with the garrison city behind the Roos outpost.",
+        "riteId": "kingston-upon-hull:garrison",
+        "wikiSlug": "kingston-upon-hull",
+        "wikiThemeSlug": "roos-hemlock-origin",
+        "narrationText": "Hull anchored the Humber Garrison. From this posting Tolkien reached Roos, where Edith danced and Tinúviel began.",
+        "directionHint": "Kingston upon Hull city reference.",
+        "themes": [
+          "glade_origin"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [],
+        "partnerReadiness": "doorstep_ok",
+        "access": "City reference for Humber Garrison posting, 1917.",
+        "geometryMode": "desk_standin",
+        "liveLat": 53.7457,
+        "liveLon": -0.3367,
+        "notes": "poseHint=doorstep;riteId=kingston-upon-hull:garrison;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09328,
+          51.5249
+        ]
+      },
+      "properties": {
+        "id": "all-saints-roos",
+        "title": "All Saints Roos",
+        "trail": "luthien-roos-origin",
+        "questRole": "waypoint",
+        "dropKind": "churchyard",
+        "order": 1,
+        "radiusM": 35,
+        "place": "All Saints Church, Roos",
+        "nation": "England",
+        "placeKind": "churchyard",
+        "poseHint": "garden",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "one_minute_company",
+        "relicId": "cow-parsley",
+        "relicPrompt": "Hold with the white umbels Tolkien called hemlocks.",
+        "riteId": "all-saints-roos:umbels",
+        "wikiSlug": "all-saints-roos",
+        "wikiThemeSlug": "roos-hemlock-origin",
+        "narrationText": "Roos churchyard still fills with cow parsley in late spring: the flora behind the hemlock glade memory.",
+        "directionHint": "All Saints churchyard, Roos.",
+        "themes": [
+          "glade_origin",
+          "tinuviel"
+        ],
+        "confidence": [
+          "documented",
+          "literary"
+        ],
+        "ethics": [
+          "respect_quiet"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Churchyard public edges; cow parsley flora.",
+        "geometryMode": "desk_standin",
+        "liveLat": 53.7535,
+        "liveLon": -0.0885,
+        "notes": "poseHint=garden;riteId=all-saints-roos:umbels;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09316,
+          51.52505
+        ]
+      },
+      "properties": {
+        "id": "dents-garth-roos",
+        "title": "Dents Garth",
+        "trail": "luthien-roos-origin",
+        "questRole": "waypoint",
+        "dropKind": "glade",
+        "order": 2,
+        "radiusM": 40,
+        "place": "Dents Garth, Roos",
+        "nation": "England",
+        "placeKind": "glade",
+        "poseHint": "glade",
+        "markerStyle": "glade",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "one_minute_company",
+        "relicId": "dents-garth-token",
+        "relicPrompt": "One minute at the garth edge often linked to the 1917 dance landscape.",
+        "riteId": "dents-garth-roos:garth",
+        "wikiSlug": "dents-garth",
+        "wikiThemeSlug": "roos-hemlock-origin",
+        "narrationText": "Dents Garth near Roos is a leading candidate landscape for Edith's dance among white flowers in 1917.",
+        "directionHint": "Dents Garth public edge, Roos (approx).",
+        "themes": [
+          "glade_origin",
+          "edith_source"
+        ],
+        "confidence": [
+          "literary",
+          "documented"
+        ],
+        "ethics": [
+          "partner_required"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "Approx commemorative woodland edge; public paths only.",
+        "geometryMode": "desk_standin",
+        "liveLat": 53.755,
+        "liveLon": -0.0895,
+        "notes": "poseHint=glade;riteId=dents-garth-roos:garth;geometryMode=desk_standin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0934,
+          51.5244
+        ]
+      },
+      "properties": {
+        "id": "roos-hemlock-glade",
+        "title": "Roos Hemlock Glade",
+        "trail": "luthien-roos-origin",
+        "questRole": "waypoint",
+        "dropKind": "glade",
+        "order": 3,
+        "radiusM": 40,
+        "place": "Roos, East Yorkshire (Dents Garth / churchyard vicinity)",
+        "nation": "England",
+        "placeKind": "glade",
+        "poseHint": "glade",
+        "markerStyle": "glade",
+        "worldPrefab": "PlaceKits/TreasureCue",
+        "momentVerb": "one_minute_company",
+        "relicId": "white-umbel-token",
+        "relicPrompt": "Hold with the white flowers: the dance that became Tinúviel.",
+        "riteId": "roos-hemlock-glade:dance",
+        "wikiSlug": "roos-hemlock-glade",
+        "wikiThemeSlug": "roos-hemlock-origin",
+        "narrationText": "In 1917 Edith danced among white umbels near Roos. Tolkien later wrote that this glade conceived the story that became the chief part of the Silmarillion.",
+        "directionHint": "Roos churchyard / Dents Garth public edge (approx).",
+        "themes": [
+          "glade_origin",
+          "edith_source",
+          "tinuviel"
+        ],
+        "confidence": [
+          "documented",
+          "literary"
+        ],
+        "ethics": [
+          "partner_required",
+          "copyright_paraphrase"
+        ],
+        "partnerReadiness": "needs_consent",
+        "access": "Commemorative vicinity near Roos; exact 1917 glade uncertain. Prefer public churchyard / path edges. Tolkien's hemlock was likely cow parsley.",
+        "geometryMode": "desk_standin",
+        "liveLat": 53.7542,
+        "liveLon": -0.0878,
+        "notes": "poseHint=glade;riteId=roos-hemlock-glade:dance;geometryMode=desk_standin"
+      }
+    }
+  ]
+}

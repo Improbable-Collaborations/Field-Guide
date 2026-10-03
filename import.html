@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OASIS Import Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600&family=Syne:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #0e0c0a;
+      --panel:   rgba(22, 19, 16, 0.96);
+      --border:  rgba(212, 165, 100, 0.20);
+      --text:    #f2ebe1;
+      --muted:   #8f867a;
+      --accent:  #e8b565;
+      --teal:    #6ecfb8;
+      --purple:  #b388ff;
+      --orange:  #ff9e4c;
+      --red:     #ff6b6b;
+      --input-bg: rgba(255,255,255,0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: var(--bg); color: var(--text); font-family: "Newsreader", Georgia, serif; }
+    .mono { font-family: "IBM Plex Mono", monospace; }
+
+    /* ── Top bar ──────────────────────────────────────────────────────── */
+    .top {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      padding: 10px 20px; border-bottom: 1px solid var(--border);
+      background: var(--panel); position: sticky; top: 0; z-index: 50;
+    }
+    .top h1 { font-family: "Syne", sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .top .sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; font-family: "IBM Plex Mono", monospace; }
+    .top-right { display: flex; align-items: center; gap: 12px; }
+    .api-input {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.62rem;
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 10px; width: 220px;
+    }
+    .api-input:focus { outline: none; border-color: rgba(212,165,100,0.5); color: var(--text); }
+    .live-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal); box-shadow: 0 0 5px var(--teal);
+      animation: blink 2.4s ease-in-out infinite;
+    }
+    .live-dot.err { background: var(--red); box-shadow: 0 0 5px var(--red); animation: none; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Tabs ─────────────────────────────────────────────────────────── */
+    .tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      background: rgba(10,9,7,0.97); padding: 0 20px;
+    }
+    .tab {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 10px 18px; border-bottom: 2px solid transparent;
+      cursor: pointer; color: var(--muted); transition: color 0.12s, border-color 0.12s;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Main layout ──────────────────────────────────────────────────── */
+    .page-body { padding: 20px; max-width: 1400px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Section label ────────────────────────────────────────────────── */
+    .section-label {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.58rem;
+      text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* ── Cards / panels ───────────────────────────────────────────────── */
+    .card {
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--panel); padding: 16px;
+    }
+    .card-title {
+      font-family: "Syne", sans-serif; font-size: 0.78rem; font-weight: 700;
+      color: var(--accent); margin-bottom: 14px;
+    }
+
+    /* ── Grid layouts ─────────────────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Step row (config + options side by side) ─────────────────────── */
+    .step-row { display: grid; grid-template-columns: 1fr 340px; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 860px) { .step-row { grid-template-columns: 1fr; } }
+
+    /* ── Form fields ──────────────────────────────────────────────────── */
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block; font-family: "IBM Plex Mono", monospace; font-size: 0.58rem;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%; font-family: "IBM Plex Mono", monospace; font-size: 0.72rem;
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 7px 10px; border-radius: 4px;
+      transition: border-color 0.12s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: rgba(232,181,101,0.5);
+    }
+    .field select option { background: #1a1612; }
+    .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    .field .hint { font-family: "IBM Plex Mono", monospace; font-size: 0.58rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── Toggle ───────────────────────────────────────────────────────── */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; }
+    .toggle-row label { font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--text); cursor: pointer; }
+    .toggle-row .hint { font-family: "IBM Plex Mono", monospace; font-size: 0.58rem; color: var(--muted); margin-top: 2px; }
+    .toggle {
+      position: relative; display: inline-block; width: 32px; height: 18px; flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border); border-radius: 9px; cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .toggle-slider::before {
+      content: ""; position: absolute; width: 12px; height: 12px; left: 2px; top: 2px;
+      background: var(--muted); border-radius: 50%; transition: transform 0.2s, background 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: rgba(110,207,184,0.15); border-color: rgba(110,207,184,0.4); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(14px); background: var(--teal); }
+
+    /* ── Buttons ──────────────────────────────────────────────────────── */
+    .btn {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 8px 18px; border: 1px solid var(--border);
+      background: transparent; color: var(--accent); cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s; border-radius: 3px;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--text); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn.primary {
+      background: rgba(232,181,101,0.1); border-color: rgba(232,181,101,0.5); color: var(--accent);
+    }
+    .btn.primary:hover:not(:disabled) { background: rgba(232,181,101,0.18); border-color: var(--accent); }
+    .btn.teal {
+      color: var(--teal); border-color: rgba(110,207,184,0.3);
+      background: rgba(110,207,184,0.06);
+    }
+    .btn.teal:hover:not(:disabled) { border-color: var(--teal); color: var(--text); background: rgba(110,207,184,0.12); }
+    .btn.danger { color: var(--red); border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.06); }
+    .btn.danger:hover:not(:disabled) { border-color: var(--red); background: rgba(255,107,107,0.12); }
+    .btn.sm { padding: 4px 10px; font-size: 0.58rem; }
+
+    .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+
+    /* ── Spinner ──────────────────────────────────────────────────────── */
+    .spinner {
+      display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(232,181,101,0.2);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Field mappings table ─────────────────────────────────────────── */
+    .mapping-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .mapping-table th {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.55rem;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+      text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--border);
+    }
+    .mapping-table td { padding: 5px 4px; vertical-align: middle; }
+    .mapping-table td input, .mapping-table td select {
+      width: 100%; font-family: "IBM Plex Mono", monospace; font-size: 0.68rem;
+      background: var(--input-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 5px 8px; border-radius: 3px;
+    }
+    .mapping-table td input:focus, .mapping-table td select:focus {
+      outline: none; border-color: rgba(232,181,101,0.45);
+    }
+    .mapping-table td select option { background: #1a1612; }
+    .mapping-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .mapping-row-remove {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; color: var(--muted);
+      background: none; border: none; cursor: pointer; padding: 3px 6px;
+      transition: color 0.1s;
+    }
+    .mapping-row-remove:hover { color: var(--red); }
+
+    /* ── JSON area with validation status ────────────────────────────── */
+    .json-area { position: relative; }
+    .json-status {
+      position: absolute; top: 8px; right: 10px;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.58rem;
+      padding: 2px 8px; border-radius: 3px;
+    }
+    .json-status.ok { background: rgba(110,207,184,0.12); color: var(--teal); border: 1px solid rgba(110,207,184,0.25); }
+    .json-status.err { background: rgba(255,107,107,0.1); color: var(--red); border: 1px solid rgba(255,107,107,0.2); }
+    .json-textarea {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.68rem;
+      background: rgba(0,0,0,0.25); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 12px; border-radius: 4px;
+      width: 100%; min-height: 240px; resize: vertical; line-height: 1.55;
+    }
+    .json-textarea:focus { outline: none; border-color: rgba(232,181,101,0.4); }
+
+    /* ── Results ──────────────────────────────────────────────────────── */
+    .result-strip {
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: rgba(0,0,0,0.3); margin-top: 16px;
+    }
+    .result-chip {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 8px 14px; border-radius: 6px; border: 1px solid var(--border); min-width: 80px;
+    }
+    .result-chip .rv { font-family: "Syne", sans-serif; font-size: 1.3rem; font-weight: 700; }
+    .result-chip .rl { font-family: "IBM Plex Mono", monospace; font-size: 0.52rem; color: var(--muted); text-align: center; margin-top: 2px; }
+    .result-chip.received { border-color: rgba(212,165,100,0.3); } .result-chip.received .rv { color: var(--accent); }
+    .result-chip.holonized { border-color: rgba(179,136,255,0.3); } .result-chip.holonized .rv { color: var(--purple); }
+    .result-chip.imported  { border-color: rgba(110,207,184,0.3); } .result-chip.imported .rv { color: var(--teal); }
+    .result-chip.failed    { border-color: rgba(255,107,107,0.3); } .result-chip.failed .rv { color: var(--red); }
+    .result-chip.skipped   { border-color: rgba(143,134,122,0.3); } .result-chip.skipped .rv { color: var(--muted); }
+    .result-chip.duration  { border-color: rgba(255,255,255,0.08); } .result-chip.duration .rv { color: var(--text); font-size: 1rem; }
+
+    .result-summary {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.68rem;
+      color: var(--muted); margin-top: 10px; padding: 8px 12px;
+      border: 1px solid var(--border); border-radius: 4px; background: rgba(0,0,0,0.2);
+      word-break: break-all; line-height: 1.6;
+    }
+
+    .error-list { margin-top: 12px; }
+    .error-item {
+      padding: 8px 10px; margin-bottom: 6px;
+      border: 1px solid rgba(255,107,107,0.2); border-radius: 5px;
+      background: rgba(255,107,107,0.04);
+    }
+    .error-item .e-id { font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; color: var(--muted); }
+    .error-item .e-stage { font-family: "IBM Plex Mono", monospace; font-size: 0.58rem; color: var(--red); text-transform: uppercase; letter-spacing: 0.08em; margin-left: 8px; }
+    .error-item .e-msg { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; color: #f0d0d0; margin-top: 3px; }
+
+    /* ── Divider ──────────────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+    /* ── Alert bar ────────────────────────────────────────────────────── */
+    .alert {
+      padding: 10px 14px; border-radius: 5px; margin-bottom: 14px;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; line-height: 1.5;
+    }
+    .alert.ok  { background: rgba(110,207,184,0.08); border: 1px solid rgba(110,207,184,0.25); color: var(--teal); }
+    .alert.err { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25); color: var(--red); }
+    .alert.warn { background: rgba(255,158,76,0.08); border: 1px solid rgba(255,158,76,0.25); color: var(--orange); }
+    .alert.dry { background: rgba(179,136,255,0.08); border: 1px solid rgba(179,136,255,0.25); color: var(--purple); }
+
+    /* ── Provider migration layout ────────────────────────────────────── */
+    .migrate-arrow {
+      display: flex; align-items: center; justify-content: center;
+      font-family: "IBM Plex Mono", monospace; font-size: 1.4rem; color: var(--accent);
+      padding: 0 8px; align-self: flex-end; padding-bottom: 12px;
+    }
+    .migrate-layout { display: flex; align-items: flex-end; gap: 4px; flex-wrap: wrap; margin-bottom: 14px; }
+    .migrate-layout .field { flex: 1; min-width: 180px; }
+
+    /* ── Dry-run badge ────────────────────────────────────────────────── */
+    .dryrun-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.6rem;
+      padding: 2px 9px; border-radius: 4px;
+      background: rgba(179,136,255,0.1); border: 1px solid rgba(179,136,255,0.3);
+      color: var(--purple); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    /* ── File upload zone ─────────────────────────────────────────────── */
+    .upload-zone {
+      border: 1px dashed rgba(212,165,100,0.3); border-radius: 5px;
+      padding: 12px 14px; text-align: center; cursor: pointer;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: var(--muted);
+      transition: border-color 0.15s, background 0.15s; margin-top: 8px;
+    }
+    .upload-zone:hover { border-color: rgba(212,165,100,0.55); background: rgba(232,181,101,0.03); color: var(--text); }
+    .upload-zone input { display: none; }
+
+    /* ── Collapsible records preview ──────────────────────────────────── */
+    details.preview { margin-top: 10px; border: 1px solid var(--border); border-radius: 6px; }
+    details.preview > summary {
+      padding: 8px 12px; cursor: pointer;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); list-style: none;
+    }
+    details.preview > summary::-webkit-details-marker { display: none; }
+    details.preview > summary::after { content: " +"; color: var(--muted); }
+    details.preview[open] > summary::after { content: " −"; }
+    details.preview .preview-body {
+      padding: 0 12px 12px; border-top: 1px solid var(--border);
+      max-height: 220px; overflow-y: auto;
+    }
+    .preview-row {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.6rem; color: var(--muted);
+      padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); line-height: 1.5;
+    }
+    .preview-row span { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>OASIS Import Portal</h1>
+    <div class="sub" id="statusSub">Connect to a running STAR WebAPI to begin</div>
+  </div>
+  <div class="top-right" style="display:flex;align-items:center;gap:1rem">
+    <a href="/holonize.html" style="font-size:0.65rem;letter-spacing:0.08em;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap" onmouseover="this.style.color='rgba(255,200,100,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">⬡ Pre-Check →</a>
+    <a href="/galaxy.html" style="font-size:0.65rem;letter-spacing:0.08em;color:rgba(255,255,255,0.4);text-decoration:none;white-space:nowrap" onmouseover="this.style.color='rgba(255,200,100,0.85)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Galaxy Map →</a>
+    <input class="api-input" id="apiBase" type="text" value="http://localhost:5000" placeholder="STAR API base URL" />
+    <span class="live-dot err" id="statusDot" title="Not connected"></span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="import">Import Records</button>
+  <button class="tab" data-tab="github">GitHub</button>
+  <button class="tab" data-tab="migrate">Migrate Provider</button>
+</nav>
+
+<div class="page-body">
+
+  <!-- ═══ IMPORT TAB ═══════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-import">
+
+    <!-- Step 1 — Source config + options -->
+    <div class="step-row">
+      <div class="card">
+        <div class="card-title">① Source Config</div>
+        <div class="grid-2">
+          <div>
+            <div class="field">
+              <label>Source System Name</label>
+              <input id="srcName" type="text" placeholder="e.g. Salesforce, MyDB, Pangea" />
+              <div class="hint">Any human-readable label. Stored on every imported holon.</div>
+            </div>
+            <div class="field">
+              <label>Source Provider Type</label>
+              <select id="srcProvider"></select>
+              <div class="hint">Which OASIS provider best represents the source technology.</div>
+            </div>
+          </div>
+          <div>
+            <div class="field">
+              <label>Target Provider</label>
+              <select id="tgtProvider"></select>
+              <div class="hint">Where holons are written. "Default" uses OASIS_DNA setting.</div>
+            </div>
+            <div class="field">
+              <label>Holon Type</label>
+              <select id="holonType"></select>
+            </div>
+            <div class="field">
+              <label>Imported By Avatar ID</label>
+              <input id="avatarId" type="text" placeholder="00000000-0000-0000-0000-000000000000" />
+              <div class="hint">GUID of the OASIS avatar performing this import.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="card">
+        <div class="card-title">Options</div>
+        <div class="toggle-row">
+          <div>
+            <div>Dry Run</div>
+            <div class="hint">Preview without writing to storage.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="dryRun" /><span class="toggle-slider"></span></label>
+        </div>
+        <hr class="divider" style="margin:10px 0" />
+        <div class="toggle-row">
+          <div>
+            <div>Continue on Error</div>
+            <div class="hint">Skip bad records rather than aborting.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="continueOnError" checked /><span class="toggle-slider"></span></label>
+        </div>
+        <hr class="divider" style="margin:14px 0 10px" />
+        <div class="section-label">Quick presets</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px">
+          <button class="btn sm" onclick="addPreset('_id','ProviderUniqueStorageKey','MongoDBOASIS')">MongoDB _id</button>
+          <button class="btn sm" onclick="addPreset('id','ProviderUniqueStorageKey','')">id</button>
+          <button class="btn sm" onclick="addPreset('name','Name','')">name</button>
+          <button class="btn sm" onclick="addPreset('title','Name','')">title</button>
+          <button class="btn sm" onclick="addPreset('description','Description','')">description</button>
+          <button class="btn sm" onclick="addPreset('created_at','CreatedDate','')">created_at</button>
+          <button class="btn sm" onclick="addPreset('createdAt','CreatedDate','')">createdAt</button>
+          <button class="btn sm" onclick="addPreset('email','None','email')">email</button>
+          <button class="btn sm" onclick="addPreset('wallet_address','None','wallet_address')">wallet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 — Field mappings -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">② Field Mappings</div>
+      <p style="font-size:0.78rem;color:#b8b0a4;margin-bottom:12px;line-height:1.5">
+        Map source fields to Holon properties. Any field <em>not</em> listed here is
+        automatically preserved in <span class="mono" style="color:var(--teal)">MetaData</span> — nothing is ever lost.
+      </p>
+      <table class="mapping-table" id="mappingTable">
+        <thead>
+          <tr>
+            <th style="width:30%">Source Field</th>
+            <th style="width:32%">Maps To</th>
+            <th style="width:30%">MetaData Key</th>
+            <th style="width:8%"></th>
+          </tr>
+        </thead>
+        <tbody id="mappingBody"></tbody>
+      </table>
+      <button class="btn sm" style="margin-top:6px" onclick="addMappingRow()">+ Add row</button>
+    </div>
+
+    <!-- Step 3 — Records -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">③ Records</div>
+      <div class="grid-2" style="gap:14px;align-items:start">
+        <div>
+          <p style="font-size:0.78rem;color:#b8b0a4;margin-bottom:10px;line-height:1.5">
+            Paste a JSON array — each object is one record. Fields with no mapping land in <span class="mono" style="color:var(--teal)">MetaData</span> automatically.
+          </p>
+          <div class="json-area">
+            <textarea class="json-textarea" id="recordsJson" style="min-height:200px" placeholder='[
+  {
+    "_id": "abc123",
+    "name": "Alice",
+    "email": "alice@example.com",
+    "created_at": "2024-01-15T10:00:00Z"
+  },
+  {
+    "_id": "def456",
+    "name": "Bob",
+    "email": "bob@example.com"
+  }
+]' oninput="validateJson(this)"></textarea>
+            <span class="json-status" id="jsonStatus" style="display:none"></span>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:0.78rem;color:#b8b0a4;margin-bottom:10px;line-height:1.5">Or upload a <span class="mono">.json</span> file.</p>
+          <label class="upload-zone" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept=".json" onchange="loadFile(event)" />
+            ↑ Click to upload .json
+          </label>
+          <div id="recordPreviewWrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Run bar -->
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <button class="btn primary" id="btnRun" onclick="runImport(false)">Run Import</button>
+        <button class="btn" id="btnDryRun" onclick="runImport(true)">Dry Run</button>
+        <span id="dryRunBadge" style="display:none" class="dryrun-badge">dry run — no data written</span>
+        <span id="runSpinner" style="display:none"><span class="spinner"></span><span class="mono" style="font-size:0.65rem;color:var(--muted)">Importing…</span></span>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="importResults" style="display:none"></div>
+
+  </div><!-- /tab-import -->
+
+  <!-- ═══ GITHUB TAB ═════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-github">
+
+    <div class="step-row">
+
+      <!-- Left: Connection + what to fetch -->
+      <div class="card">
+        <div class="card-title">① GitHub Source</div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Owner / Organisation</label>
+            <input id="ghOwner" type="text" placeholder="e.g. NextGenSoftwareUK" />
+            <div class="hint">GitHub username or org name.</div>
+          </div>
+          <div class="field">
+            <label>Repository <span style="color:var(--muted);font-size:0.55rem">(optional for repos &amp; users)</span></label>
+            <input id="ghRepo" type="text" placeholder="e.g. OASIS" />
+            <div class="hint">Leave empty to import all repos from owner.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Personal Access Token <span style="color:var(--muted);font-size:0.55rem">(optional for public data)</span></label>
+          <input id="ghToken" type="password" placeholder="ghp_…" autocomplete="off" />
+          <div class="hint">Required for private repos. Raises rate limit to 5 000 req/hr vs 60.</div>
+        </div>
+
+        <hr class="divider" />
+        <div class="card-title" style="margin-bottom:12px">② What to Import</div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Entity Type</label>
+            <select id="ghEntityType">
+              <option value="repository">Repositories</option>
+              <option value="issue">Issues</option>
+              <option value="pullrequest">Pull Requests</option>
+              <option value="commit">Commits</option>
+              <option value="release">Releases</option>
+              <option value="contributor">Contributors</option>
+              <option value="user">User Profile</option>
+            </select>
+            <div class="hint">Built-in field mappings ship for every type.</div>
+          </div>
+          <div class="field" id="ghStateField">
+            <label>State <span style="color:var(--muted);font-size:0.55rem">(issues &amp; PRs only)</span></label>
+            <select id="ghState">
+              <option value="all">All</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field" id="ghBranchField">
+            <label>Branch / Tag / SHA <span style="color:var(--muted);font-size:0.55rem">(commits only)</span></label>
+            <input id="ghBranch" type="text" placeholder="main  (default branch if empty)" />
+          </div>
+          <div class="field">
+            <label>Max Records <span style="color:var(--muted);font-size:0.55rem">(0 = all pages)</span></label>
+            <input id="ghMaxRecords" type="number" value="0" min="0" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Destination + options -->
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">③ Destination</div>
+          <div class="field">
+            <label>Target Provider</label>
+            <select id="ghTgtProvider"></select>
+          </div>
+          <div class="field">
+            <label>Holon Type</label>
+            <select id="ghHolonType"></select>
+          </div>
+          <div class="field">
+            <label>Imported By Avatar ID</label>
+            <input id="ghAvatarId" type="text" placeholder="00000000-0000-0000-0000-000000000000" />
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">④ Options</div>
+          <div class="toggle-row">
+            <div>
+              <div>Dry Run</div>
+              <div class="hint">Preview holons without writing to storage.</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="ghDryRun" /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div>Continue on Error</div>
+              <div class="hint">Skip failed records and continue.</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="ghContinue" checked /><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /step-row -->
+
+    <!-- Mappings info box -->
+    <div class="card" style="margin-bottom:14px;border-color:rgba(110,207,184,0.2)">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="font-size:1.3rem;line-height:1">⚡</div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Built-in Field Mappings</div>
+          <div style="font-size:0.82rem;color:#b8b0a4;line-height:1.55">
+            OASIS ships predefined mappings for every GitHub entity type. Key fields like
+            <span style="color:var(--text)">id → ProviderKey</span>,
+            <span style="color:var(--text)">name → Name</span>,
+            <span style="color:var(--text)">description → Description</span>,
+            <span style="color:var(--text)">created_at → CreatedDate</span> are promoted automatically.
+            Every other field (stars, labels, author, branch, etc.) is preserved in <span style="color:var(--text)">MetaData</span> — nothing is lost.
+          </div>
+          <div id="ghMappingsPreview" style="margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);line-height:1.7"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Run bar -->
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <button class="btn primary" id="ghBtnRun" onclick="runGitHubImport(false)">Import from GitHub</button>
+        <button class="btn" id="ghBtnDryRun" onclick="runGitHubImport(true)">Dry Run</button>
+        <span id="ghDryRunBadge" style="display:none" class="dryrun-badge">dry run — no data written</span>
+        <span id="ghSpinner" style="display:none"><span class="spinner"></span><span class="mono" style="font-size:0.65rem;color:var(--muted)">Fetching from GitHub…</span></span>
+      </div>
+    </div>
+
+    <div id="ghResults" style="display:none"></div>
+
+  </div><!-- /tab-github -->
+
+  <!-- ═══ MIGRATE TAB ════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-migrate">
+
+    <div class="card" style="max-width:700px">
+      <div class="card-title">Provider Migration</div>
+      <p style="font-size:0.85rem;color:#b8b0a4;margin-bottom:16px;line-height:1.55">
+        Exports the entire dataset from the source provider and imports it into the target.
+        Use this to switch storage backends, bootstrap a new provider, or create a replica.
+      </p>
+
+      <div class="migrate-layout">
+        <div class="field">
+          <label>Source Provider</label>
+          <select id="migrSrc" class="migrate-select"></select>
+        </div>
+        <div class="migrate-arrow">→</div>
+        <div class="field">
+          <label>Target Provider</label>
+          <select id="migrTgt" class="migrate-select"></select>
+        </div>
+      </div>
+
+      <div class="toggle-row" style="margin-bottom:8px">
+        <div>
+          <div>Dry Run</div>
+          <div class="hint">Inspect what would move without writing anything.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="migrDryRun" /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div>Continue on Error</div>
+          <div class="hint">Log failures and continue rather than aborting.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="migrContinue" checked /><span class="toggle-slider"></span></label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn primary" id="btnMigrate" onclick="runMigration()">Run Migration</button>
+        <span id="migrSpinner" style="display:none"><span class="spinner"></span><span class="mono" style="font-size:0.65rem;color:var(--muted)">Migrating…</span></span>
+      </div>
+    </div>
+
+    <div id="migrResults" style="display:none;margin-top:14px"></div>
+
+  </div><!-- /tab-migrate -->
+
+</div><!-- /page-body -->
+
+<script>
+  // ── Providers & types ─────────────────────────────────────────────────────
+  const PROVIDERS = [
+    "Default","MongoDBOASIS","SQLLiteDBOASIS","Neo4jOASIS","AzureCosmosDBOASIS",
+    "HoloOASIS","IPFSOASIS","PinataOASIS","LocalFileOASIS",
+    "EthereumOASIS","ArbitrumOASIS","PolygonOASIS","RootstockOASIS",
+    "SolanaOASIS","TelosOASIS","EOSIOOASIS","SEEDSOASIS",
+    "ThreeFoldOASIS","ActivityPubOASIS","ScuttlebuttOASIS",
+    "HashgraphOASIS","TRONOASIS","KadenaOASIS","BitcoinOASIS",
+    "AptosOASIS","AvalancheOASIS","BaseOASIS","SuiOASIS","CosmosBlockChainOASIS"
+  ];
+
+  const HOLON_TYPES = [
+    "Holon","Avatar","Mission","Quest","Game","NFT","GeoNFT","GeoHotSpot",
+    "InventoryItem","Zome","Planet","Moon","Star","SuperStar","GrandSuperStar",
+    "GreatGrandSuperStar","Asteroid","Comet","Portal","WormHole","BlackHole",
+    "Proposal","LiquidityPool","A2AMessage"
+  ];
+
+  const HOLON_FIELDS = [
+    { value:"None",                     label:"MetaData (use key below)" },
+    { value:"Name",                     label:"Name" },
+    { value:"Description",              label:"Description" },
+    { value:"Id",                       label:"OASIS Id (GUID)" },
+    { value:"ProviderUniqueStorageKey", label:"ProviderUniqueStorageKey" },
+    { value:"CreatedDate",              label:"CreatedDate" },
+    { value:"ModifiedDate",             label:"ModifiedDate" },
+    { value:"CustomKey",                label:"CustomKey" },
+  ];
+
+  function populateSelect(id, items, selected) {
+    const el = document.getElementById(id);
+    el.innerHTML = items.map(v =>
+      `<option value="${v}" ${v === selected ? "selected" : ""}>${v}</option>`
+    ).join("");
+  }
+
+  populateSelect("srcProvider",    PROVIDERS,    "MongoDBOASIS");
+  populateSelect("tgtProvider",    PROVIDERS,    "Default");
+  populateSelect("holonType",      HOLON_TYPES,  "Holon");
+  populateSelect("migrSrc",        PROVIDERS,    "MongoDBOASIS");
+  populateSelect("migrTgt",        PROVIDERS,    "Default");
+  populateSelect("ghTgtProvider",  PROVIDERS,    "Default");
+  populateSelect("ghHolonType",    HOLON_TYPES,  "Holon");
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  // ── Field mapping rows ─────────────────────────────────────────────────────
+  let mappingRows = [];
+
+  function renderMappings() {
+    const body = document.getElementById("mappingBody");
+    body.innerHTML = mappingRows.map((row, i) => `
+      <tr>
+        <td><input type="text" value="${esc(row.sourceField)}" placeholder="e.g. _id, full_name"
+          oninput="mappingRows[${i}].sourceField = this.value" /></td>
+        <td>
+          <select onchange="mappingRows[${i}].targetHolonField = this.value; renderMappings()">
+            ${HOLON_FIELDS.map(f => `<option value="${f.value}" ${f.value === row.targetHolonField ? "selected" : ""}>${f.label}</option>`).join("")}
+          </select>
+        </td>
+        <td><input type="text" value="${esc(row.metaDataKey)}" placeholder="${row.targetHolonField === 'None' ? 'required' : 'optional'}"
+          ${row.targetHolonField === 'ProviderUniqueStorageKey' ? 'placeholder="e.g. MongoDBOASIS"' : ''}
+          oninput="mappingRows[${i}].metaDataKey = this.value" /></td>
+        <td><button class="mapping-row-remove" onclick="removeMapping(${i})">✕</button></td>
+      </tr>
+    `).join("");
+  }
+
+  function addMappingRow() {
+    mappingRows.push({ sourceField: "", targetHolonField: "None", metaDataKey: "" });
+    renderMappings();
+  }
+
+  function removeMapping(i) {
+    mappingRows.splice(i, 1);
+    renderMappings();
+  }
+
+  function addPreset(src, target, metaKey) {
+    mappingRows.push({ sourceField: src, targetHolonField: target, metaDataKey: metaKey });
+    renderMappings();
+  }
+
+  // ── JSON validation ────────────────────────────────────────────────────────
+  function validateJson(textarea) {
+    const status = document.getElementById("jsonStatus");
+    const val = textarea.value.trim();
+    if (!val) { status.style.display = "none"; updatePreview(null); return; }
+    try {
+      const parsed = JSON.parse(val);
+      if (!Array.isArray(parsed)) throw new Error("Must be a JSON array");
+      status.textContent = `✓ ${parsed.length} record${parsed.length !== 1 ? "s" : ""}`;
+      status.className = "json-status ok";
+      status.style.display = "";
+      updatePreview(parsed);
+    } catch(e) {
+      status.textContent = "✗ " + e.message;
+      status.className = "json-status err";
+      status.style.display = "";
+      updatePreview(null);
+    }
+  }
+
+  function updatePreview(records) {
+    const wrap = document.getElementById("recordPreviewWrap");
+    if (!records || records.length === 0) { wrap.innerHTML = ""; return; }
+    const sample = records.slice(0, 3);
+    const keys = [...new Set(sample.flatMap(r => Object.keys(r)))];
+    wrap.innerHTML = `
+      <details class="preview" style="margin-top:10px">
+        <summary>Preview — first ${sample.length} of ${records.length} records (${keys.length} fields detected)</summary>
+        <div class="preview-body">
+          ${sample.map((r, i) => `
+            <div class="preview-row">[${i}] ${keys.map(k => `<span style="color:var(--muted)">${esc(k)}:</span> <span>${esc(String(r[k] ?? ""))}</span>`).join(" · ")}</div>
+          `).join("")}
+        </div>
+      </details>
+    `;
+  }
+
+  function loadFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const textarea = document.getElementById("recordsJson");
+      textarea.value = e.target.result;
+      validateJson(textarea);
+    };
+    reader.readAsText(file);
+  }
+
+  // ── API ping ───────────────────────────────────────────────────────────────
+  async function pingApi() {
+    const base = document.getElementById("apiBase").value.trim().replace(/\/$/, "");
+    try {
+      const r = await fetch(base + "/api/health", { signal: AbortSignal.timeout(3000) });
+      const ok = r.ok;
+      document.getElementById("statusDot").className = "live-dot" + (ok ? "" : " err");
+      document.getElementById("statusSub").textContent = ok
+        ? `Connected · ${base}`
+        : `API returned ${r.status} · ${base}`;
+    } catch {
+      document.getElementById("statusDot").className = "live-dot err";
+      document.getElementById("statusSub").textContent = `Cannot reach API at ${base}`;
+    }
+  }
+
+  document.getElementById("apiBase").addEventListener("change", pingApi);
+  pingApi();
+
+  // ── Import ─────────────────────────────────────────────────────────────────
+  async function runImport(forceDry) {
+    const base = document.getElementById("apiBase").value.trim().replace(/\/$/, "");
+    const raw  = document.getElementById("recordsJson").value.trim();
+
+    let records;
+    try { records = JSON.parse(raw); }
+    catch { showAlert("importResults", "err", "Invalid JSON in records area — fix syntax before importing."); return; }
+    if (!Array.isArray(records) || records.length === 0) {
+      showAlert("importResults", "err", "Records must be a non-empty JSON array.");
+      return;
+    }
+
+    const srcName = document.getElementById("srcName").value.trim();
+    if (!srcName) { showAlert("importResults", "err", "Source System Name is required."); return; }
+
+    const dryRun = forceDry || document.getElementById("dryRun").checked;
+
+    const payload = {
+      sourceSystemName:  srcName,
+      sourceProviderType: document.getElementById("srcProvider").value,
+      targetProviderType: document.getElementById("tgtProvider").value,
+      holonType:         document.getElementById("holonType").value,
+      importedByAvatarId: document.getElementById("avatarId").value.trim() || "00000000-0000-0000-0000-000000000000",
+      dryRun,
+      continueOnError:   document.getElementById("continueOnError").checked,
+      mappings: mappingRows.filter(r => r.sourceField.trim()).map(r => ({
+        sourceField:       r.sourceField,
+        targetHolonField:  HOLON_FIELDS.findIndex(f => f.value === r.targetHolonField),  // enum int
+        metaDataKey:       r.metaDataKey || null,
+      })),
+      records,
+    };
+
+    setRunning("btnRun", "btnDryRun", "runSpinner", true);
+    document.getElementById("dryRunBadge").style.display = dryRun ? "" : "none";
+
+    try {
+      const r = await fetch(base + "/api/import/generic", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      renderResults("importResults", data, dryRun);
+    } catch(e) {
+      showAlert("importResults", "err", "Network error: " + e.message);
+    } finally {
+      setRunning("btnRun", "btnDryRun", "runSpinner", false);
+    }
+  }
+
+  // ── Migration ──────────────────────────────────────────────────────────────
+  async function runMigration() {
+    const base = document.getElementById("apiBase").value.trim().replace(/\/$/, "");
+    const dryRun = document.getElementById("migrDryRun").checked;
+
+    const payload = {
+      sourceProviderType: document.getElementById("migrSrc").value,
+      targetProviderType: document.getElementById("migrTgt").value,
+      continueOnError:    document.getElementById("migrContinue").checked,
+      dryRun,
+    };
+
+    if (payload.sourceProviderType === payload.targetProviderType) {
+      showAlert("migrResults", "warn", "Source and target providers are the same."); return;
+    }
+
+    setRunning("btnMigrate", null, "migrSpinner", true);
+
+    try {
+      const r = await fetch(base + "/api/import/migrate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      renderResults("migrResults", data, dryRun);
+    } catch(e) {
+      showAlert("migrResults", "err", "Network error: " + e.message);
+    } finally {
+      setRunning("btnMigrate", null, "migrSpinner", false);
+    }
+  }
+
+  // ── Render results ─────────────────────────────────────────────────────────
+  function renderResults(containerId, data, dryRun) {
+    const el = document.getElementById(containerId);
+    el.style.display = "";
+
+    if (!data || data.isError) {
+      el.innerHTML = `<div class="alert err">
+        <strong>Import failed</strong><br>${esc(data?.message || "Unknown error")}
+      </div>`;
+      return;
+    }
+
+    const r = data.result || data;
+    const alertClass = dryRun ? "dry" : (r.isSuccess ? "ok" : "warn");
+    const alertMsg   = dryRun
+      ? `Dry run complete — ${r.recordsHolonized ?? 0} holon(s) would be imported. No data was written.`
+      : (r.isSuccess
+          ? `Import complete — ${r.recordsImported ?? 0} holon(s) imported into ${r.targetProviderName}.`
+          : `Import finished with ${r.recordsFailed ?? 0} failure(s). Check errors below.`);
+
+    el.innerHTML = `
+      <div class="alert ${alertClass}">${esc(alertMsg)}</div>
+      <div class="result-strip">
+        <div class="result-chip received"><span class="rv">${r.totalRecordsReceived ?? 0}</span><span class="rl">received</span></div>
+        <div class="result-chip holonized"><span class="rv">${r.recordsHolonized ?? 0}</span><span class="rl">holonized</span></div>
+        <div class="result-chip imported"><span class="rv">${r.recordsImported ?? 0}</span><span class="rl">imported</span></div>
+        <div class="result-chip failed"><span class="rv">${r.recordsFailed ?? 0}</span><span class="rl">failed</span></div>
+        <div class="result-chip skipped"><span class="rv">${r.recordsSkipped ?? 0}</span><span class="rl">skipped</span></div>
+        <div class="result-chip duration"><span class="rv">${r.duration ? formatDuration(r.duration) : "—"}</span><span class="rl">duration</span></div>
+      </div>
+      ${r.summary ? `<div class="result-summary">${esc(r.summary)}</div>` : ""}
+      ${renderErrors(r.errors)}
+    `;
+  }
+
+  function renderErrors(errors) {
+    if (!errors || errors.length === 0) return "";
+    return `<div class="error-list">
+      <div class="section-label" style="margin-top:12px">Errors (${errors.length})</div>
+      ${errors.map(e => `
+        <div class="error-item">
+          <div><span class="e-id">${esc(e.recordIdentifier || "—")}</span><span class="e-stage">${esc(e.stage || "")}</span></div>
+          <div class="e-msg">${esc(e.message || "")}</div>
+        </div>
+      `).join("")}
+    </div>`;
+  }
+
+  function formatDuration(iso) {
+    // ISO 8601 duration or TimeSpan — just show seconds if available
+    if (!iso) return "—";
+    const m = String(iso).match(/(\d+):(\d+):(\d+(?:\.\d+)?)/);
+    if (m) {
+      const s = parseFloat(m[1]) * 3600 + parseFloat(m[2]) * 60 + parseFloat(m[3]);
+      return s < 60 ? s.toFixed(1) + "s" : (s / 60).toFixed(1) + "m";
+    }
+    return iso;
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function showAlert(containerId, cls, msg) {
+    const el = document.getElementById(containerId);
+    el.style.display = "";
+    el.innerHTML = `<div class="alert ${cls}">${esc(msg)}</div>`;
+  }
+
+  function setRunning(primaryBtn, secondaryBtn, spinnerId, running) {
+    if (primaryBtn)   document.getElementById(primaryBtn).disabled   = running;
+    if (secondaryBtn) document.getElementById(secondaryBtn).disabled = running;
+    document.getElementById(spinnerId).style.display = running ? "" : "none";
+  }
+
+  function esc(x) {
+    if (x == null) return "";
+    const d = document.createElement("div"); d.textContent = String(x); return d.innerHTML;
+  }
+
+  // ── GitHub tab: dynamic hints & mapping preview ────────────────────────────
+
+  const GH_MAPPINGS_HINTS = {
+    repository:  "id → ProviderKey · full_name → Name · description → Description · created_at → CreatedDate · updated_at → ModifiedDate · (+13 MetaData fields)",
+    issue:       "id → ProviderKey · title → Name · body → Description · created_at → CreatedDate · updated_at → ModifiedDate · (+10 MetaData fields)",
+    pullrequest: "id → ProviderKey · title → Name · body → Description · created_at → CreatedDate · updated_at → ModifiedDate · (+14 MetaData fields)",
+    commit:      "sha → ProviderKey · message → Name · author_date → CreatedDate · (+6 MetaData fields, nested commit object auto-flattened)",
+    release:     "id → ProviderKey · tag_name → Name · body → Description · created_at → CreatedDate · published_at → ModifiedDate · (+9 MetaData fields)",
+    contributor: "id → ProviderKey · login → Name · bio → Description · (+14 MetaData fields)",
+    user:        "id → ProviderKey · login → Name · bio → Description · created_at → CreatedDate · (+13 MetaData fields)",
+  };
+
+  function updateGhHints() {
+    const type = document.getElementById("ghEntityType").value;
+    const hint = GH_MAPPINGS_HINTS[type] || "";
+    document.getElementById("ghMappingsPreview").textContent = hint;
+
+    // Show state only for issues / PRs
+    const showState  = ["issue","pullrequest"].includes(type);
+    const showBranch = type === "commit";
+    document.getElementById("ghStateField").style.opacity  = showState  ? "1" : "0.3";
+    document.getElementById("ghBranchField").style.opacity = showBranch ? "1" : "0.3";
+  }
+
+  document.getElementById("ghEntityType").addEventListener("change", updateGhHints);
+  updateGhHints();
+
+  // ── GitHub import ──────────────────────────────────────────────────────────
+  async function runGitHubImport(forceDry) {
+    const base = document.getElementById("apiBase").value.trim().replace(/\/$/, "");
+
+    const owner = document.getElementById("ghOwner").value.trim();
+    if (!owner) { showAlert("ghResults", "err", "Owner / Organisation is required."); return; }
+
+    const dryRun = forceDry || document.getElementById("ghDryRun").checked;
+
+    const payload = {
+      owner:               owner,
+      repo:                document.getElementById("ghRepo").value.trim() || null,
+      entityType:          document.getElementById("ghEntityType").value,
+      personalAccessToken: document.getElementById("ghToken").value.trim() || null,
+      state:               document.getElementById("ghState").value,
+      branch:              document.getElementById("ghBranch").value.trim() || null,
+      maxRecords:          parseInt(document.getElementById("ghMaxRecords").value, 10) || 0,
+      targetProviderType:  document.getElementById("ghTgtProvider").value,
+      holonType:           document.getElementById("ghHolonType").value,
+      importedByAvatarId:  document.getElementById("ghAvatarId").value.trim() || "00000000-0000-0000-0000-000000000000",
+      dryRun,
+      continueOnError:     document.getElementById("ghContinue").checked,
+    };
+
+    document.getElementById("ghDryRunBadge").style.display = dryRun ? "" : "none";
+    setRunning("ghBtnRun", "ghBtnDryRun", "ghSpinner", true);
+    document.getElementById("ghSpinner").querySelector(".mono").textContent =
+      `Fetching ${payload.entityType}s from GitHub…`;
+
+    try {
+      const r = await fetch(base + "/api/import/github", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json();
+      renderResults("ghResults", data, dryRun);
+    } catch(e) {
+      showAlert("ghResults", "err", "Network error: " + e.message);
+    } finally {
+      setRunning("ghBtnRun", "ghBtnDryRun", "ghSpinner", false);
+    }
+  }
+
+  // Add one starter mapping row
+  addMappingRow();
+</script>
+</body>
+</html>

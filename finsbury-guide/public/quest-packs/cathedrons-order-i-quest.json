@@ -1,0 +1,18 @@
+{
+  "questId": "5ce5f7eb-5069-40ac-8895-eeed2b6689bc",
+  "name": "Cathedrons: Order I — Awaken",
+  "createdAt": "2026-08-12T12:00:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "cathedrons-dynamic.geojson",
+  "atmosphere": "sacred",
+  "gameSource": "FieldGuide",
+  "wikiSlug": "cathedrons",
+  "description": "The earth blisters. The Devout are stirring. Go to churches near you and seal relics. [trailFile=cathedrons-dynamic.geojson] [atmosphere=sacred] [mode=cathedrons]",
+  "requiredParishCount": 3,
+  "requiredPinIds": [],
+  "notes": {
+    "mode": "Order I binds the 3 nearest GPS churches at Begin (OSM Overpass). No London fixtures as starters. No Cathedron spoilers in the intro.",
+    "reliquary": "collection=reliquary",
+    "playerJob": "GO THERE to nearest church → WITNESS → relic seals into Reliquary"
+  }
+}

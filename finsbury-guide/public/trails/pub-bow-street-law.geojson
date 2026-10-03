@@ -1,0 +1,196 @@
+{
+  "type": "FeatureCollection",
+  "name": "pub-bow-street-law",
+  "description": "Bow Street Law Walk. Runners → Waterloo neighbour → theatre → Bucket of Blood. Geometry mode: Finsbury desk stand-in. Source: uk-pubs-catalog.json. Wiki: bow-street-law-walk.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0975,
+          51.5208
+        ]
+      },
+      "properties": {
+        "id": "bow-street-tavern",
+        "title": "Bow Street Tavern",
+        "trail": "pub-bow-street-law",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 0,
+        "radiusM": 35,
+        "place": "Covent Garden, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "doorstep",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/PubThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "runners-warrant",
+        "relicPrompt": "Answer: magistrate who organised the Bow Street Runners?",
+        "riteId": "bow-street-tavern:runners-threshold",
+        "wikiSlug": "bow-street-tavern",
+        "wikiThemeSlug": "bow-street-law-walk",
+        "narrationText": "This street helped invent professional policing. Henry Fielding's magistrates and the Bow Street Runners drank their cases into shape nearby.",
+        "directionHint": "Witness at the Bow Street doorstep. Do not block the Opera House pavement.",
+        "themes": [
+          "police_law"
+        ],
+        "confidence": [
+          "documented",
+          "marketing"
+        ],
+        "ethics": [],
+        "partnerReadiness": "unknown",
+        "access": "Busy theatreland pavement; AR at door / alley edge, not inside peak hours.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.513,
+        "liveLon": -0.1225,
+        "notes": "poseHint=doorstep;riteId=bow-street-tavern:runners-threshold;relicId=runners-warrant;geometryMode=desk_standin;live=51.513,-0.1225"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09735,
+          51.52085
+        ]
+      },
+      "properties": {
+        "id": "marquess-of-anglesey",
+        "title": "Marquess of Anglesey",
+        "trail": "pub-bow-street-law",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 1,
+        "radiusM": 30,
+        "place": "Bow Street, Covent Garden, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "doorstep",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/PubThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "waterloo-spur",
+        "relicPrompt": "Name the battle that cost Henry Paget his leg.",
+        "riteId": "marquess-of-anglesey:waterloo-neighbour",
+        "wikiSlug": "marquess-of-anglesey",
+        "wikiThemeSlug": "bow-street-law-walk",
+        "narrationText": "Named for Henry Paget, cavalry commander at Waterloo, later Marquess of Anglesey. Neighbour to the Runners pub, different story entirely.",
+        "directionHint": "Witness at the Bow Street door. Then Nell of Old Drury for theatre.",
+        "themes": [
+          "waterloo",
+          "history"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [],
+        "partnerReadiness": "unknown",
+        "access": "Next door to Bow Street Tavern. Waterloo place-name, not police theme.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5131,
+        "liveLon": -0.1223,
+        "notes": "poseHint=doorstep;riteId=marquess-of-anglesey:waterloo-neighbour;relicId=waterloo-spur;geometryMode=desk_standin;live=51.5131,-0.1223"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0972,
+          51.5209
+        ]
+      },
+      "properties": {
+        "id": "nell-of-old-drury",
+        "title": "Nell of Old Drury",
+        "trail": "pub-bow-street-law",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 2,
+        "radiusM": 30,
+        "place": "Catherine Street, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "doorstep",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/PubThreshold",
+        "momentVerb": "one_minute_company",
+        "relicId": "full-house-board",
+        "relicPrompt": "Hold with Nell's Full House cue for one minute.",
+        "riteId": "nell-of-old-drury:theatre-threshold",
+        "wikiSlug": "nell-of-old-drury",
+        "wikiThemeSlug": "bow-street-law-walk",
+        "narrationText": "Nell Gwyn's theatre pub. Tunnel-to-theatre legend; cast boards signed on the ceiling. Interval drinks for Drury Lane.",
+        "directionHint": "Witness on Catherine Street. Last stop: Lamb and Flag alley.",
+        "themes": [
+          "theatre"
+        ],
+        "confidence": [
+          "literary",
+          "marketing"
+        ],
+        "ethics": [],
+        "partnerReadiness": "unknown",
+        "access": "Opposite Theatre Royal, Drury Lane. Interval crowds; doorstep only.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5125,
+        "liveLon": -0.1205,
+        "notes": "poseHint=doorstep;riteId=nell-of-old-drury:theatre-threshold;relicId=full-house-board;geometryMode=desk_standin;live=51.5125,-0.1205"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09705,
+          51.52095
+        ]
+      },
+      "properties": {
+        "id": "lamb-and-flag",
+        "title": "Lamb and Flag",
+        "trail": "pub-bow-street-law",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 3,
+        "radiusM": 30,
+        "place": "Rose Street, Covent Garden, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "alley",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/PubThreshold",
+        "momentVerb": "leave_token",
+        "relicId": "dryden-quill",
+        "relicPrompt": "Leave the quill token for Dryden in the alley volume.",
+        "riteId": "lamb-and-flag:bucket-of-blood",
+        "wikiSlug": "lamb-and-flag",
+        "wikiThemeSlug": "bow-street-law-walk",
+        "narrationText": "The Bucket of Blood: upstairs bare-knuckle fights, and the alley where hired thugs beat poet John Dryden in 1679.",
+        "directionHint": "Witness in Rose Street alley. Bow Street Law Walk complete.",
+        "themes": [
+          "prizefight",
+          "literary"
+        ],
+        "confidence": [
+          "documented",
+          "folklore"
+        ],
+        "ethics": [],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Narrow Rose Street alley. Bucket of Blood prizefight lore; Dryden beaten nearby 1679.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5116,
+        "liveLon": -0.1256,
+        "notes": "poseHint=alley;riteId=lamb-and-flag:bucket-of-blood;relicId=dryden-quill;geometryMode=desk_standin;live=51.5116,-0.1256"
+      }
+    }
+  ]
+}

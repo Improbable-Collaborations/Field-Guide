@@ -1,0 +1,32 @@
+{
+  "questId": "e5ee3bee-a276-4b6f-bed4-1e95a86ea81e",
+  "name": "Stones of the Golden Valley",
+  "createdAt": "2026-08-10T11:10:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "stones-of-the-golden-valley.geojson",
+  "atmosphere": "pilgrimage",
+  "gameSource": "FieldGuide",
+  "wikiSlug": "stones-of-the-golden-valley",
+  "requiredPinIds": [
+    "pen-y-wyrlod",
+    "arthurs-stone"
+  ],
+  "pinObjectiveMap": {
+    "pen-y-wyrlod": "pen-y-wyrlod",
+    "arthurs-stone": "arthurs-stone"
+  },
+  "optionalPinIds": [
+    "dorstone-hill"
+  ],
+  "startPinId": "hay-on-wye-start",
+  "spawnNear": {
+    "pinId": "arthurs-stone",
+    "lat": 52.0824,
+    "lon": -2.9953,
+    "note": "Desk spawn at Arthur's Stone for proximity check-in"
+  },
+  "notes": {
+    "publish": "Publish endpoint returned error on seed; Activate succeeded. Pins placed.",
+    "avatar": "Created as OASIS_ADMIN"
+  }
+}

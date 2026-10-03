@@ -1,0 +1,160 @@
+{
+  "type": "FeatureCollection",
+  "name": "grave-bunhill-ink",
+  "description": "Bunhill Ink. Blake → Bunyan → Defoe: dissenters' ink mile. Geometry mode: Finsbury desk stand-in. Source: uk-graves-catalog.json. Wiki: bunhill-ink.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0964,
+          51.5222
+        ]
+      },
+      "properties": {
+        "id": "bunhill-william-blake",
+        "title": "William Blake",
+        "trail": "grave-bunhill-ink",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 0,
+        "radiusM": 30,
+        "place": "Bunhill Fields, London",
+        "nation": "England",
+        "cemeteryId": "bunhill-fields",
+        "placeKind": "memorial",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "epitaph",
+        "relicId": "blake-vision-card",
+        "relicPrompt": "Hold with the London visionary's memorial.",
+        "riteId": "bunhill-william-blake:epitaph",
+        "wikiSlug": "william-blake-at-bunhill",
+        "wikiThemeSlug": "bunhill-ink",
+        "narrationText": "Blake engraved his own illuminated books and saw angels in London's trees. Bunhill kept the visionary among dissenters outside the parish pew.",
+        "directionHint": "At the Blake memorial, Bunhill Fields.",
+        "themes": [
+          "writer",
+          "nonconformist"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Bunhill Fields central broadwalk memorial.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5237,
+        "liveLon": -0.089,
+        "notes": "poseHint=pathside;riteId=bunhill-william-blake:epitaph;relicId=blake-vision-card;geometryMode=desk_standin;live=51.5237,-0.089;pathside_only=true"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0961,
+          51.5223
+        ]
+      },
+      "properties": {
+        "id": "bunhill-john-bunyan",
+        "title": "John Bunyan",
+        "trail": "grave-bunhill-ink",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 1,
+        "radiusM": 28,
+        "place": "Bunhill Fields, London",
+        "nation": "England",
+        "cemeteryId": "bunhill-fields",
+        "placeKind": "grave",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "one_minute_company",
+        "relicId": "pilgrim-progress-token",
+        "relicPrompt": "One minute for the pilgrim who wrote the road.",
+        "riteId": "bunhill-john-bunyan:epitaph",
+        "wikiSlug": "john-bunyan-at-bunhill",
+        "wikiThemeSlug": "bunhill-ink",
+        "narrationText": "Bunyan wrote The Pilgrim's Progress largely from Bedford gaol. Christian's road from Destruction to the Celestial City still maps English allegory.",
+        "directionHint": "At Bunyan's tomb, Bunhill Fields.",
+        "themes": [
+          "writer",
+          "nonconformist"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Bunhill paths at Bunyan's tomb.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5238,
+        "liveLon": -0.0888,
+        "notes": "poseHint=pathside;riteId=bunhill-john-bunyan:epitaph;relicId=pilgrim-progress-token;geometryMode=desk_standin;live=51.5238,-0.0888;pathside_only=true"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0958,
+          51.5224
+        ]
+      },
+      "properties": {
+        "id": "bunhill-daniel-defoe",
+        "title": "Daniel Defoe",
+        "trail": "grave-bunhill-ink",
+        "questRole": "waypoint",
+        "dropKind": "grave",
+        "order": 2,
+        "radiusM": 28,
+        "place": "Bunhill Fields, London",
+        "nation": "England",
+        "cemeteryId": "bunhill-fields",
+        "placeKind": "grave",
+        "poseHint": "pathside",
+        "markerStyle": "grave-marker",
+        "worldPrefab": "PlaceKits/GraveMarker",
+        "momentVerb": "epitaph",
+        "relicId": "crusoe-island-card",
+        "relicPrompt": "Which island tale made Defoe immortal?",
+        "riteId": "bunhill-daniel-defoe:epitaph",
+        "wikiSlug": "daniel-defoe-at-bunhill",
+        "wikiThemeSlug": "bunhill-ink",
+        "narrationText": "Defoe was spy, bankrupt, pamphleteer, then Robinson Crusoe. The Bunhill obelisk marks a restless London mind among fellow dissenters.",
+        "directionHint": "At Defoe's memorial, Bunhill Fields.",
+        "themes": [
+          "writer",
+          "nonconformist"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [
+          "respect_quiet",
+          "no_step_plot"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Bunhill paths at Defoe's obelisk.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5239,
+        "liveLon": -0.0886,
+        "notes": "poseHint=pathside;riteId=bunhill-daniel-defoe:epitaph;relicId=crusoe-island-card;geometryMode=desk_standin;live=51.5239,-0.0886;pathside_only=true"
+      }
+    }
+  ]
+}

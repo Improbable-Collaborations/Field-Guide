@@ -1,0 +1,83 @@
+{
+  "questId": "8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22",
+  "name": "JAB SW1 Street Gloves",
+  "createdAt": "2026-10-03T10:30:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "jab-sw1-gloves.geojson",
+  "atmosphere": "gym_street",
+  "gameSource": "FieldGuide",
+  "description": "Collect every boxing glove on the street around JAB Boxing Club SW1. Each glove mints an SPL NFT into the avatar Solana wallet. STAR objective title equals pin id.",
+  "requiredPinIds": [
+    "glove-victoria-door",
+    "glove-victoria-colonnade",
+    "glove-victoria-station",
+    "glove-grosvenor-gardens",
+    "glove-buckingham-palace-rd",
+    "glove-eccleston-y1"
+  ],
+  "pinObjectiveMap": {
+    "glove-victoria-door": "glove-victoria-door",
+    "glove-victoria-colonnade": "glove-victoria-colonnade",
+    "glove-victoria-station": "glove-victoria-station",
+    "glove-grosvenor-gardens": "glove-grosvenor-gardens",
+    "glove-buckingham-palace-rd": "glove-buckingham-palace-rd",
+    "glove-eccleston-y1": "glove-eccleston-y1"
+  },
+  "objectives": [
+    {
+      "id": "glove-victoria-door",
+      "title": "glove-victoria-door",
+      "order": 0,
+      "description": "Club door mitt"
+    },
+    {
+      "id": "glove-victoria-colonnade",
+      "title": "glove-victoria-colonnade",
+      "order": 1,
+      "description": "Colonnade Walk mitt"
+    },
+    {
+      "id": "glove-victoria-station",
+      "title": "glove-victoria-station",
+      "order": 2,
+      "description": "Victoria station approach mitt"
+    },
+    {
+      "id": "glove-grosvenor-gardens",
+      "title": "glove-grosvenor-gardens",
+      "order": 3,
+      "description": "Grosvenor Gardens mitt"
+    },
+    {
+      "id": "glove-buckingham-palace-rd",
+      "title": "glove-buckingham-palace-rd",
+      "order": 4,
+      "description": "Buckingham Palace Road mitt"
+    },
+    {
+      "id": "glove-eccleston-y1",
+      "title": "glove-eccleston-y1",
+      "order": 5,
+      "description": "Eccleston Place mitt"
+    }
+  ],
+  "starDna": {
+    "NeedToCollectItems": {
+      "FieldGuide": [
+        "glove-victoria-door",
+        "glove-victoria-colonnade",
+        "glove-victoria-station",
+        "glove-grosvenor-gardens",
+        "glove-buckingham-palace-rd",
+        "glove-eccleston-y1"
+      ]
+    },
+    "note": "Publish on STAR with one objective per pin. Each objective Title and NeedToCollectItems[FieldGuide][0] must be that pin id. GameSource FieldGuide."
+  },
+  "spawnNear": {
+    "pinId": "glove-victoria-door",
+    "lat": 51.49274,
+    "lon": -0.14726,
+    "note": "JAB SW1 door, 151 Buckingham Palace Road"
+  }
+}

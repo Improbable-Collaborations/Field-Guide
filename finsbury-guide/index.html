@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>The Hitchhiker's Guide to Finsbury Park</title>
+    <link
+      href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <nav>
+        <span class="nav-brand">HITCHHIKER'S GUIDE</span>
+        <span class="nav-sep">·</span>
+        <span class="nav-loc">Finsbury Park · London</span>
+        <span class="nav-spacer"></span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-nearby" checked />
+          Live nearby
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-trails" checked />
+          Trail pins
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-train" checked />
+          Live transit
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-gigs" checked />
+          What's on
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-ra" checked />
+          RA London
+        </label>
+        <div id="auth-box" class="auth-box"></div>
+        <button type="button" id="avatar-open" class="avatar-open">You</button>
+        <button type="button" id="walk-enter" class="walk-enter">Walk</button>
+      </nav>
+      <aside id="panel">
+        <header class="panel-head">
+          <p class="eyebrow">London Field Guide</p>
+          <h1>Finsbury</h1>
+          <p class="sub">Park · Skiddle · RA · STAR nearby</p>
+          <div class="persona" id="persona">
+            <p class="persona-label">Guide as</p>
+            <div class="persona-btns" id="persona-btns"></div>
+            <p class="persona-blurb" id="persona-blurb">Published map. No personal graph applied.</p>
+            <div class="persona-clusters" id="persona-clusters" aria-hidden="true"></div>
+          </div>
+        </header>
+        <div class="filters" id="filters"></div>
+        <div id="place-list" class="place-list" role="list"></div>
+        <footer id="status" class="status">Loading…</footer>
+      </aside>
+      <main id="map" aria-label="Finsbury Park map"></main>
+      <aside id="star-glyph" class="star-glyph" aria-label="Personal trust graph"></aside>
+      <aside id="avatar-desk" class="avatar-desk hidden" hidden aria-label="Avatar desk">
+        <header class="avatar-desk-bar">
+          <p class="avatar-desk-title">Your path</p>
+          <button type="button" id="avatar-desk-close" class="avatar-desk-close">Map</button>
+        </header>
+        <div id="avatar-desk-body" class="avatar-desk-body"></div>
+      </aside>
+      <section id="walk-strip" class="walk-strip hidden" hidden>
+        <p id="walk-quest" class="walk-quest"></p>
+        <p id="walk-next" class="walk-next"></p>
+        <p id="walk-meters" class="walk-meters"></p>
+        <div class="walk-actions">
+          <button type="button" id="walk-look">Look</button>
+          <button type="button" id="walk-collect">Collect</button>
+          <button type="button" id="walk-desk">Desk</button>
+        </div>
+      </section>
+      <section id="look" class="look hidden" hidden>
+        <video id="look-video" playsinline autoplay muted></video>
+        <img id="look-glove" class="look-glove" alt="" />
+        <p id="look-status" class="look-status"></p>
+        <div class="look-actions">
+          <button type="button" id="look-collect">Collect glove</button>
+          <button type="button" id="look-close">Close</button>
+        </div>
+      </section>
+      <section id="sheet" class="sheet hidden" hidden>
+        <button type="button" id="sheet-close" class="sheet-close">Close</button>
+        <p id="sheet-kind" class="sheet-kind"></p>
+        <h2 id="sheet-title"></h2>
+        <p id="sheet-sub" class="sheet-sub"></p>
+        <p id="sheet-body"></p>
+        <div id="sheet-actions" class="sheet-actions"></div>
+      </section>
+      <aside id="ra-embed" class="ra-embed hidden" hidden aria-label="Embedded page">
+        <header class="ra-embed-bar">
+          <div class="ra-embed-bar-text">
+            <p id="ra-embed-kicker" class="ra-embed-kicker">On the map</p>
+            <p id="ra-embed-title" class="ra-embed-title"></p>
+          </div>
+          <a id="ra-embed-external" class="ra-embed-ext" href="#" target="_blank" rel="noopener">Open tab</a>
+          <button type="button" id="ra-embed-close" class="ra-embed-close">Close</button>
+        </header>
+        <div id="ra-embed-tabs" class="ra-embed-tabs" role="tablist">
+          <button type="button" class="ra-embed-tab active" data-tab="page" role="tab" aria-selected="true">About</button>
+          <button type="button" class="ra-embed-tab" data-tab="site" role="tab" aria-selected="false">Site</button>
+        </div>
+        <div id="ra-embed-page" class="ra-embed-page" role="tabpanel"></div>
+        <div id="ra-embed-site" class="ra-embed-site hidden" hidden role="tabpanel">
+          <iframe id="ra-embed-frame" title="Embedded site" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <p id="ra-embed-frame-note" class="ra-embed-frame-note">
+            If this frame stays blank, the site is blocking embeds. Use <strong>Open tab</strong> or the About tab.
+          </p>
+        </div>
+      </aside>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

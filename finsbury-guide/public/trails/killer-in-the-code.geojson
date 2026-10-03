@@ -1,0 +1,806 @@
+{
+  "type": "FeatureCollection",
+  "name": "killer-in-the-code",
+  "description": "Killer In The Code phygital trail (Zodiac ciphers + Dahlia geography). Geometry mode: Finsbury desk stand-in. Source: killer_in_the_code/locations-catalog.json. Ethics: memorial tone; theory-mode for podcast claims.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0975,
+          51.5208
+        ]
+      },
+      "properties": {
+        "id": "loc-lake-herman",
+        "title": "Lake Herman Road",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 0,
+        "radiusM": 50,
+        "place": "Benicia, Solano County, CA",
+        "nation": "USA",
+        "role": "zodiac_crime_scene",
+        "event": "David Faraday & Betty Lou Jensen murdered",
+        "date": "1968-12-20",
+        "poseHint": "roadside_overlook",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "relic-z408",
+        "riteId": "loc-lake-herman:epitaph",
+        "wikiSlug": "loc-lake-herman",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Lovers' lane. First confirmed Zodiac attack. Memorial, not spectacle.",
+        "directionHint": "Rural roadside turnout / public road edge. Stay off private fencing and pump-station property.",
+        "cipherIds": [
+          "z408"
+        ],
+        "themes": [
+          "zodiac",
+          "solano",
+          "open_quest"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [],
+        "access": "Rural roadside turnout / public road edge. Stay off private fencing and pump-station property.",
+        "address": "Lake Herman Road turnout (Benicia Water Pumping Station entrance)",
+        "addressStatus": "documented_site_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 38.0876,
+        "liveLon": -122.143,
+        "podcastChapterRefs": [
+          "chapter-01",
+          "chapter-03"
+        ],
+        "notes": "poseHint=roadside_overlook;momentVerb=epitaph;geometryMode=desk_standin;addressStatus=documented_site_approx;live=38.0876,-122.143;address=Lake Herman Road turnout (Benicia Water Pumping Station entrance)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0972,
+          51.521
+        ]
+      },
+      "properties": {
+        "id": "loc-blue-rock-springs",
+        "title": "Blue Rock Springs Park",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 1,
+        "radiusM": 45,
+        "place": "Vallejo, CA",
+        "nation": "USA",
+        "role": "zodiac_crime_scene",
+        "event": "Darlene Ferrin killed; Michael Mageau survived",
+        "date": "1969-07-04",
+        "poseHint": "parking_lot_edge",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "relicId": "relic-z408",
+        "riteId": "loc-blue-rock-springs:witness_map",
+        "wikiSlug": "loc-blue-rock-springs",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Second attack; birthday coincidence noted in podcast narrative.",
+        "directionHint": "Public park parking / trail edges. Respect park hours.",
+        "cipherIds": [
+          "z408"
+        ],
+        "themes": [
+          "zodiac",
+          "vallejo"
+        ],
+        "confidence": [
+          "documented",
+          "geocoded"
+        ],
+        "ethics": [],
+        "access": "Public park parking / trail edges. Respect park hours.",
+        "address": "Blue Rock Springs Park, Vallejo, CA",
+        "addressStatus": "locked_poi",
+        "geometryMode": "desk_standin",
+        "liveLat": 38.1264012,
+        "liveLon": -122.1888741,
+        "podcastChapterRefs": [
+          "chapter-03"
+        ],
+        "notes": "poseHint=parking_lot_edge;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=locked_poi;live=38.1264012,-122.1888741;address=Blue Rock Springs Park, Vallejo, CA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0969,
+          51.5212
+        ]
+      },
+      "properties": {
+        "id": "loc-vallejo-phone",
+        "title": "Springs Road & Tuolumne Street phone booth site",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 2,
+        "radiusM": 35,
+        "place": "Vallejo, CA",
+        "nation": "USA",
+        "role": "zodiac_call_site",
+        "event": "Zodiac claim call after Blue Rock Springs",
+        "date": "1969-07-05",
+        "poseHint": "sidewalk_corner",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "cipher_fragment",
+        "relicId": "relic-z408",
+        "riteId": "loc-vallejo-phone:cipher_fragment",
+        "wikiSlug": "loc-vallejo-phone",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Call site. Podcast binds Vallejo geography to Short's first California home.",
+        "directionHint": "Urban sidewalk / intersection. Booth gone; pin is historical marker fantasy.",
+        "cipherIds": [
+          "z408"
+        ],
+        "themes": [
+          "zodiac",
+          "dahlia_bridge",
+          "vallejo"
+        ],
+        "confidence": [
+          "documented",
+          "geocoded",
+          "podcast_sightline"
+        ],
+        "ethics": [],
+        "access": "Urban sidewalk / intersection. Booth gone; pin is historical marker fantasy.",
+        "address": "Springs Rd & Tuolumne St, Vallejo, CA",
+        "addressStatus": "locked_intersection",
+        "geometryMode": "desk_standin",
+        "liveLat": 38.1058446,
+        "liveLon": -122.23831,
+        "podcastChapterRefs": [
+          "chapter-03"
+        ],
+        "notes": "poseHint=sidewalk_corner;momentVerb=cipher_fragment;geometryMode=desk_standin;addressStatus=locked_intersection;live=38.1058446,-122.23831;address=Springs Rd & Tuolumne St, Vallejo, CA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0966,
+          51.5214
+        ]
+      },
+      "properties": {
+        "id": "loc-lake-berryessa",
+        "title": "Lake Berryessa lakeshore",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 3,
+        "radiusM": 60,
+        "place": "Napa County, CA",
+        "nation": "USA",
+        "role": "zodiac_crime_scene",
+        "event": "Cecelia Shepard killed; Bryan Hartnell survived; hooded costume",
+        "date": "1969-09-27",
+        "poseHint": "shore_path",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "relic-z340",
+        "riteId": "loc-lake-berryessa:epitaph",
+        "wikiSlug": "loc-lake-berryessa",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Daylight lakeshore attack; costume / crossed-circle mythos.",
+        "directionHint": "Public recreation shoreline areas only; verify current park access. No shoreline camping for quest.",
+        "cipherIds": [
+          "z340"
+        ],
+        "themes": [
+          "zodiac",
+          "napa"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [],
+        "access": "Public recreation shoreline areas only; verify current park access. No shoreline camping for quest.",
+        "address": "West shore, Lake Berryessa (public recreation shoreline)",
+        "addressStatus": "documented_site_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 38.5655,
+        "liveLon": -122.2265,
+        "podcastChapterRefs": [
+          "chapter-01",
+          "chapter-03"
+        ],
+        "notes": "poseHint=shore_path;momentVerb=epitaph;geometryMode=desk_standin;addressStatus=documented_site_approx;live=38.5655,-122.2265;address=West shore, Lake Berryessa (public recreation shoreline)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0963,
+          51.5216
+        ]
+      },
+      "properties": {
+        "id": "loc-presidio-stine",
+        "title": "Washington & Cherry Streets",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 4,
+        "radiusM": 30,
+        "place": "Presidio Heights, San Francisco, CA",
+        "nation": "USA",
+        "role": "zodiac_crime_scene",
+        "event": "Paul Stine murdered in taxi",
+        "date": "1969-10-11",
+        "poseHint": "street_corner",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "cipher_unlock",
+        "relicId": "relic-z13",
+        "riteId": "loc-presidio-stine:cipher_unlock",
+        "wikiSlug": "loc-presidio-stine",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Last confirmed Zodiac murder. Children witnesses; police near-miss lore.",
+        "directionHint": "Quiet residential corner. Keep AR on sidewalk; do not block driveways.",
+        "cipherIds": [
+          "z13",
+          "z340"
+        ],
+        "themes": [
+          "zodiac",
+          "san_francisco"
+        ],
+        "confidence": [
+          "documented"
+        ],
+        "ethics": [],
+        "access": "Quiet residential corner. Keep AR on sidewalk; do not block driveways.",
+        "address": "Washington St & Cherry St, San Francisco, CA",
+        "addressStatus": "locked_intersection",
+        "geometryMode": "desk_standin",
+        "liveLat": 37.7897,
+        "liveLon": -122.4469,
+        "podcastChapterRefs": [
+          "chapter-03",
+          "chapter-04"
+        ],
+        "notes": "poseHint=street_corner;momentVerb=cipher_unlock;geometryMode=desk_standin;addressStatus=locked_intersection;live=37.7897,-122.4469;address=Washington St & Cherry St, San Francisco, CA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.096,
+          51.5218
+        ]
+      },
+      "properties": {
+        "id": "loc-sf-chronicle",
+        "title": "San Francisco Chronicle neighborhood",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 5,
+        "radiusM": 40,
+        "place": "San Francisco, CA",
+        "nation": "USA",
+        "role": "letter_drop_narrative",
+        "event": "Newspaper cipher / letter deliveries",
+        "date": "1969-1970",
+        "poseHint": "building_forecourt",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "cipher_solve",
+        "relicId": "relic-z408",
+        "riteId": "loc-sf-chronicle:cipher_solve",
+        "wikiSlug": "loc-sf-chronicle",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Where the codes entered public myth: This is the Zodiac speaking.",
+        "directionHint": "Public sidewalk near news / downtown fabric. Prefer outdoor pin; not lobby trespass.",
+        "cipherIds": [
+          "z408",
+          "z340",
+          "z13",
+          "z32"
+        ],
+        "themes": [
+          "zodiac",
+          "media",
+          "san_francisco"
+        ],
+        "confidence": [
+          "documented_area"
+        ],
+        "ethics": [],
+        "access": "Public sidewalk near news / downtown fabric. Prefer outdoor pin; not lobby trespass.",
+        "address": "Downtown SF newspaper district (5th / Mission fabric)",
+        "addressStatus": "documented_area",
+        "geometryMode": "desk_standin",
+        "liveLat": 37.7874,
+        "liveLon": -122.4033,
+        "podcastChapterRefs": [
+          "chapter-01",
+          "chapter-04"
+        ],
+        "notes": "poseHint=building_forecourt;momentVerb=cipher_solve;geometryMode=desk_standin;addressStatus=documented_area;live=37.7874,-122.4033;address=Downtown SF newspaper district (5th / Mission fabric)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0945,
+          51.5228
+        ]
+      },
+      "properties": {
+        "id": "loc-riverside-ccc",
+        "title": "Riverside City College area",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 6,
+        "radiusM": 50,
+        "place": "Riverside, CA",
+        "nation": "USA",
+        "role": "bates_memorial_bridge",
+        "event": "Sherry Jo Bates murdered (1966); podcast Z13 substitution keyword",
+        "date": "1966-10-30",
+        "poseHint": "campus_path",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "relic-sherry-jo-keyword",
+        "riteId": "loc-riverside-ccc:epitaph",
+        "wikiSlug": "loc-riverside-ccc",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Memorial first. Zodiac link is theory, not official finding.",
+        "directionHint": "Campus-adjacent public areas only; follow campus rules.",
+        "cipherIds": [
+          "sherry-jo-keyword"
+        ],
+        "themes": [
+          "bates",
+          "keyword",
+          "memorial"
+        ],
+        "confidence": [
+          "documented_murder",
+          "geocoded",
+          "podcast_keyword_link"
+        ],
+        "ethics": [],
+        "access": "Campus-adjacent public areas only; follow campus rules.",
+        "address": "4800 Magnolia Ave, Riverside, CA (Riverside City College)",
+        "addressStatus": "locked_campus",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.9716586,
+        "liveLon": -117.3806576,
+        "podcastChapterRefs": [
+          "chapter-04"
+        ],
+        "notes": "poseHint=campus_path;momentVerb=epitaph;geometryMode=desk_standin;addressStatus=locked_campus;live=33.9716586,-117.3806576;address=4800 Magnolia Ave, Riverside, CA (Riverside City College)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0957,
+          51.522
+        ]
+      },
+      "properties": {
+        "id": "loc-mt-diablo",
+        "title": "Mount Diablo",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 7,
+        "radiusM": 80,
+        "place": "Contra Costa County, CA",
+        "nation": "USA",
+        "role": "cipher_map_anchor",
+        "event": "Z32 Phillips 66 map centered on Diablo; radians hint",
+        "date": "1970-06-26",
+        "poseHint": "summit_overlook",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "relicId": "relic-z32",
+        "riteId": "loc-mt-diablo:witness_map",
+        "wikiSlug": "loc-mt-diablo",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Map hub. Cipher becomes compass.",
+        "directionHint": "State park. Use visitor / summit public areas; pay fees; no off-trail digs.",
+        "cipherIds": [
+          "z32"
+        ],
+        "themes": [
+          "zodiac",
+          "geo",
+          "z32"
+        ],
+        "confidence": [
+          "documented",
+          "geocoded"
+        ],
+        "ethics": [],
+        "access": "State park. Use visitor / summit public areas; pay fees; no off-trail digs.",
+        "address": "Mount Diablo Summit area, Mount Diablo State Park",
+        "addressStatus": "locked_poi",
+        "geometryMode": "desk_standin",
+        "liveLat": 37.8809144,
+        "liveLon": -121.9186787,
+        "podcastChapterRefs": [
+          "chapter-03",
+          "chapter-04"
+        ],
+        "notes": "poseHint=summit_overlook;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=locked_poi;live=37.8809144,-121.9186787;address=Mount Diablo Summit area, Mount Diablo State Park"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0954,
+          51.5222
+        ]
+      },
+      "properties": {
+        "id": "loc-norton-leimert",
+        "title": "South Norton Avenue · Leimert Park dump site",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 8,
+        "radiusM": 35,
+        "place": "Los Angeles, CA",
+        "nation": "USA",
+        "role": "dahlia_discovery_site",
+        "event": "Elizabeth Short's remains discovered",
+        "date": "1947-01-15",
+        "poseHint": "sidewalk_quiet",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "epitaph",
+        "relicId": "relic-dahlia-avenger-ling",
+        "riteId": "loc-norton-leimert:epitaph",
+        "wikiSlug": "loc-norton-leimert",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Where the city found her. Not where the podcast places the killing room.",
+        "directionHint": "Residential street. Absolute memorial tone. Sidewalk only.",
+        "cipherIds": [
+          "dahlia-avenger-ling",
+          "elizabeth-keyword"
+        ],
+        "themes": [
+          "dahlia",
+          "los_angeles",
+          "memorial"
+        ],
+        "confidence": [
+          "documented",
+          "geocoded"
+        ],
+        "ethics": [],
+        "access": "Residential street. Absolute memorial tone. Sidewalk only.",
+        "address": "3825 S Norton Ave, Los Angeles, CA 90008",
+        "addressStatus": "locked_address",
+        "geometryMode": "desk_standin",
+        "liveLat": 34.0165777,
+        "liveLon": -118.3329983,
+        "podcastChapterRefs": [
+          "chapter-01",
+          "chapter-05"
+        ],
+        "notes": "poseHint=sidewalk_quiet;momentVerb=epitaph;geometryMode=desk_standin;addressStatus=locked_address;live=34.0165777,-118.3329983;address=3825 S Norton Ave, Los Angeles, CA 90008"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09525,
+          51.52235
+        ]
+      },
+      "properties": {
+        "id": "loc-donaldson-bus",
+        "title": "Arlene Donaldson bus stop · San Antonio & Orange",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 9,
+        "radiusM": 40,
+        "place": "South Gate / Huntington Park area, CA",
+        "nation": "USA",
+        "role": "witness_report",
+        "event": "DMV investigator hears scream; sees struggle in black sedan heading north",
+        "date": "1947-01-14/15",
+        "poseHint": "bus_stop_corner",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "relicId": "relic-dahlia-avenger-ling",
+        "riteId": "loc-donaldson-bus:witness_map",
+        "wikiSlug": "loc-donaldson-bus",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Northwest of the Harbor motel cluster. Map arm toward Norton.",
+        "directionHint": "Public sidewalk at named intersection. Field-verify exact corner before live launch.",
+        "cipherIds": [
+          "dahlia-avenger-ling"
+        ],
+        "themes": [
+          "dahlia",
+          "gumshoe",
+          "witness"
+        ],
+        "confidence": [
+          "podcast_named_intersection",
+          "coords_approx"
+        ],
+        "ethics": [],
+        "access": "Public sidewalk at named intersection. Field-verify exact corner before live launch.",
+        "address": "San Antonio and Orange (intersection named in podcast)",
+        "addressStatus": "intersection_named_coords_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.9825,
+        "liveLon": -118.225,
+        "podcastChapterRefs": [
+          "chapter-05"
+        ],
+        "notes": "poseHint=bus_stop_corner;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=intersection_named_coords_approx;live=33.9825,-118.225;address=San Antonio and Orange (intersection named in podcast)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09515,
+          51.52245
+        ]
+      },
+      "properties": {
+        "id": "loc-motel-harbor-moon",
+        "title": "Harbor Moon Motel (historic report)",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 10,
+        "radiusM": 50,
+        "place": "Harbor City / San Pedro corridor, CA",
+        "nation": "USA",
+        "role": "witness_report_motel",
+        "event": "Nervous man seeks room with bathtub; parks black sedan far from entrance",
+        "date": "1947-01-14/15",
+        "poseHint": "motel_forecourt",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "riteId": "loc-motel-harbor-moon:witness_map",
+        "wikiSlug": "loc-motel-harbor-moon",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "First of three Harbor corridor bathtub-seeker reports.",
+        "directionHint": "Neighborhood centroid until street number locks. Public right-of-way only.",
+        "cipherIds": [],
+        "themes": [
+          "dahlia",
+          "harbor_corridor",
+          "gumshoe"
+        ],
+        "confidence": [
+          "name_locked",
+          "street_approx"
+        ],
+        "ethics": [],
+        "access": "Neighborhood centroid until street number locks. Public right-of-way only.",
+        "address": "Harbor Moon Motel (street number pending archive)",
+        "addressStatus": "name_locked_street_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.7911012,
+        "liveLon": -118.3012604,
+        "podcastChapterRefs": [
+          "chapter-05"
+        ],
+        "notes": "poseHint=motel_forecourt;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=name_locked_street_approx;live=33.7911012,-118.3012604;address=Harbor Moon Motel (street number pending archive)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09505,
+          51.52255
+        ]
+      },
+      "properties": {
+        "id": "loc-motel-normandie",
+        "title": "Normandie Motel (historic report)",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 11,
+        "radiusM": 50,
+        "place": "Harbor City / San Pedro corridor, CA",
+        "nation": "USA",
+        "role": "witness_report_motel",
+        "event": "Second independent bathtub-seeker report",
+        "date": "1947-01-14/15",
+        "poseHint": "motel_forecourt",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "riteId": "loc-motel-normandie:witness_map",
+        "wikiSlug": "loc-motel-normandie",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Second motel. Same jittery man, same far-parked sedan.",
+        "directionHint": "Neighborhood centroid until street number locks. Public right-of-way only.",
+        "cipherIds": [],
+        "themes": [
+          "dahlia",
+          "harbor_corridor",
+          "gumshoe"
+        ],
+        "confidence": [
+          "name_locked",
+          "street_approx"
+        ],
+        "ethics": [],
+        "access": "Neighborhood centroid until street number locks. Public right-of-way only.",
+        "address": "Normandie Motel (street number pending archive)",
+        "addressStatus": "name_locked_street_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.7895,
+        "liveLon": -118.2998,
+        "podcastChapterRefs": [
+          "chapter-05"
+        ],
+        "notes": "poseHint=motel_forecourt;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=name_locked_street_approx;live=33.7895,-118.2998;address=Normandie Motel (street number pending archive)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09495,
+          51.52265
+        ]
+      },
+      "properties": {
+        "id": "loc-motel-hillcrest",
+        "title": "Hillcrest Motel (historic report)",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 12,
+        "radiusM": 50,
+        "place": "Lomita / San Pedro corridor, CA",
+        "nation": "USA",
+        "role": "witness_report_motel",
+        "event": "Third independent bathtub-seeker report",
+        "date": "1947-01-14/15",
+        "poseHint": "motel_forecourt",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "witness_map",
+        "riteId": "loc-motel-hillcrest:witness_map",
+        "wikiSlug": "loc-motel-hillcrest",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Third motel. Cluster complete; line north toward Zodiac Motel / Norton.",
+        "directionHint": "Neighborhood centroid (Lomita) until street number locks. Public right-of-way only.",
+        "cipherIds": [],
+        "themes": [
+          "dahlia",
+          "harbor_corridor",
+          "gumshoe"
+        ],
+        "confidence": [
+          "name_locked",
+          "street_approx"
+        ],
+        "ethics": [],
+        "access": "Neighborhood centroid (Lomita) until street number locks. Public right-of-way only.",
+        "address": "Hillcrest Motel (street number pending archive)",
+        "addressStatus": "name_locked_street_approx",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.8036545,
+        "liveLon": -118.3195014,
+        "podcastChapterRefs": [
+          "chapter-05"
+        ],
+        "notes": "poseHint=motel_forecourt;momentVerb=witness_map;geometryMode=desk_standin;addressStatus=name_locked_street_approx;live=33.8036545,-118.3195014;address=Hillcrest Motel (street number pending archive)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0951,
+          51.5224
+        ]
+      },
+      "properties": {
+        "id": "loc-zodiac-motel",
+        "title": "Former Zodiac Motel bungalows",
+        "trail": "killer-in-the-code",
+        "questRole": "waypoint",
+        "dropKind": "cipher_trail",
+        "order": 13,
+        "radiusM": 30,
+        "place": "Compton, CA",
+        "nation": "USA",
+        "role": "podcast_proposed_crime_scene",
+        "event": "Podcast theory: bathtub bungalows; moniker origin",
+        "date": "1947-01 (theory)",
+        "poseHint": "street_view_only",
+        "markerStyle": "cipher-pin",
+        "worldPrefab": "PlaceKits/CipherTrailThreshold",
+        "momentVerb": "lore_reveal",
+        "relicId": "relic-elizabeth-keyword",
+        "riteId": "loc-zodiac-motel:lore_reveal",
+        "wikiSlug": "loc-zodiac-motel",
+        "wikiThemeSlug": "killer-in-the-code",
+        "narrationText": "Name on the building. Theory, not verdict. Respect residents.",
+        "directionHint": "Private apartments. OUTDOOR PUBLIC VIEW ONLY. No unit approach, no knocking, no filming residents.",
+        "cipherIds": [
+          "elizabeth-keyword",
+          "z13"
+        ],
+        "themes": [
+          "dahlia",
+          "podcast_climax",
+          "compton"
+        ],
+        "confidence": [
+          "podcast_theory",
+          "address_locked",
+          "geocoded"
+        ],
+        "ethics": [
+          "private_residence_strict"
+        ],
+        "access": "Private apartments. OUTDOOR PUBLIC VIEW ONLY. No unit approach, no knocking, no filming residents.",
+        "address": "2615 N Santa Fe Ave, Compton, CA 90222",
+        "addressStatus": "locked",
+        "geometryMode": "desk_standin",
+        "liveLat": 33.9098277,
+        "liveLon": -118.2164324,
+        "podcastChapterRefs": [
+          "chapter-05"
+        ],
+        "notes": "poseHint=street_view_only;momentVerb=lore_reveal;geometryMode=desk_standin;addressStatus=locked;live=33.9098277,-118.2164324;address=2615 N Santa Fe Ave, Compton, CA 90222"
+      }
+    }
+  ]
+}

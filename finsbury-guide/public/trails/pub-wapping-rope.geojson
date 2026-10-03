@@ -1,0 +1,154 @@
+{
+  "type": "FeatureCollection",
+  "name": "pub-wapping-rope",
+  "description": "Wapping Rope and Tide. Devil's Tavern / Jeffreys → Kidd → Dickens Limehouse. Geometry mode: Finsbury desk stand-in. Source: uk-pubs-catalog.json. Wiki: wapping-rope-and-tide.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0968,
+          51.5206
+        ]
+      },
+      "properties": {
+        "id": "prospect-of-whitby",
+        "title": "Prospect of Whitby",
+        "trail": "pub-wapping-rope",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 0,
+        "radiusM": 40,
+        "place": "Wapping, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "riverside",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/RiversideRope",
+        "momentVerb": "one_minute_company",
+        "relicId": "pewter-bar-stamp",
+        "relicPrompt": "Hold with the tide for one quiet minute at the rope cue.",
+        "riteId": "prospect-of-whitby:devils-tavern",
+        "wikiSlug": "prospect-of-whitby",
+        "wikiThemeSlug": "wapping-rope-and-tide",
+        "narrationText": "Once the Devil's Tavern. Sailors, smugglers, and lore that Judge Jeffreys watched Execution Dock from this balcony.",
+        "directionHint": "Witness on the riverside approach, not inside the crowded bar.",
+        "themes": [
+          "smuggler",
+          "pirate_river"
+        ],
+        "confidence": [
+          "documented",
+          "folklore"
+        ],
+        "ethics": [
+          "hanging_lore"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Riverside path / pub frontage. Symbolic noose is décor; treat hangings as history, not play.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5071,
+        "liveLon": -0.0511,
+        "notes": "poseHint=riverside;riteId=prospect-of-whitby:devils-tavern;relicId=pewter-bar-stamp;geometryMode=desk_standin;live=51.5071,-0.0511"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.09655,
+          51.52065
+        ]
+      },
+      "properties": {
+        "id": "captain-kidd",
+        "title": "Captain Kidd",
+        "trail": "pub-wapping-rope",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 1,
+        "radiusM": 40,
+        "place": "Wapping, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "riverside",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/RiversideRope",
+        "momentVerb": "epitaph",
+        "relicId": "broken-rope-card",
+        "relicPrompt": "Why was Kidd hanged twice? (The rope broke.)",
+        "riteId": "captain-kidd:double-hanging",
+        "wikiSlug": "captain-kidd",
+        "wikiThemeSlug": "wapping-rope-and-tide",
+        "narrationText": "Privateer turned pirate, hanged at Execution Dock in 1701. The rope broke; they hanged him again. Cheerful dark history on the tide.",
+        "directionHint": "Witness on the Wapping approach. Next: The Grapes at Limehouse.",
+        "themes": [
+          "pirate_river"
+        ],
+        "confidence": [
+          "documented",
+          "marketing"
+        ],
+        "ethics": [
+          "hanging_lore"
+        ],
+        "partnerReadiness": "doorstep_ok",
+        "access": "Near Execution Dock. Ship's-hold décor; symbolic noose. History without glamour.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.504,
+        "liveLon": -0.0615,
+        "notes": "poseHint=riverside;riteId=captain-kidd:double-hanging;relicId=broken-rope-card;geometryMode=desk_standin;live=51.504,-0.0615"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0964,
+          51.5207
+        ]
+      },
+      "properties": {
+        "id": "the-grapes",
+        "title": "The Grapes",
+        "trail": "pub-wapping-rope",
+        "questRole": "waypoint",
+        "dropKind": "pub",
+        "order": 2,
+        "radiusM": 35,
+        "place": "Limehouse, London",
+        "nation": "England",
+        "businessKind": "pub",
+        "poseHint": "riverside",
+        "markerStyle": "pub-sign",
+        "worldPrefab": "PlaceKits/RiversideRope",
+        "momentVerb": "one_minute_company",
+        "relicId": "dickens-drop",
+        "relicPrompt": "Hold company with the dropsical tavern cue for one minute.",
+        "riteId": "the-grapes:mutual-friend",
+        "wikiSlug": "the-grapes",
+        "wikiThemeSlug": "wapping-rope-and-tide",
+        "narrationText": "Dickens drew this Limehouse house as the tavern of dropsical appearance in Our Mutual Friend. The river still sets the mood.",
+        "directionHint": "Witness on Narrow Street. Wapping Rope and Tide complete.",
+        "themes": [
+          "literary",
+          "pirate_river"
+        ],
+        "confidence": [
+          "documented",
+          "literary"
+        ],
+        "ethics": [],
+        "partnerReadiness": "needs_consent",
+        "access": "Narrow Street terrace. Dickens Our Mutual Friend; Gormley in the river behind.",
+        "geometryMode": "desk_standin",
+        "liveLat": 51.5105,
+        "liveLon": -0.0335,
+        "notes": "poseHint=riverside;riteId=the-grapes:mutual-friend;relicId=dickens-drop;geometryMode=desk_standin;live=51.5105,-0.0335"
+      }
+    }
+  ]
+}

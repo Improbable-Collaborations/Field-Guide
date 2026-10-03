@@ -1,0 +1,33 @@
+{
+  "questId": "33ed1ace-32f0-4465-b3c5-1b3e812cc581",
+  "name": "When Birds Fall Silent",
+  "createdAt": "2026-08-10T13:20:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "when-birds-fall-silent.geojson",
+  "atmosphere": "omen",
+  "gameSource": "FieldGuide",
+  "wikiSlug": "when-birds-fall-silent",
+  "description": "Black Mountains eclipse ridge from Hay-on-Wye. Gospel Pass, Hay Bluff, Black Hill for the 12 Aug 2026 darkening. [trailFile=when-birds-fall-silent.geojson] [atmosphere=omen]",
+  "requiredPinIds": [
+    "gospel-pass",
+    "hay-bluff",
+    "black-hill"
+  ],
+  "pinObjectiveMap": {
+    "gospel-pass": "gospel-pass",
+    "hay-bluff": "hay-bluff",
+    "black-hill": "black-hill"
+  },
+  "optionalPinIds": [],
+  "startPinId": "hay-eclipse-gate",
+  "spawnNear": {
+    "pinId": "hay-bluff",
+    "lat": 52.02916,
+    "lon": -3.1097,
+    "note": "Desk spawn at Hay Bluff for proximity check-in"
+  },
+  "notes": {
+    "eclipse": "UK deep partial solar eclipse, Wednesday 12 August 2026 evening (~18:16–20:07 BST, max ~19:13). Black Mountains give open west horizon.",
+    "folklore": "Marches omen: birds fall silent when the sun is bitten."
+  }
+}

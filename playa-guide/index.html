@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Hitchhiker's Guide to Playa del Carmen</title>
+    <link
+      href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <nav>
+        <span class="nav-brand">HITCHHIKER'S GUIDE</span>
+        <span class="nav-sep">·</span>
+        <span class="nav-loc">Playa del Carmen</span>
+        <span class="nav-spacer"></span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-nearby" checked />
+          Live nearby
+        </label>
+        <div id="auth-box" class="auth-box"></div>
+      </nav>
+      <aside id="panel">
+        <header class="panel-head">
+          <p class="eyebrow">Phygital city guide</p>
+          <h1>Places</h1>
+          <p class="sub">Venues + STAR GeoNFT nearby</p>
+        </header>
+        <div class="filters" id="filters"></div>
+        <div id="place-list" class="place-list" role="list"></div>
+        <footer id="status" class="status">Loading…</footer>
+      </aside>
+      <main id="map" aria-label="Playa map"></main>
+      <section id="sheet" class="sheet hidden" hidden>
+        <button type="button" id="sheet-close" class="sheet-close">Close</button>
+        <p id="sheet-kind" class="sheet-kind"></p>
+        <h2 id="sheet-title"></h2>
+        <p id="sheet-sub" class="sheet-sub"></p>
+        <p id="sheet-body"></p>
+        <div id="sheet-actions" class="sheet-actions"></div>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
