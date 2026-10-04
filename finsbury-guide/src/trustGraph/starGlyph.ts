@@ -1,5 +1,8 @@
 /**
- * Dual tetrahedron layout (Soulbis /star convention).
+ * Dual tetrahedron layout. Coordinates are the Soulbis /star core
+ * (mitchuski/soulbis, MIT, (c) 2026 Mitchell Travers / 0xagentprivacy):
+ * TET_BOOKS is its Swordsman tetrahedron (TET_A), TET_PEOPLE its Mage
+ * tetrahedron (TET_B).
  * Used by tests; the live view is the Three.js core in starScene.ts.
  */
 
