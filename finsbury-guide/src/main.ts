@@ -34,6 +34,8 @@ import { JAB_SW1_GLOVES_PLACE_ID, streetGlovePinVisible } from "./quests/jabSw1G
 import { closeLook, openLook } from "./look/lookOverlay"
 import { mountAvatarDesk } from "./profile/desk"
 import { buildProfileSnapshot } from "./profile/model"
+import { startFieldGuideSiteLink } from "./profile/siteLink"
+import type { FieldGuideMode } from "./profile/siteSession"
 import {
   DESK_MAP_PITCH,
   DESK_MAP_ZOOM,
@@ -137,6 +139,7 @@ let activePersona: Persona | null = null
 let activeClusterId: string | null = null
 let starHandle: StarHandle | null = null
 let avatarDesk: ReturnType<typeof mountAvatarDesk> | null = null
+let stopSiteLink: (() => void) | null = null
 let nearbyPins: TrailPin[] = []
 let trailPins: TrailPin[] = []
 let activeTrailId = ""
@@ -333,6 +336,9 @@ const geolocate = new maplibregl.GeolocateControl({
   },
 })
 map.addControl(geolocate, "top-right")
+window.addEventListener("resize", () => {
+  map.resize()
+})
 
 let walkActive = false
 let walkFix: GeoFix | null = null
@@ -783,7 +789,9 @@ async function loadTrail(place: Place, opts?: { fit?: boolean }) {
     trailPins = await client.content.loadTrailFile(place.trailFile)
   }
   drawTrailPins()
-  if (opts?.fit !== false && !walkActive) fitPins(trailPins)
+  if (opts?.fit !== false && !walkActive && !document.body.classList.contains("mode-you")) {
+    fitPins(trailPins)
+  }
   renderList()
   if (walkActive) refreshWalkStrip()
   avatarDesk?.refresh()
@@ -1048,12 +1056,16 @@ function profileSnapshot() {
   })
 }
 
-function openPlaceFromDesk(placeId: string) {
+function prepareGuideFromDesk(placeId: string) {
+  const place = PLACES.find((p) => p.id === placeId)
+  if (place?.trailFile) void loadTrail(place, { fit: false })
+}
+
+function showGuideOnMap(placeId: string) {
   const place = PLACES.find((p) => p.id === placeId)
   if (!place) return
   setYouPage(false)
   openPlace(place)
-  if (place.trailFile) void loadTrail(place)
 }
 
 function setYouPage(on: boolean) {
@@ -1069,6 +1081,30 @@ function setYouPage(on: boolean) {
   avatarOpen.classList.toggle("active", on)
   avatarOpen.textContent = on ? "Map" : "You"
   requestAnimationFrame(() => map.resize())
+}
+
+function currentMode(): FieldGuideMode {
+  if (walkActive) return "walk"
+  if (document.body.classList.contains("mode-you")) return "you"
+  return "map"
+}
+
+function beginSiteLink(ticket: string) {
+  stopSiteLink?.()
+  stopSiteLink = startFieldGuideSiteLink({
+    ticket,
+    jwt: () => client.session.getJwt() || "",
+    view: () => {
+      const sel = avatarDesk?.selection() ?? { placeId: "", pinId: "" }
+      return {
+        mode: currentMode(),
+        selectedPlaceId: sel.placeId || activeTrailId,
+        selectedPinId: sel.pinId,
+        wearingPersonaId: activePersona?.id ?? null,
+        wearingClusterId: graphClusterId(),
+      }
+    },
+  })
 }
 
 function graphShowsLayer(layer: GuideLayer): boolean {
@@ -1136,8 +1172,9 @@ function setPersona(persona: Persona | null) {
   activeFilter = "all"
   renderPersonas()
   applyView()
-  flyToGraph()
+  if (!document.body.classList.contains("mode-you")) flyToGraph()
   unloadGlovesIfNotAllowed()
+  avatarDesk?.refresh()
   setStatus(
     persona
       ? `Guide as ${persona.name}: ${persona.clusters.map((c) => c.label).join(" · ")}`
@@ -1152,7 +1189,7 @@ function toggleCluster(clusterId: string) {
   activeFilter = "all"
   renderPersonas()
   applyView()
-  flyToGraph()
+  if (!document.body.classList.contains("mode-you")) flyToGraph()
   const shown = person.clusters.find((c) => c.id === activeClusterId)
   if (shown) {
     const trailPlace = PLACES.find(
@@ -1171,6 +1208,7 @@ function toggleCluster(clusterId: string) {
       ? `${person.name}: ${shown.label}`
       : `Guide as ${person.name}: ${person.clusters.map((c) => c.label).join(" · ")}`,
   )
+  avatarDesk?.refresh()
 }
 
 function renderPersonas() {
@@ -1687,7 +1725,62 @@ async function boot() {
       setPersona(persona)
     },
     pickCluster: (id) => toggleCluster(id),
-    openPlace: openPlaceFromDesk,
+    prepareGuide: prepareGuideFromDesk,
+    showGuideOnMap: showGuideOnMap,
+    connectMyAi: async (provider) => {
+      const jwt = client.session.getJwt()
+      if (!jwt) {
+        return { ok: false, message: "Sign in at the top of the page, then press Claude or ChatGPT." }
+      }
+      let res: Response
+      try {
+        res = await fetch("/connect", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "X-Public-Origin": window.location.origin,
+          },
+        })
+      } catch {
+        return { ok: false, message: "Could not reach the Field Guide connector. Run npm run dev." }
+      }
+      let data: {
+        ok?: boolean
+        message?: string
+        ticket?: string
+        mcpUrl?: string
+        claudeUrl?: string
+      }
+      try {
+        data = (await res.json()) as typeof data
+      } catch {
+        return { ok: false, message: "Personal AI is not running. Start the Field Guide with npm run dev." }
+      }
+      if (!data.ok || !data.claudeUrl || !data.mcpUrl || !data.ticket) {
+        return { ok: false, message: data.message || "Could not start the connector." }
+      }
+      beginSiteLink(data.ticket)
+      try {
+        await navigator.clipboard.writeText(data.mcpUrl)
+      } catch {
+        /* clipboard optional */
+      }
+      if (provider === "chatgpt") {
+        return {
+          ok: true,
+          ticket: data.ticket,
+          openUrl: "https://chatgpt.com/",
+          message:
+            "ChatGPT is opening. Paste the Field Guide URL as a connector. The chat can read your progress, not edit the Guide.",
+        }
+      }
+      return {
+        ok: true,
+        ticket: data.ticket,
+        openUrl: data.claudeUrl,
+        message: "Claude is opening with Field Guide filled in. Press Add. The chat can read your progress, not edit the Guide.",
+      }
+    },
     ensureWallet: () => client.wallet.ensure(),
   })
   avatarOpen.addEventListener("click", () => {

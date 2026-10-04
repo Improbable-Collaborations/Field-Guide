@@ -3,12 +3,24 @@ import type { Place } from "../places"
 import { JAB_SW1_GLOVES_PLACE_ID, JAB_SW1_GLOVE_PIN_IDS } from "../quests/jabSw1Gloves"
 import type { Persona } from "../trustGraph/personas"
 
+export type GuidePinProgress = {
+  id: string
+  title: string
+  collected: boolean
+  narrationText: string
+  directionHint: string
+  order: number
+}
+
 export type GuideProgress = {
   placeId: string
   name: string
+  subtitle: string
+  desc: string
   trailFile: string
   starQuestId: string
   pinIds: string[]
+  pins: GuidePinProgress[]
   collected: number
   complete: boolean
 }
@@ -86,6 +98,18 @@ function titleForPin(pinId: string, trailPins: TrailPin[]): string {
   return trailPins.find((p) => p.id === pinId)?.title || pinId
 }
 
+function pinProgress(pinId: string, trailPins: TrailPin[], done: Set<string>): GuidePinProgress {
+  const pin = trailPins.find((p) => p.id === pinId)
+  return {
+    id: pinId,
+    title: pin?.title || pinId,
+    collected: done.has(pinId.toLowerCase()),
+    narrationText: pin?.narrationText || "",
+    directionHint: pin?.directionHint || "",
+    order: pin?.order ?? 0,
+  }
+}
+
 export function buildProfileSnapshot(args: {
   signedIn: boolean
   avatarName: string
@@ -108,13 +132,19 @@ export function buildProfileSnapshot(args: {
   const guidePlaces = graphPlaces.filter((p) => Boolean(p.trailFile))
   const guides: GuideProgress[] = guidePlaces.map((place) => {
     const pinIds = pinIdsForGuide(place, args.trailPins)
-    const collected = pinIds.filter((id) => done.has(id.toLowerCase())).length
+    const pins: GuidePinProgress[] = pinIds
+      .map((id) => pinProgress(id, args.trailPins, done))
+      .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id))
+    const collected = pins.filter((p) => p.collected).length
     return {
       placeId: place.id,
       name: place.name,
+      subtitle: place.subtitle || "",
+      desc: place.desc || "",
       trailFile: place.trailFile || "",
       starQuestId: place.starQuestId || "",
       pinIds,
+      pins,
       collected,
       complete: pinIds.length > 0 && collected >= pinIds.length,
     }

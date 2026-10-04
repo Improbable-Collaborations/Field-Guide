@@ -24,6 +24,11 @@ const raProxy: ProxyOptions = {
   },
 }
 
+const mcpProxy: ProxyOptions = {
+  target: "http://127.0.0.1:8788",
+  changeOrigin: true,
+}
+
 export default defineConfig({
   server: {
     port: 5179,
@@ -31,6 +36,8 @@ export default defineConfig({
     proxy: {
       "/api/skiddle": skiddleProxy,
       "/api/ra": raProxy,
+      "/mcp": mcpProxy,
+      "/connect": mcpProxy,
     },
   },
   preview: {
@@ -38,6 +45,8 @@ export default defineConfig({
     proxy: {
       "/api/skiddle": skiddleProxy,
       "/api/ra": raProxy,
+      "/mcp": mcpProxy,
+      "/connect": mcpProxy,
     },
   },
   build: { outDir: "dist", emptyOutDir: true },

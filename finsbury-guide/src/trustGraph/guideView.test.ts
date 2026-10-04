@@ -142,6 +142,16 @@ describe("same Guide, two graphs of records", () => {
     expect(open.length).toBe(PLACES.length)
   })
 
+  it("pins Newspeak House on the published culture layer, not on Alex or Margaret", () => {
+    const house = PLACES.find((p) => p.id === "newspeak-house")!
+    expect(house.type).toBe("culture")
+    expect(house.coords[0]).toBeCloseTo(-0.07124, 4)
+    expect(house.coords[1]).toBeCloseTo(51.52529, 4)
+    expect(personaAllowsPlace(null, house)).toBe(true)
+    expect(personaAllowsPlace(ALEX, house)).toBe(false)
+    expect(personaAllowsPlace(MARGARET, house)).toBe(false)
+  })
+
   it("derived layers come from cluster membership counts, not preset tip glow", () => {
     expect(layersFromClusters(ALEX, PLACES).sort()).toEqual(
       ["gigs", "hq", "music", "nearby", "park", "ra", "sport", "trail"].sort(),

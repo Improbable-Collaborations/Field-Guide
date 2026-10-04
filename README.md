@@ -2,7 +2,7 @@
 
 Hitchhikers Field Guide web maps (Finsbury Park, Playa) and the OASIS holonic galaxy / pre-check pages. Published for [Improbable Collaborations](https://github.com/Improbable-Collaborations).
 
-The Finsbury app (`finsbury-guide/`) is Walk + GPS follow + Look (camera overlay) plus the JAB SW1 street-gloves quest. Glove pins appear only after you open that trail.
+The Finsbury app (`finsbury-guide/`) is Walk + GPS follow + Look, the JAB SW1 street-gloves quest (pins only when that trail is selected), a You page for progress, and a phone layout. Sign in and connect Claude or ChatGPT for a read-only pack of the guides and this avatar's STAR progress. The published Field Guide is not writable from chat. Collect stays in Walk / Look.
 
 The Web4 client used by both city guides lives in `clients/field-guide-web4-client/` (ONODE mint + STAR quest progress).
 

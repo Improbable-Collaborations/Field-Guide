@@ -6,13 +6,21 @@ export type AvatarDeskHandle = {
   close: () => void
   isOpen: () => boolean
   refresh: () => void
+  selection: () => { placeId: string; pinId: string }
 }
 
 export type AvatarDeskController = {
   snapshot: () => ProfileSnapshot
   wearPersona: (id: "alex" | "margaret") => void
   pickCluster: (id: string) => void
-  openPlace: (id: string) => void
+  prepareGuide: (id: string) => void
+  showGuideOnMap: (id: string) => void
+  connectMyAi: (provider: "claude" | "chatgpt") => Promise<{
+    ok: boolean
+    message: string
+    openUrl?: string
+    ticket?: string
+  }>
   ensureWallet: () => Promise<{ ok: boolean; address: string; message: string }>
 }
 
@@ -40,11 +48,19 @@ export function mountAvatarDesk(
 ): AvatarDeskHandle {
   const messages: Array<{ role: "you" | "bot"; text: string }> = []
   let lastAvatarKey = ""
+  let selectedPlaceId = ""
+  let selectedPinId = ""
+
+  const selectGuide = (placeId: string) => {
+    if (selectedPlaceId !== placeId) selectedPinId = ""
+    selectedPlaceId = placeId
+    ctrl.prepareGuide(placeId)
+  }
 
   const applyAction = (action: ReturnType<typeof askFieldGuideAgent>["action"]) => {
     if (action.type === "wear-persona") ctrl.wearPersona(action.personaId)
     if (action.type === "pick-cluster") ctrl.pickCluster(action.clusterId)
-    if (action.type === "open-place") ctrl.openPlace(action.placeId)
+    if (action.type === "open-place") selectGuide(action.placeId)
   }
 
   const render = () => {
@@ -79,7 +95,23 @@ export function mountAvatarDesk(
     )
     host.append(stats)
 
-    const next = el("section", "you-next")
+    if (selectedPlaceId && !snap.guides.some((g) => g.placeId === selectedPlaceId)) {
+      selectedPlaceId = ""
+      selectedPinId = ""
+    }
+    const selected = snap.guides.find((g) => g.placeId === selectedPlaceId)
+    if (selected && selectedPinId && !selected.pins.some((p) => p.id === selectedPinId)) {
+      selectedPinId = ""
+    }
+    const selectedPin = selected?.pins.find((p) => p.id === selectedPinId)
+
+    const paned = 1 + (selected ? 1 : 0) + (selected && selectedPin ? 1 : 0)
+    const triptych = el("div", `you-triptych open-${paned}`)
+    const leafGuides = el("section", "you-leaf")
+    const leafGuide = el("section", "you-leaf")
+    const leafPin = el("section", "you-leaf")
+
+    const next = el("div", "you-next")
     if (snap.nextStep) {
       next.append(
         el("p", "avatar-kicker", "Up next"),
@@ -88,8 +120,12 @@ export function mountAvatarDesk(
       )
       const go = el("button", "you-continue")
       go.type = "button"
-      go.textContent = "Continue"
-      go.addEventListener("click", () => ctrl.openPlace(snap.nextStep!.placeId))
+      go.textContent = "Open guide"
+      go.addEventListener("click", () => {
+        selectGuide(snap.nextStep!.placeId)
+        selectedPinId = snap.nextStep!.pinId
+        render()
+      })
       next.append(go)
     } else if (snap.pinsKnown && snap.pinsCollected >= snap.pinsKnown) {
       next.append(
@@ -101,18 +137,16 @@ export function mountAvatarDesk(
       next.append(
         el("p", "avatar-kicker", "Up next"),
         el("p", "you-next-title", "No hunt is in motion yet."),
-        el("p", "avatar-meta", "Wear a graph, then open a trail. Collecting is how this page fills."),
+        el("p", "avatar-meta", "Wear a graph, then open a guide. Collecting is how this page fills."),
       )
     }
-    host.append(next)
-
-    const guides = el("section", "you-guides")
-    guides.append(el("p", "avatar-kicker", "Guides"))
+    leafGuides.append(next)
+    leafGuides.append(el("p", "avatar-kicker", "Guides"))
     if (!snap.guides.length) {
-      guides.append(el("p", "avatar-meta", "No authored trails on this graph."))
+      leafGuides.append(el("p", "avatar-meta", "No authored trails on this graph."))
     }
     for (const g of snap.guides) {
-      const btn = el("button", "you-guide")
+      const btn = el("button", "you-guide" + (g.placeId === selectedPlaceId ? " active" : ""))
       btn.type = "button"
       const pct = g.pinIds.length ? Math.round((100 * g.collected) / g.pinIds.length) : 0
       const bar = el("span", "you-bar")
@@ -127,14 +161,83 @@ export function mountAvatarDesk(
           "meta",
           g.pinIds.length
             ? `${g.collected} of ${g.pinIds.length}${g.complete ? " · complete" : ""}`
-            : "Open on the map to load pins",
+            : "Open to load pins",
         ),
       )
       btn.append(copy, bar)
-      btn.addEventListener("click", () => ctrl.openPlace(g.placeId))
-      guides.append(btn)
+      btn.addEventListener("click", () => {
+        selectGuide(g.placeId)
+        render()
+      })
+      leafGuides.append(btn)
     }
-    host.append(guides)
+
+    if (selected) {
+      leafGuide.append(
+        el("p", "avatar-kicker", selected.starQuestId ? "Quest" : "Guide"),
+        el("h3", "you-detail-title", selected.name),
+      )
+      if (selected.subtitle) leafGuide.append(el("p", "avatar-meta", selected.subtitle))
+      if (selected.desc) leafGuide.append(el("p", "you-detail-body", selected.desc))
+      leafGuide.append(
+        el(
+          "p",
+          "avatar-meta",
+          selected.pinIds.length
+            ? `${selected.collected} of ${selected.pinIds.length} collected`
+            : "Pins load when you open this guide.",
+        ),
+      )
+      const pinList = el("div", "you-pins")
+      if (!selected.pins.length) {
+        pinList.append(el("p", "avatar-meta", "No objectives listed yet."))
+      }
+      for (const pin of selected.pins) {
+        const row = el(
+          "button",
+          "you-pin" + (pin.collected ? " collected" : "") + (pin.id === selectedPinId ? " active" : ""),
+        )
+        row.type = "button"
+        row.textContent = `${pin.collected ? "Collected" : "Open"} · ${pin.title}`
+        row.addEventListener("click", () => {
+          selectedPinId = pin.id
+          render()
+        })
+        pinList.append(row)
+      }
+      leafGuide.append(pinList)
+      const onMap = el("button", "you-continue")
+      onMap.type = "button"
+      onMap.textContent = "Show on map"
+      onMap.addEventListener("click", () => ctrl.showGuideOnMap(selected.placeId))
+      leafGuide.append(onMap)
+    }
+
+    if (selectedPin && selected) {
+      leafPin.append(
+        el("p", "avatar-kicker", "Objective"),
+        el("h3", "you-detail-title", selectedPin.title),
+        el("p", "avatar-meta", selected.name),
+        el(
+          "p",
+          "you-detail-body",
+          selectedPin.narrationText ||
+            (selectedPin.collected
+              ? "Collected on this avatar."
+              : "Still open. Collect it on the map or in Walk / Look."),
+        ),
+      )
+      const onMap = el("button", "you-continue")
+      onMap.type = "button"
+      onMap.textContent = "Show on map"
+      onMap.addEventListener("click", () => ctrl.showGuideOnMap(selected.placeId))
+      leafPin.append(onMap)
+    }
+
+    triptych.append(leafGuides)
+    if (selected) triptych.append(leafGuide)
+    if (selected && selectedPin) triptych.append(leafPin)
+    host.append(triptych)
 
     const logSec = el("section", "you-log")
     logSec.append(el("p", "avatar-kicker", "Collected"))
@@ -179,6 +282,62 @@ export function mountAvatarDesk(
     }
     account.append(makeWallet, wearRow)
     host.append(account)
+
+    const connect = el("section", "you-connect")
+    connect.append(el("p", "avatar-kicker", "Personal AI"))
+    const note = el("p", "you-connect-note")
+    note.textContent =
+      "Sign in, then pick Claude or ChatGPT. The chat can read this guide and your progress. It cannot change the Field Guide. Collect stays in Walk / Look."
+    const row = el("div", "you-ai-row")
+
+    const makeAiBtn = (
+      provider: "claude" | "chatgpt",
+      label: string,
+      icon: string,
+    ) => {
+      const btn = el("button", "you-ai-btn")
+      btn.type = "button"
+      const img = document.createElement("img")
+      img.src = icon
+      img.alt = ""
+      img.className = "you-ai-logo"
+      btn.append(img, document.createTextNode(label))
+      btn.addEventListener("click", async () => {
+        const popup = window.open("about:blank", "field-guide-ai")
+        btn.disabled = true
+        try {
+          const result = await ctrl.connectMyAi(provider)
+          note.textContent = result.message
+          if (result.ok && result.openUrl && popup && !popup.closed) {
+            popup.location.href = result.openUrl
+          } else {
+            popup?.close()
+            if (result.ok && result.openUrl) {
+              const fallback = document.createElement("a")
+              fallback.href = result.openUrl
+              fallback.target = "_blank"
+              fallback.rel = "noopener"
+              fallback.textContent = "Open " + label
+              fallback.className = "you-connect-fallback"
+              note.after(fallback)
+            }
+          }
+        } catch (err) {
+          popup?.close()
+          note.textContent = err instanceof Error ? err.message : "Could not connect."
+        } finally {
+          btn.disabled = false
+        }
+      })
+      return btn
+    }
+
+    row.append(
+      makeAiBtn("chatgpt", "ChatGPT", "/icons/openai.svg"),
+      makeAiBtn("claude", "Claude", "/icons/anthropic.svg"),
+    )
+    connect.append(note, row)
+    host.append(connect)
 
     const agent = el("section", "avatar-block avatar-agent")
     agent.append(el("p", "avatar-kicker", "Ask the Guide"))
@@ -229,6 +388,9 @@ export function mountAvatarDesk(
     },
     refresh() {
       if (this.isOpen()) render()
+    },
+    selection() {
+      return { placeId: selectedPlaceId, pinId: selectedPinId }
     },
   }
 }

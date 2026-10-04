@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Hitchhiker's Guide to Playa del Carmen — MapLibre + Field Guide Web4 Client",
+  "description": "Hitchhiker's Guide to Playa del Carmen \u2014 MapLibre + Field Guide Web4 Client",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
