@@ -4,6 +4,8 @@ Hitchhikers Field Guide web maps (Finsbury Park, Playa) and the OASIS holonic ga
 
 The Finsbury app (`finsbury-guide/`) is Walk + GPS follow + Look, Sit for Day After Tomorrow, the JAB SW1 street-gloves quest (pins only when that trail is selected), Hitchhiker Stoop, the Finsbury Park circuit, a You page for progress, and a phone layout. Sign in and connect Claude or ChatGPT at `{origin}/mcp`. `field_guide_context` includes the sit companion voice. `field_guide_wallet` is the wallet inspector. Collect stays in Walk / Look / Sit. The published Field Guide is not writable from chat.
 
+The star panel and the personal graphs in the Finsbury app build on the agentprivacy Star and on OpenVTC. What those are, where they are defined, and the build path to an in-person community map are in [`docs/agentprivacy/`](docs/agentprivacy/). Coding agents start at [`AGENTS.md`](AGENTS.md).
+
 The Web4 client used by both city guides lives in `clients/field-guide-web4-client/` (ONODE mint + STAR quest progress).
 
 ## Run Finsbury
