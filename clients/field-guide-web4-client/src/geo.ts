@@ -233,8 +233,6 @@ export function parseNearbyJson(text: string): TrailPin[] {
 
     let creatorName = readString(meta, "createdByAvatarName", "CreatedByAvatarName")
     if (!creatorName) creatorName = readString(n, "createdByAvatarName", "CreatedByAvatarName")
-    let creatorId = readString(meta, "createdByAvatarId", "CreatedByAvatarId")
-    if (!creatorId) creatorId = readString(n, "createdByAvatarId", "CreatedByAvatarId")
 
     const radiusM = metaDouble(meta, "radiusM")
     pins.push({
@@ -254,12 +252,13 @@ export function parseNearbyJson(text: string): TrailPin[] {
       markerStyle: style,
       worldPrefab: "",
       trustOrigin: "",
-      peerDisplayName: creatorName,
-      peerAvatarId: creatorId,
+      peerDisplayName: "",
+      peerAvatarId: "",
       trustAudience: "",
       imageUrl,
       fileUrl,
       dropKind: kind,
+      authorName: creatorName,
       vaultId,
       temperament,
       forgeAttestationId,

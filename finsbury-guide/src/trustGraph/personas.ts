@@ -1,9 +1,17 @@
 /**
  * Personal Trust Graph as claimed vertices, not role labels.
  *
- * Vertices follow Soulbis /star (mitchuski/soulbis): dual tet slots 0–7.
+ * The shape is the Soulbis /star dual tetrahedron (mitchuski/soulbis).
+ * Numbering its eight tips as slots 0–7 is this Guide's convention; /star
+ * itself does not assign records to tips.
  * Each filled tip is a cluster of records, never a single activity.
+ *
+ * What is written here is Knowledge: the full record, as its owner holds it.
+ * Alex and Margaret are authored demo people. Nobody has met them, so there
+ * is no trust edge behind wearing one. A viewer gets the Promise projection
+ * in promise.ts at the audience in `grants`, never these records directly.
  */
+import type { Audience } from "./promise"
 
 export type GuideLayer =
   | "park"
@@ -41,6 +49,8 @@ export type DataCluster = {
     relation: "friend" | "similar"
     venueNames?: string[]
   }>
+  /** Caps or trims what any viewer may be shown of this vertex. */
+  disclosure?: { maxAudience?: Audience; deny?: string[] }
   /** 0–3 copper (records), 4–7 cyan (orbit). */
   slot: number
 }
@@ -50,6 +60,8 @@ export type Persona = {
   name: string
   age: number
   blurb: string
+  /** Audience this demo person hands to whoever wears them. Unset is public. */
+  grants?: Audience
   clusters: DataCluster[]
 }
 
@@ -59,6 +71,7 @@ export const ALEX: Persona = {
   age: 30,
   blurb:
     "Electronic nights he actually likes, both JAB gyms, and the park circuit with coffee on the weekend.",
+  grants: "link",
   clusters: [
     {
       id: "nights",
@@ -132,6 +145,7 @@ export const MARGARET: Persona = {
   age: 64,
   blurb:
     "Memorial walks, theatres and chapels, and the north London ground she arrives into.",
+  grants: "link",
   clusters: [
     {
       id: "walks",
