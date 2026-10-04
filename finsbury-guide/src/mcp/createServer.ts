@@ -1,6 +1,6 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js"
-import { formatFieldGuideContext } from "../profile/contextPack"
+import { chatSnapshot, formatFieldGuideContext } from "../profile/contextPack"
 import { loadAvatarGuide } from "./loadAvatarGuide"
 import { siteViewForTicket } from "./tickets"
 
@@ -37,7 +37,7 @@ export function createFieldGuideMcpServer(jwt: string, ticket: string): Server {
       }
       if (name === "field_guide_progress") {
         return {
-          content: [{ type: "text", text: JSON.stringify({ ...snap, site: live }, null, 2) }],
+          content: [{ type: "text", text: JSON.stringify({ ...chatSnapshot(snap), site: live }, null, 2) }],
         }
       }
       return {

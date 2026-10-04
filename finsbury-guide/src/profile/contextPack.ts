@@ -1,6 +1,33 @@
 import { maskWallet, type ProfileSnapshot } from "./model"
 import { formatLiveSiteLine, type SiteView } from "./siteSession"
 
+/** What a connected chat may hold about the visitor. Wallet is masked. */
+export type ChatSnapshot = Omit<ProfileSnapshot, "avatarId" | "avatarEmail">
+
+/**
+ * The chat is a third party. It gets a closed allow-list of the snapshot:
+ * named fields only, so a field added to ProfileSnapshot later is not sent
+ * until it is listed here. Never the avatar id or email.
+ */
+export function chatSnapshot(snap: ProfileSnapshot): ChatSnapshot {
+  return {
+    signedIn: snap.signedIn,
+    avatarName: snap.avatarName,
+    wallet: maskWallet(snap.wallet),
+    wearingPersonaId: snap.wearingPersonaId,
+    wearingPersonaName: snap.wearingPersonaName,
+    wearingClusterId: snap.wearingClusterId,
+    wearingClusterLabel: snap.wearingClusterLabel,
+    clusters: snap.clusters,
+    guides: snap.guides,
+    experiences: snap.experiences,
+    nextStep: snap.nextStep,
+    pinsCollected: snap.pinsCollected,
+    pinsKnown: snap.pinsKnown,
+    guidesComplete: snap.guidesComplete,
+  }
+}
+
 /** Plain-language pack a connected Claude or ChatGPT can run with. */
 export function formatFieldGuideContext(snap: ProfileSnapshot, live: SiteView | null = null): string {
   const wearFromSite = live?.wearingPersonaId
@@ -13,7 +40,7 @@ export function formatFieldGuideContext(snap: ProfileSnapshot, live: SiteView | 
     "The visitor updates their own progress only in Walk / Look: JWT, OASIS Solana wallet, mint GLOVE, then STAR. Do not invent a second collect path, and do not write progress from chat.",
     "",
     formatLiveSiteLine(live),
-    `Avatar: ${snap.signedIn ? snap.avatarName || snap.avatarEmail || snap.avatarId || "signed in" : "guest (no OASIS session)"}`,
+    `Avatar: ${snap.signedIn ? snap.avatarName || "signed in" : "guest (no OASIS session)"}`,
     `Wearing: ${wearing}`,
     `Wallet: ${snap.wallet ? maskWallet(snap.wallet) : "none on this avatar"}`,
     `Guides: ${snap.guidesComplete} of ${snap.guides.length} complete. Pins ${snap.pinsCollected} of ${snap.pinsKnown}.`,
