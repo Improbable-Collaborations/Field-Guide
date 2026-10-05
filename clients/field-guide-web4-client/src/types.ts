@@ -126,7 +126,7 @@ export type PlacePinResult = {
 
 export type CheckInResult = {
   ok: boolean
-  kind: "shared-drop" | "quest-pin" | "glove" | "skipped"
+  kind: "shared-drop" | "quest-pin" | "glove" | "sit" | "skipped"
   questId?: string
   started?: boolean
   progressed?: boolean

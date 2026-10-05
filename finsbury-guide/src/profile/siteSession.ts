@@ -8,6 +8,9 @@ export type SiteView = {
   selectedPinId: string
   wearingPersonaId: string | null
   wearingClusterId: string | null
+  lat?: number
+  lon?: number
+  accuracyM?: number
 }
 
 export function parseSiteView(raw: unknown): SiteView | string {
@@ -15,12 +18,19 @@ export function parseSiteView(raw: unknown): SiteView | string {
   const rec = raw as Record<string, unknown>
   const mode = rec.mode
   if (mode !== "map" && mode !== "you" && mode !== "walk") return "Site mode must be map, you, or walk."
+  const lat = typeof rec.lat === "number" && Number.isFinite(rec.lat) ? rec.lat : undefined
+  const lon = typeof rec.lon === "number" && Number.isFinite(rec.lon) ? rec.lon : undefined
+  const accuracyM =
+    typeof rec.accuracyM === "number" && Number.isFinite(rec.accuracyM) ? rec.accuracyM : undefined
   return {
     mode,
     selectedPlaceId: typeof rec.selectedPlaceId === "string" ? rec.selectedPlaceId : "",
     selectedPinId: typeof rec.selectedPinId === "string" ? rec.selectedPinId : "",
     wearingPersonaId: typeof rec.wearingPersonaId === "string" ? rec.wearingPersonaId : null,
     wearingClusterId: typeof rec.wearingClusterId === "string" ? rec.wearingClusterId : null,
+    lat,
+    lon,
+    accuracyM,
   }
 }
 
@@ -32,5 +42,9 @@ export function formatLiveSiteLine(view: SiteView | null): string {
   const cluster = view.wearingClusterId ? ` / ${view.wearingClusterId}` : ""
   const guide = view.selectedPlaceId ? ` · guide ${view.selectedPlaceId}` : ""
   const pin = view.selectedPinId ? ` · pin ${view.selectedPinId}` : ""
-  return `Site: ${view.mode} · wearing ${wear}${cluster}${guide}${pin}`
+  const gps =
+    view.lat != null && view.lon != null
+      ? ` · GPS ${view.lat.toFixed(5)}, ${view.lon.toFixed(5)}${view.accuracyM != null ? ` ±${Math.round(view.accuracyM)}m` : ""}`
+      : ""
+  return `Site: ${view.mode} · wearing ${wear}${cluster}${guide}${pin}${gps}`
 }

@@ -7,9 +7,5 @@ export function claudeConnectorLink(mcpUrl: string, name = "Field Guide"): strin
 }
 
 export function chatgptHomeLink(): string {
-  return "https://chatgpt.com/"
-}
-
-export function publicMcpUrl(origin: string, ticket: string): string {
-  return `${origin.replace(/\/$/, "")}/mcp/${ticket}`
+  return "https://chatgpt.com/plugins"
 }

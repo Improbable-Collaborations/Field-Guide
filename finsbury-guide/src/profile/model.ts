@@ -1,6 +1,7 @@
-import type { TrailPin } from "field-guide-web4-client"
+import { isSitPin, isStreetGlovePin, type TrailPin } from "field-guide-web4-client"
 import type { Place } from "../places"
 import { JAB_SW1_GLOVES_PLACE_ID, JAB_SW1_GLOVE_PIN_IDS } from "../quests/jabSw1Gloves"
+import { dayAfterTomorrowPinVisible } from "../quests/dayAfterTomorrow"
 import type { Persona } from "../trustGraph/personas"
 
 export type GuidePinProgress = {
@@ -10,6 +11,9 @@ export type GuidePinProgress = {
   narrationText: string
   directionHint: string
   order: number
+  lat: number
+  lon: number
+  radiusM: number
 }
 
 export type GuideProgress = {
@@ -35,7 +39,7 @@ export type NextStep = {
 export type Experience = {
   pinId: string
   title: string
-  kind: "glove" | "check-in"
+  kind: "glove" | "sit" | "check-in"
   minted: boolean
   placeId: string
 }
@@ -79,14 +83,23 @@ function trailKey(place: Place): string {
   return (place.trailFile || "").replace(/\.geojson$/i, "")
 }
 
-function pinIdsForGuide(place: Place, trailPins: TrailPin[]): string[] {
+function pinIdsForGuide(place: Place, trailPins: TrailPin[], mintedIds: string[]): string[] {
   if (place.id === JAB_SW1_GLOVES_PLACE_ID) {
     const known = JAB_SW1_GLOVE_PIN_IDS as readonly string[]
     const loaded = trailPins.filter((p) => p.trail === "jab-sw1-gloves" || known.includes(p.id)).map((p) => p.id)
     return loaded.length ? [...new Set(loaded)] : [...JAB_SW1_GLOVE_PIN_IDS]
   }
   const key = trailKey(place)
-  return trailPins.filter((p) => p.trail === key).map((p) => p.id)
+  return trailPins
+    .filter((p) => p.trail === key)
+    .filter((p) =>
+      dayAfterTomorrowPinVisible({
+        pin: p,
+        activeTrailId: place.id,
+        mintedPinIds: mintedIds,
+      }),
+    )
+    .map((p) => p.id)
 }
 
 function collectedSet(checkedIn: string[], minted: string[]): Set<string> {
@@ -107,6 +120,9 @@ function pinProgress(pinId: string, trailPins: TrailPin[], done: Set<string>): G
     narrationText: pin?.narrationText || "",
     directionHint: pin?.directionHint || "",
     order: pin?.order ?? 0,
+    lat: pin?.lat ?? 0,
+    lon: pin?.lon ?? 0,
+    radiusM: pin?.radiusM ?? 40,
   }
 }
 
@@ -131,7 +147,7 @@ export function buildProfileSnapshot(args: {
 
   const guidePlaces = graphPlaces.filter((p) => Boolean(p.trailFile))
   const guides: GuideProgress[] = guidePlaces.map((place) => {
-    const pinIds = pinIdsForGuide(place, args.trailPins)
+    const pinIds = pinIdsForGuide(place, args.trailPins, args.mintedIds)
     const pins: GuidePinProgress[] = pinIds
       .map((id) => pinProgress(id, args.trailPins, done))
       .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id))
@@ -169,12 +185,13 @@ export function buildProfileSnapshot(args: {
   const experienceIds = [...new Set([...args.mintedIds, ...args.checkedInIds])]
   const experiences: Experience[] = experienceIds.map((pinId) => {
     const pin = args.trailPins.find((p) => p.id === pinId)
-    const glove = pinId.toLowerCase().startsWith("glove-") || pin?.dropKind === "glove"
-    const place = args.places.find((p) => p.trailFile && pinIdsForGuide(p, args.trailPins).includes(pinId))
+    const glove = pin ? isStreetGlovePin(pin) : false
+    const sit = pin ? isSitPin(pin) : pinId.toLowerCase().startsWith("sit-")
+    const place = args.places.find((p) => p.trailFile && pinIdsForGuide(p, args.trailPins, args.mintedIds).includes(pinId))
     return {
       pinId,
       title: titleForPin(pinId, args.trailPins),
-      kind: glove ? "glove" : "check-in",
+      kind: glove ? "glove" : sit ? "sit" : "check-in",
       minted: minted.has(pinId.toLowerCase()),
       placeId: place?.id || "",
     }

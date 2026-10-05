@@ -45,7 +45,8 @@ export function trailPinsFromFeatureCollection(raw: unknown): TrailPin[] {
   const pins: TrailPin[] = []
   for (const feature of features) {
     if (!feature || typeof feature !== "object") continue
-    const rec = feature as { geometry?: { coordinates?: unknown }; properties?: Record<string, unknown> }
+    const rec = feature as { geometry?: { type?: unknown; coordinates?: unknown }; properties?: Record<string, unknown> }
+    if (rec.geometry?.type !== "Point") continue
     const props = rec.properties
     const id = typeof props?.id === "string" ? props.id : ""
     if (!id) continue
@@ -67,6 +68,7 @@ export function trailPinsFromFeatureCollection(raw: unknown): TrailPin[] {
         notes: typeof props.notes === "string" ? props.notes : "",
         narrationText: typeof props.narrationText === "string" ? props.narrationText : "",
         directionHint: typeof props.directionHint === "string" ? props.directionHint : "",
+        audioUrl: typeof props.audioUrl === "string" ? props.audioUrl : "",
         dropKind: typeof props.dropKind === "string" ? props.dropKind : "",
         imageUrl: typeof props.imageUrl === "string" ? props.imageUrl : "",
       }),
@@ -75,13 +77,65 @@ export function trailPinsFromFeatureCollection(raw: unknown): TrailPin[] {
   return pins
 }
 
+export type TrailRoute = {
+  id: string
+  title: string
+  trail: string
+  coordinates: [number, number][]
+  pinIds: string[]
+}
+
+export function trailRoutesFromFeatureCollection(raw: unknown): TrailRoute[] {
+  if (!raw || typeof raw !== "object") return []
+  const features = (raw as { features?: unknown }).features
+  if (!Array.isArray(features)) return []
+  const routes: TrailRoute[] = []
+  for (const feature of features) {
+    if (!feature || typeof feature !== "object") continue
+    const rec = feature as { geometry?: { type?: unknown; coordinates?: unknown }; properties?: Record<string, unknown> }
+    if (rec.geometry?.type !== "LineString") continue
+    const props = rec.properties
+    const id = typeof props?.id === "string" ? props.id : ""
+    const coords = rec.geometry.coordinates
+    if (!id || !Array.isArray(coords) || coords.length < 2) continue
+    const coordinates: [number, number][] = []
+    for (const pair of coords) {
+      if (!Array.isArray(pair) || typeof pair[0] !== "number" || typeof pair[1] !== "number") continue
+      coordinates.push([pair[0], pair[1]])
+    }
+    if (coordinates.length < 2) continue
+    const pinIds = Array.isArray(props?.pinIds)
+      ? props.pinIds.filter((p): p is string => typeof p === "string")
+      : []
+    routes.push({
+      id,
+      title: typeof props?.title === "string" && props.title ? props.title : id,
+      trail: typeof props?.trail === "string" ? props.trail : "",
+      coordinates,
+      pinIds,
+    })
+  }
+  return routes
+}
+
+function trailFiles(places: Place[]): string[] {
+  return [...new Set(places.map((p) => p.trailFile).filter((f): f is string => Boolean(f)))]
+}
+
 export function loadAuthoredTrailPins(places: Place[]): TrailPin[] {
-  const files = [...new Set(places.map((p) => p.trailFile).filter((f): f is string => Boolean(f)))]
   const pins: TrailPin[] = []
-  for (const file of files) {
-    const path = join(trailsDir, file)
-    const text = readFileSync(path, "utf8")
+  for (const file of trailFiles(places)) {
+    const text = readFileSync(join(trailsDir, file), "utf8")
     pins.push(...trailPinsFromFeatureCollection(JSON.parse(text) as unknown))
   }
   return pins
+}
+
+export function loadAuthoredTrailRoutes(places: Place[]): TrailRoute[] {
+  const routes: TrailRoute[] = []
+  for (const file of trailFiles(places)) {
+    const text = readFileSync(join(trailsDir, file), "utf8")
+    routes.push(...trailRoutesFromFeatureCollection(JSON.parse(text) as unknown))
+  }
+  return routes
 }

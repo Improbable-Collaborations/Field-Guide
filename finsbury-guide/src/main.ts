@@ -1,6 +1,7 @@
 import maplibregl from "maplibre-gl"
 import {
   createFieldGuideWeb4Client,
+  isSitPin,
   isStreetGlovePin,
   type TrailPin,
 } from "field-guide-web4-client"
@@ -31,10 +32,20 @@ import {
 } from "./trustGraph/guideView"
 import { mountStar, type StarHandle } from "./trustGraph/starScene"
 import { JAB_SW1_GLOVES_PLACE_ID, streetGlovePinVisible } from "./quests/jabSw1Gloves"
+import {
+  FINSBURY_PARK_CIRCUIT_PLACE_ID,
+  isParkBeaconPin,
+  parkBeaconPinVisible,
+} from "./quests/finsburyParkCircuit"
 import { closeLook, openLook } from "./look/lookOverlay"
+import { closeSit, openSit } from "./sit/sitOverlay"
+import { dayAfterTomorrowPinVisible } from "./quests/dayAfterTomorrow"
 import { mountAvatarDesk } from "./profile/desk"
 import { buildProfileSnapshot } from "./profile/model"
 import { startFieldGuideSiteLink } from "./profile/siteLink"
+import type { SiteCommand } from "./profile/siteCommand"
+import { loadPersonalPhotos } from "./profile/personalPhotosApi"
+import type { PersonalPhoto } from "./profile/personalPhoto"
 import type { FieldGuideMode } from "./profile/siteSession"
 import {
   DESK_MAP_PITCH,
@@ -146,6 +157,8 @@ let activeTrailId = ""
 const venueMarkers = new Map<string, maplibregl.Marker>()
 let nearbyMarkers: maplibregl.Marker[] = []
 let trailMarkers: maplibregl.Marker[] = []
+let personalMarkers: maplibregl.Marker[] = []
+let personalPhotos: PersonalPhoto[] = []
 let gigMarkers: maplibregl.Marker[] = []
 let raMarkers: maplibregl.Marker[] = []
 let liveGigs: Gig[] = []
@@ -488,8 +501,15 @@ function refreshWalkStrip() {
         ? `GPS ±${Math.round(walkFix.accuracyM)}m`
         : walkFix
           ? "GPS"
-          : "next mitt"
+          : "next pin"
     walkMeters.textContent = `${Math.round(meters)}m · ${gps} · ${pin.directionHint || pin.place || pin.id}`
+  }
+  if (pin && isSitPin(pin)) {
+    walkLookBtn.textContent = "Sit"
+    walkCollectBtn.textContent = "Sit"
+  } else {
+    walkLookBtn.textContent = "Look"
+    walkCollectBtn.textContent = "Collect"
   }
   walkLookBtn.disabled = !pin
   walkCollectBtn.disabled = !pin
@@ -569,6 +589,7 @@ function stopWalk() {
   walkStrip.classList.add("hidden")
   walkStrip.hidden = true
   closeLook()
+  closeSit()
   hideYouMarker()
   if (walkWatchId != null) {
     navigator.geolocation.clearWatch(walkWatchId)
@@ -594,19 +615,30 @@ async function collectPin(pin: TrailPin) {
     setStatus("Sign in to collect")
     return
   }
+  if (isSitPin(pin) && !walkFix) {
+    setStatus("GPS required to sit. No desk stand-in.")
+    return
+  }
   const result = await client.checkIn.handle(pin, { questId: activeQuestId() })
   setStatus(result.message)
   drawTrailPins()
   renderList()
   refreshWalkStrip()
   avatarDesk?.refresh()
-  if (result.ok) closeLook()
+  if (result.ok) {
+    closeLook()
+    closeSit()
+  }
 }
 
 async function collectActiveWalkPin() {
   const pin = nextWalkPin()
   if (!pin) {
     setStatus("No pin left to collect")
+    return
+  }
+  if (isSitPin(pin)) {
+    await sitAtWalkPin(pin.id)
     return
   }
   if (!deskWalk && !insidePinRadius(walkHere(), pin)) {
@@ -621,10 +653,33 @@ async function collectActiveWalkPin() {
   await collectPin(pin)
 }
 
-async function lookAtWalkPin() {
-  const pin = nextWalkPin()
+async function sitAtWalkPin(pinId?: string) {
+  const pin = pinId
+    ? trailPins.filter(trailPinVisible).find((p) => p.id === pinId && !client.session.isCheckedIn(p.id))
+    : nextWalkPin()
+  if (!pin || !isSitPin(pin)) {
+    setStatus("No sit left")
+    return
+  }
+  openSit({
+    pin,
+    getHere: () => walkFix,
+    onComplete: async () => {
+      await collectPin(pin)
+    },
+  })
+}
+
+async function lookAtWalkPin(pinId?: string) {
+  const pin = pinId
+    ? trailPins.filter(trailPinVisible).find((p) => p.id === pinId && !client.session.isCheckedIn(p.id))
+    : nextWalkPin()
   if (!pin) {
     setStatus("No pin left to look at")
+    return
+  }
+  if (isSitPin(pin)) {
+    await sitAtWalkPin(pin.id)
     return
   }
   await openLook({
@@ -633,6 +688,17 @@ async function lookAtWalkPin() {
     deskStandIn: deskWalk,
     onCollect: collectActiveWalkPin,
   })
+}
+
+async function applyQuestDeepLink() {
+  const q = new URLSearchParams(window.location.search)
+  const placeId = q.get("place") || ""
+  if (!placeId) return
+  const place = PLACES.find((p) => p.id === placeId)
+  if (!place) return
+  await loadTrail(place)
+  if (q.get("walk") === "1" || q.get("look") === "1") await startWalk()
+  if (q.get("look") === "1") await lookAtWalkPin(q.get("pin") || undefined)
 }
 
 function showSheet(args: {
@@ -644,6 +710,7 @@ function showSheet(args: {
 }) {
   sheet.querySelector(".gig-sheet-list")?.remove()
   sheet.querySelector(".glove-sheet-art")?.remove()
+  sheet.querySelector(".personal-sheet-art")?.remove()
   sheetKind.textContent = args.kind
   sheetTitle.textContent = args.title
   sheetSub.textContent = args.sub || ""
@@ -740,6 +807,13 @@ function drawTrailPins() {
       img.alt = pin.title || "Boxing glove"
       img.draggable = false
       el.appendChild(img)
+    } else if (isParkBeaconPin(pin)) {
+      el.className = "marker nearby" + (client.session.isCheckedIn(pin.id) ? " collected" : "")
+      const img = document.createElement("img")
+      img.src = pin.imageUrl || "/icons/park-beacon.svg"
+      img.alt = pin.title || "Park beacon"
+      img.draggable = false
+      el.appendChild(img)
     } else {
       el.className = "marker hotel_champion"
       el.style.width = "10px"
@@ -755,6 +829,60 @@ function drawTrailPins() {
         anchor: isStreetGlovePin(pin) ? "bottom" : "center",
       }).setLngLat([pin.lon, pin.lat]).addTo(map),
     )
+  }
+}
+
+function openPersonalPhoto(photo: PersonalPhoto) {
+  showSheet({
+    kind: "personal photo",
+    title: photo.caption,
+    sub: `${photo.lat.toFixed(5)}, ${photo.lon.toFixed(5)}`,
+    body: "On your personal Field Guide. Not a published trail pin and not a GLOVE collect.",
+  })
+  const art = document.createElement("img")
+  art.className = "personal-sheet-art"
+  art.src = photo.imageUrl
+  art.alt = photo.caption
+  sheetBody.after(art)
+}
+
+function drawPersonalPhotos() {
+  clearMarkers(personalMarkers)
+  for (const photo of personalPhotos) {
+    const el = document.createElement("button")
+    el.type = "button"
+    el.className = "marker personal"
+    el.title = photo.caption
+    el.addEventListener("click", (e) => {
+      e.stopPropagation()
+      openPersonalPhoto(photo)
+    })
+    personalMarkers.push(new maplibregl.Marker({ element: el }).setLngLat([photo.lon, photo.lat]).addTo(map))
+  }
+}
+
+async function refreshPersonalPhotos() {
+  if (!client.session.hasJwt()) {
+    personalPhotos = []
+    drawPersonalPhotos()
+    return
+  }
+  const avatarId = client.session.get().avatarId
+  const jwt = client.session.getJwt()
+  if (!avatarId || !jwt) {
+    personalPhotos = []
+    drawPersonalPhotos()
+    return
+  }
+  try {
+    personalPhotos = await loadPersonalPhotos({
+      oasisBaseUrl: client.config.oasisBaseUrl,
+      jwt,
+      avatarId,
+    })
+    drawPersonalPhotos()
+  } catch (err) {
+    setStatus(err instanceof Error ? err.message : "Could not load personal photos")
   }
 }
 
@@ -778,8 +906,18 @@ function fitPins(pins: TrailPin[]) {
   })
 }
 
+function wearClusterForPlace(placeId: string) {
+  if (!activePersona) return
+  const hit = clusterForPlace(activePersona, placeId)
+  if (!hit || activeClusterId === hit.id) return
+  activeClusterId = hit.id
+  renderPersonas()
+  applyView()
+}
+
 async function loadTrail(place: Place, opts?: { fit?: boolean }) {
   if (!place.trailFile) return
+  wearClusterForPlace(place.id)
   activeTrailId = place.id
   setStatus(`Loading trail ${place.trailFile}…`)
   if (place.starQuestId) {
@@ -807,13 +945,28 @@ function glovesPlace(): Place | undefined {
 }
 
 function trailPinVisible(pin: TrailPin): boolean {
-  const place = glovesPlace()
-  return streetGlovePinVisible({
+  const gloves = glovesPlace()
+  const glovesOk = streetGlovePinVisible({
     isGlove: isStreetGlovePin(pin),
     activeTrailId,
     personaAllowsGlovesPlace: Boolean(
-      place && personaAllowsPlace(activePersona, place, graphClusterId()),
+      gloves && personaAllowsPlace(activePersona, gloves, graphClusterId()),
     ),
+  })
+  if (!glovesOk) return false
+  const circuit = PLACES.find((p) => p.id === FINSBURY_PARK_CIRCUIT_PLACE_ID)
+  const beaconsOk = parkBeaconPinVisible({
+    isBeacon: isParkBeaconPin(pin),
+    activeTrailId,
+    personaAllowsCircuitPlace: Boolean(
+      circuit && personaAllowsPlace(activePersona, circuit, graphClusterId()),
+    ),
+  })
+  if (!beaconsOk) return false
+  return dayAfterTomorrowPinVisible({
+    pin,
+    activeTrailId,
+    mintedPinIds: client.session.mintedCollectibleIds(),
   })
 }
 
@@ -984,17 +1137,24 @@ function openNearby(pin: TrailPin) {
 
 function openTrailPin(pin: TrailPin) {
   const glove = isStreetGlovePin(pin)
+  const sit = isSitPin(pin)
   showSheet({
-    kind: glove ? "street glove" : pin.questRole || "trail pin",
+    kind: glove ? "street glove" : sit ? "sit" : pin.questRole || "trail pin",
     title: pin.title || pin.id,
     sub: pin.wikiSlug ? `wiki:${pin.wikiSlug}` : pin.id,
     body: glove
       ? `${pin.narrationText || pin.notes || "Street glove."} Check-in mints this glove as an NFT into your Solana wallet. Pin id ${pin.id} is the STAR objective.`
-      : pin.narrationText || pin.notes || "Authored Field Guide trail pin.",
+      : sit
+        ? `${pin.narrationText || pin.notes || "Sit."} Stay in the radius through the placeholder audio. Completing mints ${pin.title} into your OASIS Solana wallet. That token unlocks the next sit.`
+        : pin.narrationText || pin.notes || "Authored Field Guide trail pin.",
     actions: [
       {
-        label: glove ? "Collect glove" : "Check in",
+        label: glove ? "Collect glove" : sit ? "Sit" : "Check in",
         onClick: () => {
+          if (sit) {
+            void sitAtWalkPin(pin.id)
+            return
+          }
           void collectPin(pin)
         },
       },
@@ -1023,7 +1183,9 @@ function openTrailPin(pin: TrailPin) {
               },
             },
           ]
-        : []),
+        : sit
+          ? []
+          : []),
     ],
   })
   if (glove) {
@@ -1089,10 +1251,40 @@ function currentMode(): FieldGuideMode {
   return "map"
 }
 
-function beginSiteLink(ticket: string) {
+function paintProgress() {
+  drawTrailPins()
+  renderList()
+  refreshWalkStrip()
+  avatarDesk?.refresh()
+}
+
+function applyCollectedPinIds(ids: string[]) {
+  for (const id of ids) client.session.markCheckedIn(id)
+  if (ids.length) paintProgress()
+}
+
+async function pullStarProgress() {
+  if (!client.session.hasJwt()) return
+  try {
+    const ids = await client.quests.syncSessionFromStar()
+    applyCollectedPinIds(ids)
+  } catch (err) {
+    console.warn("[field-guide] STAR progress", err)
+  }
+  try {
+    const read = await client.wallet.read({ includeNfts: true })
+    for (const nft of read.nfts) {
+      if (nft.trailPinId) client.session.markMintedCollectible(nft.trailPinId)
+    }
+    if (read.nfts.length) paintProgress()
+  } catch (err) {
+    console.warn("[field-guide] wallet NFTs", err)
+  }
+}
+
+function beginSiteLink() {
   stopSiteLink?.()
   stopSiteLink = startFieldGuideSiteLink({
-    ticket,
     jwt: () => client.session.getJwt() || "",
     view: () => {
       const sel = avatarDesk?.selection() ?? { placeId: "", pinId: "" }
@@ -1102,9 +1294,25 @@ function beginSiteLink(ticket: string) {
         selectedPinId: sel.pinId,
         wearingPersonaId: activePersona?.id ?? null,
         wearingClusterId: graphClusterId(),
+        lat: walkFix?.lat,
+        lon: walkFix?.lon,
+        accuracyM: walkFix?.accuracyM,
       }
     },
+    onCommand: applySiteCommand,
+    onCollected: applyCollectedPinIds,
   })
+}
+
+async function applySiteCommand(command: SiteCommand) {
+  const place = PLACES.find((p) => p.id === command.placeId)
+  if (!place?.trailFile) {
+    setStatus(`Unknown guide ${command.placeId}`)
+    return
+  }
+  await loadTrail(place)
+  await startWalk()
+  await lookAtWalkPin(command.pinId || undefined)
 }
 
 function graphShowsLayer(layer: GuideLayer): boolean {
@@ -1150,6 +1358,7 @@ function applyView() {
   applyVenueVisibility()
   drawNearby()
   drawTrailPins()
+  drawPersonalPhotos()
   drawGigs()
   drawRa()
   if (liveRa.length) raStatus = raStatusLine()
@@ -1347,7 +1556,7 @@ function renderList() {
     (activeFilter === "all" || activeFilter === "trail")
   ) {
     for (const pin of trailPins) {
-      if (!trailPinVisible(pin) || !isStreetGlovePin(pin)) continue
+      if (!trailPinVisible(pin) || !(isStreetGlovePin(pin) || isSitPin(pin))) continue
       const btn = document.createElement("button")
       btn.type = "button"
       btn.className = "place-btn"
@@ -1647,6 +1856,8 @@ function renderAuth() {
     out.textContent = "Sign out"
     out.addEventListener("click", () => {
       client.session.clear()
+      personalPhotos = []
+      drawPersonalPhotos()
       renderAuth()
       renderStarGlyph()
       setStatus("Signed out")
@@ -1679,6 +1890,9 @@ function renderAuth() {
     renderAuth()
     renderStarGlyph()
     avatarDesk?.refresh()
+    void refreshPersonalPhotos()
+    beginSiteLink()
+    void pullStarProgress()
     setStatus(`Signed in as ${result.result.avatarName || result.result.avatarEmail}`)
   })
   authBox.append(email, password, go)
@@ -1698,6 +1912,7 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible") return
   if (walkActive) void holdWakeLock()
   if (raToggle.checked) void refreshRa()
+  void pullStarProgress()
 })
 
 nearbyToggle.addEventListener("change", () => {
@@ -1729,15 +1944,12 @@ async function boot() {
     showGuideOnMap: showGuideOnMap,
     connectMyAi: async (provider) => {
       const jwt = client.session.getJwt()
-      if (!jwt) {
-        return { ok: false, message: "Sign in at the top of the page, then press Claude or ChatGPT." }
-      }
       let res: Response
       try {
         res = await fetch("/connect", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
             "X-Public-Origin": window.location.origin,
           },
         })
@@ -1747,7 +1959,6 @@ async function boot() {
       let data: {
         ok?: boolean
         message?: string
-        ticket?: string
         mcpUrl?: string
         claudeUrl?: string
       }
@@ -1756,10 +1967,10 @@ async function boot() {
       } catch {
         return { ok: false, message: "Personal AI is not running. Start the Field Guide with npm run dev." }
       }
-      if (!data.ok || !data.claudeUrl || !data.mcpUrl || !data.ticket) {
+      if (!data.ok || !data.claudeUrl || !data.mcpUrl) {
         return { ok: false, message: data.message || "Could not start the connector." }
       }
-      beginSiteLink(data.ticket)
+      if (jwt) beginSiteLink()
       try {
         await navigator.clipboard.writeText(data.mcpUrl)
       } catch {
@@ -1768,17 +1979,16 @@ async function boot() {
       if (provider === "chatgpt") {
         return {
           ok: true,
-          ticket: data.ticket,
-          openUrl: "https://chatgpt.com/",
-          message:
-            "ChatGPT is opening. Paste the Field Guide URL as a connector. The chat can read your progress, not edit the Guide.",
+          mcpUrl: data.mcpUrl,
+          openUrl: "https://chatgpt.com/plugins",
+          message: `Shared Field Guide MCP (OAuth):\n${data.mcpUrl}\nCreate this ChatGPT connector once and keep that name. Sign in with your OASIS avatar. Do not use auth none. Do not recreate it when Field Guide tools change.`,
         }
       }
       return {
         ok: true,
-        ticket: data.ticket,
+        mcpUrl: data.mcpUrl,
         openUrl: data.claudeUrl,
-        message: "Claude is opening with Field Guide filled in. Press Add. The chat can read your progress, not edit the Guide.",
+        message: "Claude is opening with the shared Field Guide URL. Add it. Sign in with OASIS when Claude asks.",
       }
     },
     ensureWallet: () => client.wallet.ensure(),
@@ -1792,7 +2002,12 @@ async function boot() {
   renderFilters()
   drawVenues()
   renderList()
-  await Promise.all([refreshNearby(), refreshGigs(), refreshRa()])
+  if (client.session.hasJwt()) {
+    beginSiteLink()
+    void pullStarProgress()
+  }
+  await Promise.all([refreshNearby(), refreshGigs(), refreshRa(), refreshPersonalPhotos()])
+  await applyQuestDeepLink()
   window.setInterval(() => {
     if (document.visibilityState === "visible" && raToggle.checked) void refreshRa()
   }, RA_POLL_MS)

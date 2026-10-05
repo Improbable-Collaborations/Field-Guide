@@ -1,5 +1,5 @@
 import type { HttpClient } from "./http.js"
-import { isErrorBody, oasisUrl, readBool, readString, requestJson, unwrapResult } from "./http.js"
+import { isErrorBody, oasisUrl, readBool, readNumber, readString, requestJson, unwrapResult } from "./http.js"
 import type { SessionApi } from "./session.js"
 
 const SOLANA_PROVIDER = "SolanaOASIS"
@@ -53,27 +53,59 @@ function guidFromJwt(jwt: string): string {
   return ""
 }
 
-export function pickSolanaFromProviderWallets(wallets: unknown): string {
-  if (wallets == null || typeof wallets !== "object") return ""
+export type SolanaWalletRecord = {
+  id: string
+  address: string
+  balance: number | null
+}
+
+function walletIdFromNode(node: unknown): string {
+  return readString(node, "walletId", "WalletId", "id", "Id")
+}
+
+function walletBalanceFromNode(node: unknown): number | null {
+  const n = readNumber(node, "balance", "Balance")
+  return Number.isFinite(n) ? n : null
+}
+
+function solanaWalletItems(wallets: unknown): unknown[] {
+  if (wallets == null || typeof wallets !== "object") return []
   const root = wallets as Record<string, unknown>
   const buckets = [root[SOLANA_PROVIDER], root[SOLANA_NUMERIC_KEY], root[3 as unknown as string]]
+  const items: unknown[] = []
   for (const bucket of buckets) {
     if (bucket == null) continue
-    const items: unknown[] = Array.isArray(bucket)
-      ? bucket
-      : bucket != null && typeof bucket === "object" && !readString(bucket, "walletAddress", "WalletAddress")
-        ? Object.values(bucket as Record<string, unknown>)
-        : [bucket]
-    let fallback = ""
-    for (const item of items) {
-      const addr = addressFromWalletNode(item)
-      if (!isUsableSolanaAddress(addr)) continue
-      if (readBool(item, "isDefaultWallet", "IsDefaultWallet")) return addr
-      if (!fallback) fallback = addr
+    if (Array.isArray(bucket)) {
+      items.push(...bucket)
+      continue
     }
-    if (fallback) return fallback
+    if (typeof bucket === "object" && !readString(bucket, "walletAddress", "WalletAddress")) {
+      items.push(...Object.values(bucket as Record<string, unknown>))
+      continue
+    }
+    items.push(bucket)
   }
-  return ""
+  return items
+}
+
+export function pickSolanaWalletRecord(wallets: unknown): SolanaWalletRecord | null {
+  let fallback: SolanaWalletRecord | null = null
+  for (const item of solanaWalletItems(wallets)) {
+    const address = addressFromWalletNode(item)
+    if (!isUsableSolanaAddress(address)) continue
+    const rec: SolanaWalletRecord = {
+      id: walletIdFromNode(item),
+      address,
+      balance: walletBalanceFromNode(item),
+    }
+    if (readBool(item, "isDefaultWallet", "IsDefaultWallet")) return rec
+    if (!fallback) fallback = rec
+  }
+  return fallback
+}
+
+export function pickSolanaFromProviderWallets(wallets: unknown): string {
+  return pickSolanaWalletRecord(wallets)?.address ?? ""
 }
 
 async function loadAvatar(

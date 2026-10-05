@@ -1,0 +1,144 @@
+{
+  "type": "FeatureCollection",
+  "name": "day-after-tomorrow",
+  "description": "Day After Tomorrow sits on a Finsbury Park lawn. Companion voice: you cannot change what is already here. Withdraw investment. Sit as awareness. Choose identity. Only later is yours. Pin id is STAR objective title and NFT trailPinId. Audio is a placeholder until Aether.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1002, 51.5716] },
+      "properties": {
+        "id": "cafe-park-coffee",
+        "title": "Park cafe",
+        "trail": "day-after-tomorrow",
+        "questRole": "cafe",
+        "dropKind": "cafe",
+        "order": 99,
+        "radiusM": 35,
+        "place": "Finsbury Park cafe",
+        "imageUrl": "/icons/sit-coin.svg",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "Optional stop. Placeholder offer: mention Field Guide sit at the counter. Completing a sit does not require this cafe.",
+        "directionHint": "Public cafe in the park, west of Manor House gate. Skip it if you are sitting.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 offerText=Placeholder: ask at the counter"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09855, 51.5728] },
+      "properties": {
+        "id": "sit-still-stone",
+        "title": "Still Stone",
+        "trail": "day-after-tomorrow",
+        "questRole": "sit",
+        "dropKind": "sit",
+        "order": 0,
+        "radiusM": 45,
+        "place": "Lawn south of American Gardens",
+        "imageUrl": "/icons/sit-stone.svg",
+        "audioUrl": "/audio/day-after-tomorrow-placeholder.wav",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "You cannot change what is already here. Sit with it. Do not argue. Do not unpack the other person. Placeholder audio until the guided sit is recorded.",
+        "directionHint": "From Manor House gate, walk north into the gardens, then sit on the open lawn.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 nftSymbol=STONE sitSeconds=90 nftImageUrl=https://via.placeholder.com/512/2c3a28/e8d5a3?text=STONE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09855, 51.5728] },
+      "properties": {
+        "id": "sit-withdrawn-coin",
+        "title": "Withdrawn Coin",
+        "trail": "day-after-tomorrow",
+        "questRole": "sit",
+        "dropKind": "sit",
+        "order": 1,
+        "radiusM": 45,
+        "place": "Lawn south of American Gardens",
+        "imageUrl": "/icons/sit-coin.svg",
+        "audioUrl": "/audio/day-after-tomorrow-placeholder.wav",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "Notice where attention is still out there: the name, the thread, the replay. Bring the coin back. Do not draft the message. Placeholder audio until the guided sit is recorded.",
+        "directionHint": "Same lawn as Still Stone. Sit when the previous token is in your wallet.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 nftSymbol=COIN sitSeconds=90 nftImageUrl=https://via.placeholder.com/512/3a3220/f0d48a?text=COIN"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09855, 51.5728] },
+      "properties": {
+        "id": "sit-empty-bowl",
+        "title": "Empty Bowl",
+        "trail": "day-after-tomorrow",
+        "questRole": "sit",
+        "dropKind": "sit",
+        "order": 2,
+        "radiusM": 45,
+        "place": "Lawn south of American Gardens",
+        "imageUrl": "/icons/sit-bowl.svg",
+        "audioUrl": "/audio/day-after-tomorrow-placeholder.wav",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "The story can sit in the bowl. You sit as the space that holds it. Do not become the plot. Placeholder audio until the guided sit is recorded.",
+        "directionHint": "Same lawn. Empty Bowl unlocks when Withdrawn Coin is in the wallet.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 nftSymbol=BOWL sitSeconds=90 nftImageUrl=https://via.placeholder.com/512/1e2a32/a8d4e8?text=BOWL"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09855, 51.5728] },
+      "properties": {
+        "id": "sit-chosen-seed",
+        "title": "Chosen Seed",
+        "trail": "day-after-tomorrow",
+        "questRole": "sit",
+        "dropKind": "sit",
+        "order": 3,
+        "radiusM": 45,
+        "place": "Lawn south of American Gardens",
+        "imageUrl": "/icons/sit-seed.svg",
+        "audioUrl": "/audio/day-after-tomorrow-placeholder.wav",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "Feel the identity that already has the life you would pick. Imagination is practice, not getting them back. Placeholder audio until the guided sit is recorded.",
+        "directionHint": "Same lawn. Chosen Seed unlocks when Empty Bowl is in the wallet.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 nftSymbol=SEED sitSeconds=90 nftImageUrl=https://via.placeholder.com/512/24341c/9fd18a?text=SEED"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09855, 51.5728] },
+      "properties": {
+        "id": "sit-daybreak",
+        "title": "Daybreak",
+        "trail": "day-after-tomorrow",
+        "questRole": "sit",
+        "dropKind": "sit",
+        "order": 4,
+        "radiusM": 45,
+        "place": "Lawn south of American Gardens",
+        "imageUrl": "/icons/sit-dawn.svg",
+        "audioUrl": "/audio/day-after-tomorrow-placeholder.wav",
+        "wikiSlug": "day-after-tomorrow",
+        "narrationText": "Today still belongs to who you were. Only the day after tomorrow belongs to you. Walk as the one who owns later. Placeholder audio until the guided sit is recorded.",
+        "directionHint": "Same lawn. Daybreak unlocks when Chosen Seed is in the wallet.",
+        "notes": "starQuestId=9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70 nftSymbol=DAWN sitSeconds=90 nftImageUrl=https://via.placeholder.com/512/3a2418/f3c07a?text=DAWN"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.09735, 51.57095],
+          [-0.0978, 51.5722],
+          [-0.09855, 51.5728]
+        ]
+      },
+      "properties": {
+        "id": "day-after-tomorrow-walk",
+        "kind": "walk",
+        "title": "Walk to the sit lawn",
+        "trail": "day-after-tomorrow",
+        "pinIds": ["sit-still-stone"]
+      }
+    }
+  ]
+}

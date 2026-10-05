@@ -157,9 +157,19 @@ export function gigMatchesVenue(
   return d < 120
 }
 
+function skiddleUrl(pathAndQuery: string): string {
+  const path = pathAndQuery.startsWith("/") ? pathAndQuery : `/${pathAndQuery}`
+  if (typeof window !== "undefined") return `/api/skiddle${path}`
+  return `https://www.skiddle.com${path}`
+}
+
 async function fetchSkiddleHtml(pathAndQuery: string): Promise<string> {
-  const url = `/api/skiddle${pathAndQuery.startsWith("/") ? "" : "/"}${pathAndQuery}`
-  const res = await fetch(url)
+  const headers: Record<string, string> = {}
+  if (typeof window === "undefined") {
+    headers["User-Agent"] =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  }
+  const res = await fetch(skiddleUrl(pathAndQuery), { headers })
   if (!res.ok) throw new Error(`Skiddle ${res.status}`)
   return res.text()
 }

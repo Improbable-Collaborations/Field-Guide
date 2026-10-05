@@ -207,9 +207,9 @@ export function createQuestsApi(
   }
 
   return {
-    async list(): Promise<QuestSummary[]> {
+    async list(opts?: { fresh?: boolean }): Promise<QuestSummary[]> {
       const ttl = (config.listCacheTtlSeconds ?? 120) * 1000
-      if (memoryList && Date.now() - memoryListAt < ttl) {
+      if (!opts?.fresh && memoryList && Date.now() - memoryListAt < ttl) {
         return memoryList.map(cloneQuest)
       }
 
@@ -248,6 +248,21 @@ export function createQuestsApi(
       memoryListAt = Date.now()
       saveDiskList(list)
       return list.map(cloneQuest)
+    },
+
+    async syncSessionFromStar(): Promise<string[]> {
+      const applied: string[] = []
+      const list = await (this as { list: (opts?: { fresh?: boolean }) => Promise<QuestSummary[]> }).list({
+        fresh: true,
+      })
+      for (const q of list) {
+        for (const o of q.objectives) {
+          if (!o.isCompleted || !o.title) continue
+          session.markCheckedIn(o.title)
+          applied.push(o.title)
+        }
+      }
+      return applied
     },
 
     get: getQuest,
@@ -329,7 +344,7 @@ export function createQuestsApi(
       }
       const body = {
         GameSource: "FieldGuide",
-        GenericItemPickup: true,
+        GenericItemPickup: 1,
         ItemCollectedName: pinId || "trail-check-in",
       }
       const { status, json, text } = await requestJson(

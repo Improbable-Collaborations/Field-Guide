@@ -5,3 +5,8 @@ node_modules/
 *.local
 finsbury-guide/dist/
 playa-guide/dist/
+
+.field-guide-mcp-oauth.json
+.field-guide-mcp-oauth.json.*
+.field-guide-mcp-tickets.json
+.field-guide-mcp-tickets.json.*

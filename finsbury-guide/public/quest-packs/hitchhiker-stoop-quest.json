@@ -1,0 +1,29 @@
+{
+  "questId": "e86e2c7d-7cdd-4542-b82d-7d1bd27b46df",
+  "name": "Hitchhiker Stoop",
+  "createdAt": "2026-10-04T17:30:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "hitchhiker-stoop.geojson",
+  "atmosphere": "doorstep",
+  "gameSource": "FieldGuide",
+  "description": "One pavement beacon outside Hitchhiker House. Prove GPS check-in before the park circuit. Collect is field_guide_check_in: JWT, mint/STAR. Pin id equals objective title.",
+  "requiredPinIds": ["hitchhiker-stoop"],
+  "pinObjectiveMap": { "hitchhiker-stoop": "hitchhiker-stoop" },
+  "objectives": [
+    {
+      "id": "hitchhiker-stoop",
+      "title": "hitchhiker-stoop",
+      "order": 0,
+      "description": "Pavement outside Hitchhiker House"
+    }
+  ],
+  "starDna": {
+    "NeedToCollectItems": { "FieldGuide": ["hitchhiker-stoop"] }
+  },
+  "spawnNear": {
+    "pinId": "hitchhiker-stoop",
+    "lat": 51.563743,
+    "lon": -0.105181,
+    "note": "Pavement outside 33 Vaudeville Court"
+  }
+}

@@ -27,17 +27,30 @@ const raProxy: ProxyOptions = {
 const mcpProxy: ProxyOptions = {
   target: "http://127.0.0.1:8788",
   changeOrigin: true,
+  configure: (proxy) => {
+    proxy.on("proxyReq", (proxyReq, req) => {
+      const host = req.headers["x-forwarded-host"] || req.headers.host
+      if (typeof host === "string") proxyReq.setHeader("X-Forwarded-Host", host)
+      const proto = req.headers["x-forwarded-proto"]
+      if (typeof proto === "string") proxyReq.setHeader("X-Forwarded-Proto", proto.split(",")[0].trim())
+    })
+  },
 }
 
 export default defineConfig({
   server: {
+    host: "127.0.0.1",
     port: 5179,
+    strictPort: true,
+    allowedHosts: true,
     open: false,
     proxy: {
       "/api/skiddle": skiddleProxy,
       "/api/ra": raProxy,
       "/mcp": mcpProxy,
       "/connect": mcpProxy,
+      "/oauth": mcpProxy,
+      "/.well-known": mcpProxy,
     },
   },
   preview: {
@@ -47,6 +60,8 @@ export default defineConfig({
       "/api/ra": raProxy,
       "/mcp": mcpProxy,
       "/connect": mcpProxy,
+      "/oauth": mcpProxy,
+      "/.well-known": mcpProxy,
     },
   },
   build: { outDir: "dist", emptyOutDir: true },

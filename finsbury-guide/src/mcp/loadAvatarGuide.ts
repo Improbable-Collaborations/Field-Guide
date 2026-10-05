@@ -1,6 +1,8 @@
 import {
   createFieldGuideWeb4Client,
   isErrorBody,
+  isSitPin,
+  isStreetGlovePin,
   pickSolanaFromProviderWallets,
   unwrapResult,
 } from "field-guide-web4-client"
@@ -68,6 +70,7 @@ export async function loadAvatarGuide(jwt: string): Promise<ProfileSnapshot> {
   let avatarEmail = typeof payload.email === "string" ? payload.email : ""
   let avatarId = guidFromPayload(payload)
 
+  const trailPins = loadAuthoredTrailPins(PLACES)
   const oasis = client.config.oasisBaseUrl
   const res = await fetch(`${oasis}/api/avatar/get-logged-in-avatar`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -93,6 +96,18 @@ export async function loadAvatarGuide(jwt: string): Promise<ProfileSnapshot> {
     }
   }
 
+  let mintedIds = collected.filter((id) => {
+    const pin = trailPins.find((p) => p.id === id)
+    return pin ? isStreetGlovePin(pin) : false
+  })
+  try {
+    const wallet = await client.wallet.read({ includeNfts: true })
+    const fromNfts = wallet.nfts.map((n) => n.trailPinId).filter(Boolean)
+    mintedIds = [...new Set([...mintedIds, ...fromNfts])]
+  } catch {
+    /* NFT list is the sit unlock key; STAR glove heuristic remains */
+  }
+
   return buildProfileSnapshot({
     signedIn: true,
     avatarName,
@@ -102,8 +117,8 @@ export async function loadAvatarGuide(jwt: string): Promise<ProfileSnapshot> {
     persona: null,
     clusterId: null,
     places: PLACES,
-    trailPins: loadAuthoredTrailPins(PLACES),
+    trailPins,
     checkedInIds: collected,
-    mintedIds: collected.filter((id) => id.toLowerCase().startsWith("glove-")),
+    mintedIds,
   })
 }

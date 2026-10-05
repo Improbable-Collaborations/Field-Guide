@@ -13,4 +13,15 @@ describe("live Field Guide tab presence", () => {
     expect(view).toMatchObject({ mode: "you", selectedPinId: "glove-victoria-door" })
     expect(formatLiveSiteLine(view as Exclude<typeof view, string>)).toMatch(/you · wearing alex/)
   })
+
+  it("includes live GPS when the Walk tab is sending a fix", () => {
+    const view = parseSiteView({
+      mode: "walk",
+      selectedPlaceId: "trail-finsbury-park-circuit",
+      lat: 51.5714,
+      lon: -0.0998,
+      accuracyM: 12,
+    })
+    expect(formatLiveSiteLine(view as Exclude<typeof view, string>)).toMatch(/GPS 51\.57140, -0\.09980 ±12m/)
+  })
 })

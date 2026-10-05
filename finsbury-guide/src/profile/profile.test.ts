@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { ALEX } from "../trustGraph/personas"
 import { PLACES } from "../places"
+import { loadAuthoredTrailPins } from "../mcp/loadTrailPins"
 import { askFieldGuideAgent } from "./agent"
 import { buildProfileSnapshot } from "./model"
 
@@ -13,7 +14,7 @@ const base = {
   persona: ALEX,
   clusterId: "boxing" as string | null,
   places: PLACES,
-  trailPins: [] as [],
+  trailPins: loadAuthoredTrailPins(PLACES),
   checkedInIds: ["glove-victoria-door"],
   mintedIds: ["glove-victoria-door"],
 }
