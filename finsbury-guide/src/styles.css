@@ -288,6 +288,26 @@ nav {
   font-size: 0.92rem;
   letter-spacing: 0.01em;
 }
+.star-key-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
+}
+.star-key-btn {
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(120, 140, 220, 0.4);
+  border-radius: 999px;
+  background: transparent;
+  color: #e8edff;
+  font-size: 0.62rem;
+  cursor: pointer;
+}
+.star-key-note {
+  color: #8f9bc4;
+  font-size: 0.58rem;
+}
+.star-key-row.warn .star-key-note { color: #e8523a; }
 .star-glyph-stage {
   position: relative;
   height: 200px;

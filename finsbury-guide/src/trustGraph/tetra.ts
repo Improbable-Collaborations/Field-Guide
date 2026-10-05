@@ -1,19 +1,11 @@
 import * as THREE from "three"
+import { TET_BOOKS, TET_PEOPLE } from "./starGlyph"
 
-/** Dual tetrahedra of the stella octangula (Soulbis /star). */
-export const TET_BOOKS: [number, number, number][] = [
-  [1, 1, 1],
-  [1, -1, -1],
-  [-1, 1, -1],
-  [-1, -1, 1],
-]
-
-export const TET_PEOPLE: [number, number, number][] = [
-  [-1, -1, -1],
-  [-1, 1, 1],
-  [1, -1, 1],
-  [1, 1, -1],
-]
+/**
+ * Dual tetrahedra of the stella octangula. Geometry ported from Soulbis /star
+ * (mitchuski/soulbis, MIT, (c) 2026 Mitchell Travers / 0xagentprivacy).
+ */
+export { TET_BOOKS, TET_PEOPLE }
 
 const FACES: [number, number, number][] = [
   [0, 1, 2],

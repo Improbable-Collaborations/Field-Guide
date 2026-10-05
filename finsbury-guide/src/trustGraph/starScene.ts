@@ -1,8 +1,15 @@
 /**
  * Soulbis /star dual-tet as a map legend: glass shells, slow spin,
  * labeled clusters, and a readable story under the jewel.
+ *
+ * Two things share this panel and must not be confused. Wearing a demo
+ * person lays their place clusters on the tips, which is this Guide's own
+ * legend. Carrying a City Key draws the visitor's own Star from the file
+ * they hold: its colours, its Swordsman : Mage size and its kappa verdict.
+ * The key is read in this tab and goes nowhere else.
  */
 import * as THREE from "three"
+import { readCityKey, type StarReading } from "./cityKey"
 import type { ClusterStory } from "./guideView"
 import type { Persona } from "./personas"
 import { layoutGlyph } from "./starGlyph"
@@ -81,7 +88,19 @@ export function mountStar(
   const who = document.createElement("p")
   who.className = "star-hud-who"
   who.textContent = "Everyone's map"
-  head.append(kicker, who)
+  const keyRow = document.createElement("p")
+  keyRow.className = "star-key-row"
+  const keyBtn = document.createElement("button")
+  keyBtn.type = "button"
+  keyBtn.className = "star-key-btn"
+  const keyNote = document.createElement("span")
+  keyNote.className = "star-key-note"
+  const keyFile = document.createElement("input")
+  keyFile.type = "file"
+  keyFile.accept = ".json,application/json"
+  keyFile.hidden = true
+  keyRow.append(keyBtn, keyNote, keyFile)
+  head.append(kicker, who, keyRow)
 
   const canvasWrap = document.createElement("div")
   canvasWrap.className = "star-glyph-stage"
@@ -140,6 +159,8 @@ export function mountStar(
       depthWrite: false,
     }),
   )
+  const swordLine = swordEdges.material as THREE.LineBasicMaterial
+  const mageLine = mageEdges.material as THREE.LineBasicMaterial
   core.add(swordFaces, mageFaces, swordEdges, mageEdges)
 
   const heart = new THREE.Mesh(
@@ -190,7 +211,62 @@ export function mountStar(
   let selectedId: string | null = null
   let stories: ClusterStory[] = []
   let wearerName = ""
+  let carried: StarReading | null = null
   const tmp = new THREE.Vector3()
+  const mageTips = tipLocal.slice(4).map((v) => v.clone())
+
+  const keyVerdict = (reading: StarReading): string => {
+    if (reading.verdict === "authentic") return "κ matches"
+    if (reading.verdict === "mismatch") return "κ does not match · changed since stamped"
+    return "no κ on this key"
+  }
+
+  const applyKey = (reading: StarReading | null, problem = "") => {
+    carried = reading
+    const sword = new THREE.Color(reading?.sword ?? SWORD)
+    const mage = new THREE.Color(reading?.mage ?? MAGE)
+    swordMat.color.copy(sword)
+    swordMat.emissive.copy(sword)
+    swordLine.color.copy(sword)
+    mageMat.color.copy(mage)
+    mageMat.emissive.copy(mage)
+    mageLine.color.copy(mage)
+    const k = 1 / (reading?.smRatio ?? 1)
+    mageFaces.scale.setScalar(k)
+    mageEdges.scale.setScalar(k)
+    mageTips.forEach((base, i) => {
+      tipLocal[4 + i].copy(base).multiplyScalar(k)
+      sprites[4 + i].position.copy(tipLocal[4 + i])
+      picks[4 + i].position.copy(tipLocal[4 + i])
+    })
+    keyBtn.textContent = reading ? "Put the key down" : "Carry your City Key"
+    keyNote.textContent = reading
+      ? `${keyVerdict(reading)} · ${reading.lit} of 64 lit`
+      : problem || "Read in this tab only"
+    keyRow.classList.toggle("warn", reading?.verdict === "mismatch" || Boolean(problem))
+  }
+
+  keyBtn.addEventListener("click", () => {
+    if (carried) {
+      applyKey(null)
+      applyTips()
+      return
+    }
+    keyFile.click()
+  })
+  keyFile.addEventListener("change", () => {
+    const file = keyFile.files?.[0]
+    keyFile.value = ""
+    if (!file) return
+    void file
+      .text()
+      .then(readCityKey)
+      .then((reading) => {
+        if (typeof reading === "string") applyKey(null, reading)
+        else applyKey(reading)
+        applyTips()
+      })
+  })
 
   const paintTip = (i: number, color: string) => {
     const sp = sprites[i]
@@ -207,7 +283,7 @@ export function mountStar(
       const empty = document.createElement("p")
       empty.className = "star-empty"
       empty.textContent =
-        "Pick Alex or Margaret to see which rooms, walks, and gyms their graph actually keeps."
+        "Alex and Margaret are demo people. Pick one to see the rooms, walks, and gyms their graph shows a met peer."
       cards.appendChild(empty)
       return
     }
@@ -246,10 +322,12 @@ export function mountStar(
       hit.userData.clusterId = tip.cluster?.id ?? null
     }
     if (!persona) {
-      who.textContent = "Everyone's map"
-      kicker.textContent = wearerName || "Published Guide"
+      who.textContent = carried ? carried.name || "Unnamed key" : "Everyone's map"
+      kicker.textContent = carried ? "Your Star" : wearerName || "Published Guide"
     } else {
-      kicker.textContent = wearerName ? `${wearerName} wearing` : `${persona.name}'s Guide`
+      kicker.textContent = wearerName
+        ? `${wearerName} wearing · demo`
+        : `${persona.name}'s Guide · demo`
       const n = stories.reduce((s, c) => s + c.count, 0)
       who.textContent = selectedId
         ? stories.find((s) => s.id === selectedId)?.label || persona.name
@@ -343,6 +421,7 @@ export function mountStar(
     raf = requestAnimationFrame(tick)
   }
   raf = requestAnimationFrame(tick)
+  applyKey(null)
   applyTips()
 
   return {

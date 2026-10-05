@@ -29,6 +29,7 @@ import {
   personaShowsLayer,
   visiblePlaces,
 } from "./trustGraph/guideView"
+import { wornPersona } from "./trustGraph/promise"
 import { mountStar, type StarHandle } from "./trustGraph/starScene"
 import { JAB_SW1_GLOVES_PLACE_ID, streetGlovePinVisible } from "./quests/jabSw1Gloves"
 import { closeLook, openLook } from "./look/lookOverlay"
@@ -1167,7 +1168,7 @@ function renderStarGlyph() {
 }
 
 function setPersona(persona: Persona | null) {
-  activePersona = persona
+  activePersona = persona ? wornPersona(persona) : null
   activeClusterId = null
   activeFilter = "all"
   renderPersonas()
@@ -1177,7 +1178,7 @@ function setPersona(persona: Persona | null) {
   avatarDesk?.refresh()
   setStatus(
     persona
-      ? `Guide as ${persona.name}: ${persona.clusters.map((c) => c.label).join(" · ")}`
+      ? `Demo guide as ${persona.name}: ${persona.clusters.map((c) => c.label).join(" · ")}`
       : "Published Guide. No personal graph.",
   )
 }
@@ -1216,7 +1217,8 @@ function renderPersonas() {
   const add = (label: string, persona: Persona | null) => {
     const btn = document.createElement("button")
     btn.type = "button"
-    btn.className = "persona-btn" + (activePersona === persona ? " active" : "")
+    btn.className =
+      "persona-btn" + ((activePersona?.id ?? null) === (persona?.id ?? null) ? " active" : "")
     btn.textContent = label
     btn.addEventListener("click", () => setPersona(persona))
     personaBtns.appendChild(btn)
@@ -1228,7 +1230,7 @@ function renderPersonas() {
 
   if (!activePersona) {
     personaBlurb.textContent =
-      "This is the published map. Pick a person to see only the places their graph keeps."
+      "This is the published map. Pick a demo person to see only the places their graph shows a met peer."
     personaClusters.innerHTML = ""
     personaClusters.setAttribute("aria-hidden", "true")
     renderStarGlyph()
