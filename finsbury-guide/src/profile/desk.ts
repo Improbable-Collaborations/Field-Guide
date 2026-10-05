@@ -19,7 +19,7 @@ export type AvatarDeskController = {
     ok: boolean
     message: string
     openUrl?: string
-    ticket?: string
+    mcpUrl?: string
   }>
   ensureWallet: () => Promise<{ ok: boolean; address: string; message: string }>
 }
@@ -50,6 +50,7 @@ export function mountAvatarDesk(
   let lastAvatarKey = ""
   let selectedPlaceId = ""
   let selectedPinId = ""
+  let lastConnect: { message: string; mcpUrl?: string } | null = null
 
   const selectGuide = (placeId: string) => {
     if (selectedPlaceId !== placeId) selectedPinId = ""
@@ -286,8 +287,8 @@ export function mountAvatarDesk(
     const connect = el("section", "you-connect")
     connect.append(el("p", "avatar-kicker", "Personal AI"))
     const note = el("p", "you-connect-note")
-    note.textContent =
-      "Sign in, then pick Claude or ChatGPT. The chat can read this guide and your progress. It cannot change the Field Guide. Collect stays in Walk / Look."
+    note.textContent = lastConnect?.message
+      || "Pick Claude or ChatGPT. They add one Field Guide connector. Sign in with your OASIS avatar when asked. The chat cannot change the published Field Guide. Collect stays in Walk / Look."
     const row = el("div", "you-ai-row")
 
     const makeAiBtn = (
@@ -307,7 +308,20 @@ export function mountAvatarDesk(
         btn.disabled = true
         try {
           const result = await ctrl.connectMyAi(provider)
+          lastConnect = { message: result.message, mcpUrl: result.mcpUrl }
           note.textContent = result.message
+          const existingUrl = connect.querySelector(".you-mcp-url")
+          existingUrl?.remove()
+          if (result.mcpUrl) {
+            const urlBox = document.createElement("input")
+            urlBox.className = "you-mcp-url"
+            urlBox.readOnly = true
+            urlBox.value = result.mcpUrl
+            urlBox.setAttribute("aria-label", "Field Guide MCP URL")
+            note.after(urlBox)
+            urlBox.focus()
+            urlBox.select()
+          }
           if (result.ok && result.openUrl && popup && !popup.closed) {
             popup.location.href = result.openUrl
           } else {
@@ -337,6 +351,14 @@ export function mountAvatarDesk(
       makeAiBtn("claude", "Claude", "/icons/anthropic.svg"),
     )
     connect.append(note, row)
+    if (lastConnect?.mcpUrl) {
+      const urlBox = document.createElement("input")
+      urlBox.className = "you-mcp-url"
+      urlBox.readOnly = true
+      urlBox.value = lastConnect.mcpUrl
+      urlBox.setAttribute("aria-label", "Field Guide MCP URL")
+      note.after(urlBox)
+    }
     host.append(connect)
 
     const agent = el("section", "avatar-block avatar-agent")

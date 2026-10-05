@@ -1,9 +1,12 @@
+import { isSitPin, isWalletCollectiblePin } from "./collectibleMint.js"
 import type { FieldGuideWeb4ClientConfig } from "./config.js"
 import type { DropsApi } from "./drops.js"
 import type { GeoApi } from "./geo.js"
 import type { QuestsApi } from "./quests.js"
 import type { SessionApi } from "./session.js"
 import type { CheckInResult, TrailPin } from "./types.js"
+
+export { isSitPin, isStreetGlovePin, isWalletCollectiblePin } from "./collectibleMint.js"
 
 function isSharedDrop(pin: TrailPin): boolean {
   const trail = (pin.trail || "").toLowerCase()
@@ -19,13 +22,6 @@ function isSharedDrop(pin: TrailPin): boolean {
     || kind === "power-crystal"
     || pin.id.toLowerCase().startsWith("drop-")
   )
-}
-
-/** Street glove: pin id is STAR objective title and NFT trailPinId. */
-export function isStreetGlovePin(pin: TrailPin): boolean {
-  const role = (pin.questRole || "").toLowerCase()
-  const kind = (pin.dropKind || "").toLowerCase()
-  return kind === "glove" || role === "glove" || pin.id.toLowerCase().startsWith("glove-")
 }
 
 /**
@@ -106,7 +102,7 @@ export function createCheckInApi(
         return { ok: false, kind: "skipped", message: "Pin required" }
       }
 
-      if (isSharedDrop(pin) && !isStreetGlovePin(pin)) {
+      if (isSharedDrop(pin) && !isWalletCollectiblePin(pin)) {
         session.markCheckedIn(pin.id)
         const state = session.get()
         await geo.postStreetEvent({
@@ -124,12 +120,14 @@ export function createCheckInApi(
 
       const questId = (opts?.questId || config.configuredQuestId || "").trim()
 
-      if (isStreetGlovePin(pin)) {
+      if (isWalletCollectiblePin(pin)) {
+        const kind = isSitPin(pin) ? "sit" : "glove"
+        const label = kind === "sit" ? "sit" : "glove"
         if (!session.hasJwt()) {
-          return { ok: false, kind: "glove", message: "Sign in required to collect a glove" }
+          return { ok: false, kind, message: `Sign in required to collect a ${label}` }
         }
         if (!questId) {
-          return { ok: false, kind: "glove", message: "Street glove requires a STAR quest id" }
+          return { ok: false, kind, message: `${kind === "sit" ? "Sit" : "Street glove"} requires a STAR quest id` }
         }
 
         let mintHash = ""
@@ -141,7 +139,7 @@ export function createCheckInApi(
           if (!minted.ok) {
             return {
               ok: false,
-              kind: "glove",
+              kind,
               questId,
               message: minted.message,
               walletAddress: minted.walletAddress,
@@ -159,7 +157,7 @@ export function createCheckInApi(
         if (!quested.ok) {
           return {
             ok: false,
-            kind: "glove",
+            kind,
             questId,
             started: quested.started,
             progressed: quested.progressed,
@@ -167,14 +165,14 @@ export function createCheckInApi(
             mintHash,
             tokenAddress,
             walletAddress,
-            message: `${quested.message} Glove mint was kept; retry check-in will not remint.`,
+            message: `${quested.message} ${kind === "sit" ? "Sit" : "Glove"} mint was kept; retry check-in will not remint.`,
           }
         }
 
         session.markCheckedIn(pin.id)
         return {
           ok: true,
-          kind: "glove",
+          kind,
           questId,
           started: quested.started,
           progressed: quested.progressed,
@@ -183,8 +181,12 @@ export function createCheckInApi(
           tokenAddress,
           walletAddress,
           message: quested.completed
-            ? "Glove in wallet. Street gloves quest complete."
-            : "Glove minted to wallet. Progress recorded.",
+            ? kind === "sit"
+              ? "Sit token in wallet. Day After Tomorrow course complete."
+              : "Glove in wallet. Street gloves quest complete."
+            : kind === "sit"
+              ? "Sit token minted to wallet. Progress recorded."
+              : "Glove minted to wallet. Progress recorded.",
         }
       }
 

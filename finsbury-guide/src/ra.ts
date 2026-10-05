@@ -168,17 +168,33 @@ function rowToEvent(row: GqlRow): RaEvent | null {
   }
 }
 
+function raGraphqlUrl(): string {
+  if (typeof window !== "undefined") return "/api/ra/graphql"
+  return "https://ra.co/graphql"
+}
+
+function raGraphqlHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  }
+  if (typeof window === "undefined") {
+    headers.Origin = "https://ra.co"
+    headers.Referer = "https://ra.co/events/uk/london"
+    headers["User-Agent"] =
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  }
+  return headers
+}
+
 async function fetchPage(page: number, gte: string, lte: string): Promise<{
   events: RaEvent[]
   total: number
   rowCount: number
 }> {
-  const res = await fetch("/api/ra/graphql", {
+  const res = await fetch(raGraphqlUrl(), {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    headers: raGraphqlHeaders(),
     body: JSON.stringify({
       operationName: "GET_EVENT_LISTINGS",
       query: LISTINGS_QUERY,
@@ -229,24 +245,21 @@ export function formatRaWhen(iso: string): string {
 /** Next ~10 London calendar days of electronic listings with mappable venues. */
 export async function fetchRaLondon(now = new Date()): Promise<RaEvent[]> {
   const { gte, lte } = listingDateWindow(now)
-  const all: RaEvent[] = []
-  let page = 1
-  let total = Number.POSITIVE_INFINITY
-
-  while ((page - 1) * PAGE_SIZE < total) {
-    if (page > MAX_PAGES) {
-      throw new Error(`RA listed more than ${MAX_PAGES * PAGE_SIZE} events`)
-    }
-    const batch = await fetchPage(page, gte, lte)
-    total = batch.total
-    if (page === 1 && batch.rowCount === 0 && total > 0) {
-      throw new Error("RA returned no rows for a non-empty listing window")
-    }
-    if (batch.rowCount === 0) break
-    all.push(...batch.events)
-    page += 1
+  const first = await fetchPage(1, gte, lte)
+  if (first.rowCount === 0 && first.total > 0) {
+    throw new Error("RA returned no rows for a non-empty listing window")
   }
-
+  const pageCount = Math.max(1, Math.ceil(first.total / PAGE_SIZE))
+  if (pageCount > MAX_PAGES) {
+    throw new Error(`RA listed more than ${MAX_PAGES * PAGE_SIZE} events`)
+  }
+  const rest =
+    pageCount <= 1
+      ? []
+      : await Promise.all(
+          Array.from({ length: pageCount - 1 }, (_, i) => fetchPage(i + 2, gte, lte)),
+        )
+  const all = [first, ...rest].flatMap((batch) => batch.events)
   const seen = new Set<string>()
   const out: RaEvent[] = []
   for (const e of all) {

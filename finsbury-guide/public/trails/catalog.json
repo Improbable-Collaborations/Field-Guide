@@ -136,5 +136,32 @@
     "atmosphere": "gym_street",
     "starQuestId": "8f2c1a4e-6b7d-4c91-a3e5-1d9f0b4e7c22",
     "geometryMode": "street_approx"
+  },
+  {
+    "id": "finsbury-park-circuit",
+    "title": "Finsbury Park Circuit",
+    "file": "finsbury-park-circuit.geojson",
+    "wikiSlug": "finsbury-park-circuit",
+    "atmosphere": "park_walk",
+    "starQuestId": "783700a0-5f6f-4861-993b-7c1ff76b3a26",
+    "geometryMode": "park_path"
+  },
+  {
+    "id": "hitchhiker-stoop",
+    "title": "Hitchhiker Stoop",
+    "file": "hitchhiker-stoop.geojson",
+    "wikiSlug": "hitchhiker-stoop",
+    "atmosphere": "doorstep",
+    "starQuestId": "e86e2c7d-7cdd-4542-b82d-7d1bd27b46df",
+    "geometryMode": "pavement"
+  },
+  {
+    "id": "day-after-tomorrow",
+    "title": "Day After Tomorrow",
+    "file": "day-after-tomorrow.geojson",
+    "wikiSlug": "day-after-tomorrow",
+    "atmosphere": "sit",
+    "starQuestId": "9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70",
+    "geometryMode": "park_lawn"
   }
 ]

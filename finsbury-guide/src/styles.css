@@ -594,6 +594,14 @@ nav {
   box-shadow: 0 0 0 1px rgba(46, 230, 166, 0.5), 0 0 8px rgba(46, 230, 166, 0.35);
 }
 .marker.anchor { background: var(--muted); }
+.marker.personal {
+  background: var(--amber);
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.55);
+}
 .marker.glove {
   width: 40px;
   height: 40px;
@@ -791,10 +799,44 @@ body.mode-walk .walk-strip { display: grid; }
   color: var(--bright);
 }
 .walk-actions #walk-desk,
-.look-actions #look-close {
+.look-actions #look-close,
+.sit-actions #sit-close {
   border-color: var(--border);
   background: transparent;
   color: var(--muted);
+}
+
+.sit {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  background: #071107;
+  color: #d7ecd7;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.7rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+.sit.hidden { display: none !important; }
+.sit-art { width: min(42vw, 180px); }
+.sit-title { font-family: var(--sans); font-size: 1.4rem; margin: 0; }
+.sit-prompt { max-width: 28rem; color: var(--muted); margin: 0; line-height: 1.4; }
+.sit-meter, .sit-status { font-family: var(--mono); font-size: 0.75rem; margin: 0; }
+.sit-actions { display: flex; gap: 0.5rem; }
+.sit-actions button {
+  min-height: 48px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid rgba(201, 168, 76, 0.55);
+  background: rgba(201, 168, 76, 0.16);
+  color: #c9a84c;
+  padding: 0 0.9rem;
 }
 
 .look {
@@ -829,6 +871,7 @@ body.mode-walk .walk-strip { display: grid; }
   position: absolute;
   left: 1rem;
   right: 1rem;
+
   top: calc(0.75rem + env(safe-area-inset-top));
   text-align: center;
   font-size: 0.78rem;
@@ -1121,6 +1164,21 @@ body.mode-you .avatar-chat {
   font-size: 0.78rem;
   line-height: 1.4;
   max-width: 36rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.you-mcp-url {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 0.55rem;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--amber2);
+  font-family: var(--mono);
+  font-size: 16px;
 }
 .you-connect-fallback {
   display: inline-block;
@@ -1176,6 +1234,14 @@ body.mode-walk .sheet-actions button {
   width: 72px;
   height: 72px;
   margin: 0.2rem 0 0.45rem;
+}
+.personal-sheet-art {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  margin: 0.2rem 0 0.45rem;
+  border: 1px solid rgba(201, 168, 76, 0.45);
 }
 #sheet-title {
   font-family: var(--display);

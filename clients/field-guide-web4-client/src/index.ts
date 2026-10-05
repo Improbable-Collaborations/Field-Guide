@@ -13,12 +13,24 @@ export {
 
 export { parseNearbyJson } from "./geo.js"
 export { parseQuestNode } from "./quests.js"
-export { isStreetGlovePin } from "./checkIn.js"
+export { isSitPin, isStreetGlovePin, isWalletCollectiblePin } from "./checkIn.js"
+export { collectibleMintSpec, noteTag } from "./collectibleMint.js"
 export { unwrapResult, isErrorBody } from "./http.js"
 export {
   pickSolanaFromProviderWallets,
+  pickSolanaWalletRecord,
   isUsableSolanaAddress,
 } from "./wallet.js"
+export {
+  readSolanaWallet,
+  parseOasisNftList,
+  parseOasisNftNode,
+  mergeOasisNfts,
+  OASIS_SESSION_EXPIRED_MESSAGE,
+  OASIS_NATIVE_TOKENS_NOTE,
+  type OasisWalletNft,
+  type SolanaWalletRead,
+} from "./walletRead.js"
 export {
   KNOWN_QUEST_PACK_FILES,
   parseQuestPackJson,

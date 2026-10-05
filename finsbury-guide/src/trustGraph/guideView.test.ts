@@ -80,6 +80,7 @@ describe("Margaret · walks, rooms, north London ground", () => {
     const labels = MARGARET.clusters.map((c) => c.label)
     expect(labels).toEqual([
       "Memorial walks",
+      "Park sits",
       "Theatres and chapels",
       "North London ground",
     ])

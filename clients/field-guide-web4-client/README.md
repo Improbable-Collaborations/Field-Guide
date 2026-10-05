@@ -15,7 +15,7 @@ npm run build
 In an app:
 
 ```bash
-npm install ../path/to/Web4/clients/field-guide-web4-client
+npm install ../clients/field-guide-web4-client
 ```
 
 ## Quick start

@@ -1,3 +1,4 @@
+import { collectibleMintSpec } from "./collectibleMint.js"
 import type { FieldGuideWeb4ClientConfig } from "./config.js"
 import type { GeoApi } from "./geo.js"
 import type { HttpClient } from "./http.js"
@@ -11,6 +12,7 @@ import {
 import type { SessionApi } from "./session.js"
 import type { DropResult, DropSpec } from "./types.js"
 import { ensureSolanaWallet } from "./wallet.js"
+import { parseOasisNftList } from "./walletRead.js"
 
 function shortReason(message: string, fallback: string): string {
   const src = (message || fallback || "Mint failed").trim()
@@ -256,6 +258,8 @@ export function createDropsApi(
       lat: number
       lon: number
       imageUrl?: string
+      dropKind?: string
+      questRole?: string
     }): Promise<DropResult> {
       const done: DropResult = {
         ok: false,
@@ -267,12 +271,27 @@ export function createDropsApi(
         message: "",
       }
 
-      if (!pin.id) {
-        done.message = "Pin id required"
+      if (!session.hasJwt()) {
+        done.message = "Sign in required to mint a collectible"
         return done
       }
-      if (!session.hasJwt()) {
-        done.message = "Sign in required to mint a glove"
+
+      const spec = collectibleMintSpec(
+        {
+          id: pin.id,
+          title: pin.title || pin.id,
+          notes: pin.notes || "",
+          narrationText: pin.narrationText || "",
+          lat: pin.lat,
+          lon: pin.lon,
+          imageUrl: pin.imageUrl || "",
+          dropKind: pin.dropKind || "",
+          questRole: pin.questRole || "",
+        },
+        (config.gloveNftImageUrl || config.dropNftImageUrl || "").trim(),
+      )
+      if ("error" in spec) {
+        done.message = spec.error
         return done
       }
 
@@ -284,26 +303,29 @@ export function createDropsApi(
       done.walletAddress = resolved.address
 
       const avatarId = session.get().avatarId
-      const image = (pin.imageUrl || config.gloveNftImageUrl || config.dropNftImageUrl || "").trim()
-      if (!image) {
-        done.message = "Glove image URL is missing"
-        return done
+      if (avatarId) {
+        const existing = await requestJson(
+          http,
+          oasisUrl(http, `/api/nft/load-all-nfts-for_avatar/${encodeURIComponent(avatarId)}`),
+        )
+        if (existing.status >= 200 && existing.status < 300 && !isErrorBody(existing.json).isError) {
+          const held = parseOasisNftList(existing.json)
+          const already = held.find((n) => n.trailPinId.toLowerCase() === pin.id.toLowerCase())
+          if (already) {
+            done.ok = true
+            done.web4Id = already.web4Id
+            done.tokenAddress = already.tokenAddress
+            done.mintHash = already.mintHash
+            done.message = "Collectible already in wallet. Will not remint."
+            return done
+          }
+        }
       }
 
-      const title = (pin.title || pin.id).trim()
-      const desc = [
-        pin.narrationText || pin.notes || "JAB street glove",
-        `trailPinId=${pin.id}`,
-        Number.isFinite(pin.lat) ? `lat=${pin.lat}` : "",
-        Number.isFinite(pin.lon) ? `lon=${pin.lon}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n")
-
       const body: Record<string, unknown> = {
-        Title: title,
-        Description: desc,
-        Symbol: "GLOVE",
+        Title: spec.title,
+        Description: spec.description,
+        Symbol: spec.symbol,
         NumberToMint: 1,
         Price: 0,
         OnChainProvider: "SolanaOASIS",
@@ -318,13 +340,13 @@ export function createDropsApi(
         WaitForNFTToSendInSeconds: 120,
         AttemptToSendEveryXSeconds: 2,
         SendToAddressAfterMinting: resolved.address,
-        ImageUrl: image,
-        ThumbnailUrl: image,
+        ImageUrl: spec.imageUrl,
+        ThumbnailUrl: spec.imageUrl,
         MemoText: pin.id,
         MetaData: {
-          kind: "glove",
-          trailPinId: pin.id,
-          questRole: "glove",
+          kind: spec.kind,
+          trailPinId: spec.trailPinId,
+          questRole: spec.questRole,
         },
       }
       if (avatarId) body.SendToAvatarAfterMintingId = avatarId
@@ -360,12 +382,12 @@ export function createDropsApi(
       if (!done.mintHash) done.mintHash = readString(node, "mintTransactionHash", "MintTransactionHash")
 
       if (!done.mintHash && !done.tokenAddress) {
-        done.message = "Mint returned no Solana transaction. Glove is not in the wallet."
+        done.message = "Mint returned no Solana transaction. Collectible is not in the wallet."
         return done
       }
 
       done.ok = true
-      done.message = readString(json, "message", "Message") || "Glove minted to wallet"
+      done.message = readString(json, "message", "Message") || `${spec.title} minted to wallet`
       return done
     },
   }

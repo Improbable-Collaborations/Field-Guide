@@ -1,0 +1,151 @@
+{
+  "type": "FeatureCollection",
+  "name": "finsbury-park-circuit",
+  "description": "Walkable STAR circuit inside Finsbury Park. Pin id is the STAR objective title and the NFT trailPinId. Coords are public park paths.",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.09735, 51.57095] },
+      "properties": {
+        "id": "park-manor-house-gate",
+        "title": "Manor House gate",
+        "trail": "finsbury-park-circuit",
+        "questRole": "beacon",
+        "dropKind": "beacon",
+        "order": 0,
+        "radiusM": 45,
+        "place": "Finsbury Park east gate",
+        "imageUrl": "/icons/park-beacon.svg",
+        "wikiSlug": "finsbury-park-circuit",
+        "narrationText": "Start at the Manor House gate. The park opens west from Green Lanes. Check in when you are on the park side of the gate.",
+        "directionHint": "Piccadilly line to Manor House, then walk west into the park. Stay on the public path.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.0978, 51.57315] },
+      "properties": {
+        "id": "park-american-gardens",
+        "title": "American Gardens",
+        "trail": "finsbury-park-circuit",
+        "questRole": "beacon",
+        "dropKind": "beacon",
+        "order": 1,
+        "radiusM": 50,
+        "place": "McKenzie Flower Garden",
+        "imageUrl": "/icons/park-beacon.svg",
+        "wikiSlug": "finsbury-park-circuit",
+        "narrationText": "North-east gardens. The beacon sits among the flower beds, not on Green Lanes.",
+        "directionHint": "From the east gate, follow paths north into the American / McKenzie gardens.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.1017, 51.57355] },
+      "properties": {
+        "id": "park-athletics-track",
+        "title": "Athletics track",
+        "trail": "finsbury-park-circuit",
+        "questRole": "beacon",
+        "dropKind": "beacon",
+        "order": 2,
+        "radiusM": 55,
+        "place": "Finsbury Park track",
+        "imageUrl": "/icons/park-beacon.svg",
+        "wikiSlug": "finsbury-park-circuit",
+        "narrationText": "The north track. Check in from the public perimeter path, not the infield.",
+        "directionHint": "West along the northern park paths until the stadium fence.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.10255, 51.56985] },
+      "properties": {
+        "id": "park-boating-lake",
+        "title": "Boating lake",
+        "trail": "finsbury-park-circuit",
+        "questRole": "beacon",
+        "dropKind": "beacon",
+        "order": 3,
+        "radiusM": 50,
+        "place": "Finsbury Park lake",
+        "imageUrl": "/icons/park-beacon.svg",
+        "wikiSlug": "finsbury-park-circuit",
+        "narrationText": "The lake in the west of the park. The beacon is on the path around the water.",
+        "directionHint": "South from the track toward the boating lake. Stay on the lakeside path.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-0.10355, 51.56815] },
+      "properties": {
+        "id": "park-parkland-walk-mouth",
+        "title": "Parkland Walk mouth",
+        "trail": "finsbury-park-circuit",
+        "questRole": "beacon",
+        "dropKind": "beacon",
+        "order": 4,
+        "radiusM": 45,
+        "place": "Parkland Walk entrance",
+        "imageUrl": "/icons/park-beacon.svg",
+        "wikiSlug": "finsbury-park-circuit",
+        "narrationText": "South-west mouth of the Parkland Walk. Last check-in of the circuit. Look here to finish.",
+        "directionHint": "From the lake, continue south-west to the old railway entrance.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-0.09735, 51.57095],
+          [-0.0977, 51.57105],
+          [-0.09815, 51.57125],
+          [-0.09855, 51.57155],
+          [-0.0985, 51.57195],
+          [-0.09835, 51.5724],
+          [-0.0981, 51.5728],
+          [-0.0978, 51.57315],
+          [-0.09835, 51.57328],
+          [-0.099, 51.57338],
+          [-0.0997, 51.57345],
+          [-0.1005, 51.5735],
+          [-0.1012, 51.57352],
+          [-0.1017, 51.57355],
+          [-0.10195, 51.57315],
+          [-0.1021, 51.5726],
+          [-0.1022, 51.57205],
+          [-0.1023, 51.5714],
+          [-0.1024, 51.5707],
+          [-0.10255, 51.56985],
+          [-0.10275, 51.5694],
+          [-0.10305, 51.56885],
+          [-0.1033, 51.56845],
+          [-0.10355, 51.56815]
+        ]
+      },
+      "properties": {
+        "id": "park-circuit-walk",
+        "title": "Finsbury Park Circuit walk",
+        "trail": "finsbury-park-circuit",
+        "kind": "walk",
+        "questRole": "walk",
+        "dropKind": "walk",
+        "pinIds": [
+          "park-manor-house-gate",
+          "park-american-gardens",
+          "park-athletics-track",
+          "park-boating-lake",
+          "park-parkland-walk-mouth"
+        ],
+        "narrationText": "Authored public-path walk through Finsbury Park. Same geometry both directions. Start at the nearest beacon. Do not replace this with a straight line between pins.",
+        "notes": "starQuestId=783700a0-5f6f-4861-993b-7c1ff76b3a26"
+      }
+    }
+  ]
+}

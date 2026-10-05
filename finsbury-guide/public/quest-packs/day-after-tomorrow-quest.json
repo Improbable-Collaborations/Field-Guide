@@ -1,0 +1,48 @@
+{
+  "questId": "9a4c2e81-6f0b-4d3a-9c17-2e8b5a1d4c70",
+  "name": "Day After Tomorrow",
+  "createdAt": "2026-10-05T10:00:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "day-after-tomorrow.geojson",
+  "atmosphere": "sit",
+  "gameSource": "FieldGuide",
+  "description": "Five sits on a Finsbury Park lawn. Body practice, not therapy or a breakup coach. Model: you cannot change what is already here; resistance keeps it energized; withdraw investment; sit as awareness; imagine the identity you would pick; only the day after tomorrow belongs to you. Dwell then mint STONE, COIN, BOWL, SEED, DAWN, then STAR. The NFT unlocks the next sit. Pin id equals objective title. Audio is a placeholder.",
+  "requiredPinIds": [
+    "sit-still-stone",
+    "sit-withdrawn-coin",
+    "sit-empty-bowl",
+    "sit-chosen-seed",
+    "sit-daybreak"
+  ],
+  "pinObjectiveMap": {
+    "sit-still-stone": "sit-still-stone",
+    "sit-withdrawn-coin": "sit-withdrawn-coin",
+    "sit-empty-bowl": "sit-empty-bowl",
+    "sit-chosen-seed": "sit-chosen-seed",
+    "sit-daybreak": "sit-daybreak"
+  },
+  "objectives": [
+    { "id": "sit-still-stone", "title": "sit-still-stone", "order": 0, "description": "Still Stone: sit with what is already here. Do not argue with today." },
+    { "id": "sit-withdrawn-coin", "title": "sit-withdrawn-coin", "order": 1, "description": "Withdrawn Coin: bring attention back. Do not spend it on the thread." },
+    { "id": "sit-empty-bowl", "title": "sit-empty-bowl", "order": 2, "description": "Empty Bowl: sit as awareness, not as the story." },
+    { "id": "sit-chosen-seed", "title": "sit-chosen-seed", "order": 3, "description": "Chosen Seed: rehearse the identity you would pick." },
+    { "id": "sit-daybreak", "title": "sit-daybreak", "order": 4, "description": "Daybreak: today belongs to who you were. Later is yours." }
+  ],
+  "starDna": {
+    "NeedToCollectItems": {
+      "FieldGuide": [
+        "sit-still-stone",
+        "sit-withdrawn-coin",
+        "sit-empty-bowl",
+        "sit-chosen-seed",
+        "sit-daybreak"
+      ]
+    }
+  },
+  "spawnNear": {
+    "pinId": "sit-still-stone",
+    "lat": 51.5728,
+    "lon": -0.09855,
+    "note": "Lawn south of American Gardens, Finsbury Park"
+  }
+}

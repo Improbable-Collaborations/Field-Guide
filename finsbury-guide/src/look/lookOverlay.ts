@@ -47,7 +47,11 @@ function paintPose() {
   status.textContent = `${livePin.title} · ${pose.turnHint}`
   const canCollect = pose.inRadius || deskStandIn
   collectBtn.disabled = !canCollect
-  collectBtn.title = canCollect ? "Mint this glove into your wallet" : pose.turnHint
+  collectBtn.title = canCollect
+    ? livePin.dropKind === "glove"
+      ? "Mint this glove into your wallet"
+      : "Check in: mint then STAR"
+    : pose.turnHint
 }
 
 function tick() {
@@ -90,7 +94,10 @@ export async function openLook(args: {
   const closeBtn = document.getElementById("look-close") as HTMLButtonElement
 
   img.src = args.pin.imageUrl || "/icons/boxing-glove.svg"
-  img.alt = args.pin.title || "Boxing glove"
+  img.alt = args.pin.title || "Collect"
+  collectBtn.textContent = args.pin.dropKind === "glove" ? "Collect glove" : "I'm here"
+  collectBtn.title =
+    args.pin.dropKind === "glove" ? "Mint this glove into your wallet" : "Check in: mint then STAR"
   el.classList.remove("hidden")
   el.hidden = false
   paintPose()

@@ -1,0 +1,74 @@
+{
+  "questId": "783700a0-5f6f-4861-993b-7c1ff76b3a26",
+  "name": "Finsbury Park Circuit",
+  "createdAt": "2026-10-04T16:00:00.000Z",
+  "starBaseUrl": "https://oasis-star-api-production.up.railway.app",
+  "trailFile": "finsbury-park-circuit.geojson",
+  "atmosphere": "park_walk",
+  "gameSource": "FieldGuide",
+  "description": "Walk five public-path beacons inside Finsbury Park. ChatGPT can guide using pin coordinates and live GPS from the Field Guide tab. Collect is Walk / Look: JWT, wallet, mint, then STAR. Pin id equals objective title equals NFT trailPinId.",
+  "requiredPinIds": [
+    "park-manor-house-gate",
+    "park-american-gardens",
+    "park-athletics-track",
+    "park-boating-lake",
+    "park-parkland-walk-mouth"
+  ],
+  "pinObjectiveMap": {
+    "park-manor-house-gate": "park-manor-house-gate",
+    "park-american-gardens": "park-american-gardens",
+    "park-athletics-track": "park-athletics-track",
+    "park-boating-lake": "park-boating-lake",
+    "park-parkland-walk-mouth": "park-parkland-walk-mouth"
+  },
+  "objectives": [
+    {
+      "id": "park-manor-house-gate",
+      "title": "park-manor-house-gate",
+      "order": 0,
+      "description": "Manor House gate"
+    },
+    {
+      "id": "park-american-gardens",
+      "title": "park-american-gardens",
+      "order": 1,
+      "description": "American Gardens"
+    },
+    {
+      "id": "park-athletics-track",
+      "title": "park-athletics-track",
+      "order": 2,
+      "description": "Athletics track"
+    },
+    {
+      "id": "park-boating-lake",
+      "title": "park-boating-lake",
+      "order": 3,
+      "description": "Boating lake"
+    },
+    {
+      "id": "park-parkland-walk-mouth",
+      "title": "park-parkland-walk-mouth",
+      "order": 4,
+      "description": "Parkland Walk mouth"
+    }
+  ],
+  "starDna": {
+    "NeedToCollectItems": {
+      "FieldGuide": [
+        "park-manor-house-gate",
+        "park-american-gardens",
+        "park-athletics-track",
+        "park-boating-lake",
+        "park-parkland-walk-mouth"
+      ]
+    },
+    "note": "Publish on STAR with one objective per pin. Each objective Title and NeedToCollectItems[FieldGuide][0] must be that pin id. GameSource FieldGuide."
+  },
+  "spawnNear": {
+    "pinId": "park-manor-house-gate",
+    "lat": 51.57095,
+    "lon": -0.09735,
+    "note": "Manor House gate, Finsbury Park"
+  }
+}

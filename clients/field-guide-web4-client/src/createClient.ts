@@ -11,6 +11,7 @@ import type { HttpClient } from "./http.js"
 import { createQuestsApi } from "./quests.js"
 import { createSession } from "./session.js"
 import { ensureSolanaWallet } from "./wallet.js"
+import { readSolanaWallet } from "./walletRead.js"
 
 export type FieldGuideWeb4Client = ReturnType<typeof createFieldGuideWeb4Client>
 
@@ -56,10 +57,12 @@ export function createFieldGuideWeb4Client(
       markCheckedIn: (pinId: string) => session.markCheckedIn(pinId),
       checkedInIds: () => session.checkedInIds(),
       hasMintedCollectible: (pinId: string) => session.hasMintedCollectible(pinId),
+      markMintedCollectible: (pinId: string) => session.markMintedCollectible(pinId),
       mintedCollectibleIds: () => session.mintedCollectibleIds(),
     },
     wallet: {
       ensure: () => ensureSolanaWallet(http, session),
+      read: (opts?: { includeNfts?: boolean }) => readSolanaWallet(http, session, opts),
     },
     auth,
     quests,
