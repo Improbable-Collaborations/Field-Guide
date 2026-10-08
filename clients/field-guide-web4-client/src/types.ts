@@ -16,10 +16,18 @@ export type TrailPin = {
   audioUrl: string
   markerStyle: string
   worldPrefab: string
+  /**
+   * Trust overlay only: a pin that reached this map through a met peer.
+   * peerAvatarId holds the peer's pairwise reference toward this viewer and
+   * peerDisplayName the name they chose for this edge. Never a raw avatar id
+   * or a profile name. Empty on every other pin.
+   */
   trustOrigin: string
   peerDisplayName: string
   peerAvatarId: string
   trustAudience: string
+  /** Who published a shared STAR drop. An author, not a trust peer. */
+  authorName?: string
   imageUrl: string
   fileUrl: string
   /** drop | guide | power-crystal */

@@ -6,7 +6,7 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js"
-import { formatFieldGuideContext } from "../profile/contextPack"
+import { chatSnapshot, formatFieldGuideContext } from "../profile/contextPack"
 import { loadPersonalPhotos } from "../profile/personalPhotosApi"
 import { dropPersonalPhoto } from "./dropPhoto"
 import { loadAvatarGuide } from "./loadAvatarGuide"
@@ -595,7 +595,7 @@ export function createFieldGuideMcpServer(jwt: string): Server {
       }
       if (name === "field_guide_progress") {
         return {
-          content: [{ type: "text", text: JSON.stringify({ ...snap, site: live }, null, 2) }],
+          content: [{ type: "text", text: JSON.stringify({ ...chatSnapshot(snap), site: live }, null, 2) }],
         }
       }
       return {
